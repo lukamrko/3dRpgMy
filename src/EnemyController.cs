@@ -4,7 +4,7 @@ using System;
 
 public class EnemyController : Spatial
 {
-    int Stage = 0;
+    EnemyStage Stage = EnemyStage.ChoosePawn;
     Pawn CurrentPawn;
     Pawn AttackablePawn;
 
@@ -22,7 +22,7 @@ public class EnemyController : Spatial
         foreach (Pawn p in GetChildren())
             if (p.CanAct())
                 return true;
-        return Stage > 0;
+        return Stage != EnemyStage.ChoosePawn;
     }
 
     public void Reset()
@@ -50,7 +50,7 @@ public class EnemyController : Spatial
             if (pawn.CanAct())
                 CurrentPawn = pawn;
         }
-        Stage = 1;
+        Stage = EnemyStage.ChoseNearestEnemy;
     }
 
     public void ChoseNearestEnemy()
@@ -62,13 +62,13 @@ public class EnemyController : Spatial
         Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, Targets.GetChildren().As<Pawn>());
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);
         TacticsCamera.Target = to;
-        Stage = 2;
+        Stage = EnemyStage.MovePawn;
     }
 
     public void MovePawn()
     {
         if (CurrentPawn.PathStack.Count == 0)
-            Stage = 3;
+            Stage = EnemyStage.ChosePawnToAttack;
     }
 
     public void ChoosePawnToAttack()
@@ -82,7 +82,7 @@ public class EnemyController : Spatial
             AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = AttackablePawn;
         }
-        Stage = 4;
+        Stage = EnemyStage.AttackPawn;
     }
 
     public void AttackPawn(float delta)
@@ -97,7 +97,7 @@ public class EnemyController : Spatial
             TacticsCamera.Target = CurrentPawn;
         }
         AttackablePawn = null;
-        Stage = 0;
+        Stage = EnemyStage.ChoosePawn;
     }
 
 
@@ -112,20 +112,19 @@ public class EnemyController : Spatial
     {
         switch (Stage)
         {
-            case 0:
+            case EnemyStage.ChoosePawn:
                 ChoosePawn();
                 break;
-            case 1:
+            case EnemyStage.ChoseNearestEnemy:
                 ChoseNearestEnemy();
                 break;
-            case 2:
+            case EnemyStage.MovePawn:
                 MovePawn();
                 break;
-            case 3:
+            case EnemyStage.ChosePawnToAttack:
                 ChoosePawnToAttack();
                 break;
-            case 4:
-            default:
+            case EnemyStage.AttackPawn:
                 AttackPawn(delta);
                 break;
         }
@@ -138,4 +137,14 @@ public class EnemyController : Spatial
     //  {
     //      
     //  }
+}
+
+
+public enum EnemyStage
+{
+    ChoosePawn = 0,
+    ChoseNearestEnemy = 1,
+    MovePawn = 2,
+    ChosePawnToAttack = 3,
+    AttackPawn = 4
 }
