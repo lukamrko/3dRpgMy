@@ -6,6 +6,10 @@ public class TileRaycasting : Spatial
     private Spatial _neighbors;
     private RayCast _above;
 
+    public TileRaycasting()
+    {
+        _Ready();
+    }
     public override void _Ready()
     {
         _neighbors = GetNode<Spatial>("Neighbors");
@@ -20,10 +24,10 @@ public class TileRaycasting : Spatial
             RayCast rayCast = ray as RayCast;
             Tile obj = rayCast.GetCollider() as Tile; //Those might be some sort of collision since they end like tile093_col
             Tile parent = GetParent() as Tile;
-            if (parent == null)
+            if (parent == null || obj==null)
                 continue;
             bool objectFulfillsYAxis = Math.Abs(obj.Translation.y - parent.Translation.y) <= height;
-            if (obj != null && objectFulfillsYAxis)
+            if (objectFulfillsYAxis)
                 objects.Add(obj);
         }
         return objects;
@@ -31,6 +35,9 @@ public class TileRaycasting : Spatial
 
     public Pawn GetObjectAbove()
     {
+        Pawn pawn = _above.GetCollider() as Pawn;
+        if(_above==null)
+            GD.Print("Oh no Im null :D");
         return _above.GetCollider() as Pawn;
     }
 

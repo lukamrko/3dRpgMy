@@ -53,22 +53,45 @@ public class Pawn : KinematicBody
 
     Label HealthLabel;
 
+    #region Node calling
+    Sprite3D Character;
+    Spatial CharacterStats;
+    AnimationTree AnimationTree;
+    Label NameLabel;
+    RayCast CurrTiles;
+    #endregion
+
+    public Pawn()
+    {
+        // _Ready();
+    }
+    public override void _Ready()
+    {
+        Character = GetNode<Sprite3D>("Character");
+        AnimationTree = GetNode<AnimationTree>("Character/AnimationTree");
+        CharacterStats = GetNode<Spatial>("CharacterStats");
+        HealthLabel = GetNode<Label>("CharacterStats/Health/Viewport/Label");
+        NameLabel = GetNode<Label>("CharacterStats/Name/Viewport/Label");
+        CurrTiles = GetNode<RayCast>("Tile");
+        LoadStats();
+        LoadAnimatorSprite();
+        DisplayPawnStats(false);
+    }
+
     public Tile GetTile()
     {
-        RayCast currTiles = GetNode<RayCast>("Tile");
-        return currTiles.GetCollider() as Tile;
+        return CurrTiles.GetCollider() as Tile;
     }
 
     public void RotatePawnSprite()
     {
         Vector3 cameraForward = -GetViewport().GetCamera().GlobalTransform.basis.z;
         float dot = GlobalTransform.basis.z.Dot(cameraForward);
-        Sprite3D character = GetNode<Sprite3D>("Character");
-        character.FlipH = GlobalTransform.basis.x.Dot(cameraForward) > 0;
+        Character.FlipH = GlobalTransform.basis.x.Dot(cameraForward) > 0;
         if (dot < -0.306)
-            character.Frame = CurrFrame;
+            Character.Frame = CurrFrame;
         else if (dot > 0.306)
-            character.Frame = CurrFrame + 1 * AnimationFrames;
+            Character.Frame = CurrFrame + 1 * AnimationFrames;
     }
 
     public void LookAtDirection(Vector3 dir)
@@ -133,7 +156,7 @@ public class Pawn : KinematicBody
     {
         if (MoveDirection == Vector3.Zero)
             Animator.Travel("IDLE");
-        else
+        else if (IsJumping)
             Animator.Travel("JUMP");
     }
 
@@ -191,40 +214,28 @@ public class Pawn : KinematicBody
 
     private void LoadAnimatorSprite()
     {
-        AnimationTree animationTree = GetNode<AnimationTree>("Character/AnimationTree");
-        Animator = animationTree.Get("parameters/playback") as AnimationNodeStateMachinePlayback;
+        Animator = AnimationTree.Get("parameters/playback") as AnimationNodeStateMachinePlayback;
         Animator.Start("IDLE");
-        animationTree.Active = true;
+        AnimationTree.Active = true;
 
-        Sprite3D character = GetNode<Sprite3D>("Character");
-        character.Texture = Utils.GetPawnSprite(PawnClass);
+        Character.Texture = Utils.GetPawnSprite(PawnClass);
 
-        Label nameLabel = GetNode<Label>("CharacterStats/Name/Viewport/Label");
-        nameLabel.Text = PawnName+"\nThe "+PawnClass.ToString();
+        NameLabel.Text = PawnName+", The "+PawnClass.ToString();
     }
 
     public void TintWhenNotAbleToAct()
     {
-        Sprite3D character = GetNode<Sprite3D>("Character");
-        character.Modulate = !CanAct() 
+        Character.Modulate = !CanAct() 
         ? new Color (0.7f, 0.7f, 0.7f) 
         : new Color(1, 1, 1);
     }
 
     public void DisplayPawnStats(bool characterStatsVisible)
     {
-        Spatial characterStats = GetNode<Spatial>("CharacterStats");
-        characterStats.Visible = characterStatsVisible;
+        CharacterStats.Visible = characterStatsVisible;
     }
 
-    public override void _Ready()
-    {
-        LoadStats();
-        LoadAnimatorSprite();
-        DisplayPawnStats(false);
-        HealthLabel = GetNode<Label>("CharacterStats/Name/Viewport/Label");
-
-    }
+    
 
     public override void _Process(float delta)
     {

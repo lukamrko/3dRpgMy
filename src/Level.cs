@@ -10,10 +10,22 @@ public class Level : Spatial
     PlayerController Player;
     EnemyController Enemy;
 
+    public Level()
+    {
+        // _Ready();
+    }
 
     public override void _Ready()
     {
-        Player = GetNode<PlayerController>("Player");
+        try
+        {
+            Player = GetNode<PlayerController>("Player");
+        }
+        catch (InvalidCastException e)
+        {
+            GD.Print(e.Message);
+            GD.Print("Zajeb");
+        }
         Enemy = GetNode<EnemyController>("Enemy");
 
         Arena arena = GetNode<Arena>("Arena");

@@ -20,6 +20,13 @@ public class Tile : StaticBody
     PackedScene TileRaycastingTSCN;
     TileRaycasting TileRaycasting;
 
+    public int Testic = 0;
+
+    public Tile()
+    {
+        _Ready();
+    }
+
     public Godot.Collections.Array<Tile> GetNeighbors(float height)
     {
         // TileRaycasting rayCasting = GetNode<TileRaycasting>("RayCasting");
@@ -28,12 +35,12 @@ public class Tile : StaticBody
         return TileRaycasting.GetAllNeighbors(height);
     }
 
-    public Pawn GetObjectAbove()
+    public object GetObjectAbove()
     {
         // TileRaycasting rayCasting = GetNode<TileRaycasting>("RayCasting");
         // return rayCasting.GetObjectAbove() as Pawn;
-
-        return TileRaycasting.GetObjectAbove() as Pawn;
+        object objectAbove = TileRaycasting.GetObjectAbove();
+        return objectAbove;
     }
 
     public bool IsTaken()
@@ -54,13 +61,31 @@ public class Tile : StaticBody
         this.Hover = false;
         AddChild(TileRaycastingTSCN.Instance());
         Reset();
+        TileRaycasting = GetNode<TileRaycasting>("RayCasting");
     }
+
+
 
     public override void _Ready()
     {
-        TileRaycastingTSCN = ResourceLoader.Load<PackedScene>("res://assets/tscn/tile_raycasting.tscn");
+        // var TileRaycastingHelper = ResourceLoader.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
+        // TileRaycastingTSCN = TileRaycastingHelper.Instance();
+        Testic=5;
+        TileRaycastingTSCN = ResourceLoader.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
+        // TileRaycasting = GetNode<TileRaycasting>("RayCasting");
+
+        if(TileRaycastingTSCN==null)
+            GD.Print("OH NO IM NULL. WHAT DO");
         CurrTiles = GetNode<MeshInstance>("Tile");
-        TileRaycasting = GetNode<TileRaycasting>("RayCasting");
+        // try
+        // {
+        // }
+        // catch (InvalidCastException e)
+        // {
+        //     GD.Print("GRRRR nisan naša");
+        //     GD.Print(e);
+        //     GD.Print(e.Message);
+        // }
     }
 
     public override void _Process(float delta)
@@ -78,9 +103,9 @@ public class Tile : StaticBody
                 break;
             case false:
                 if(Reachable)
-                    CurrTiles.MaterialOverride = HoverReachableMat;
+                    CurrTiles.MaterialOverride = ReachableMat;
                 else if (Attackable)
-                    CurrTiles.MaterialOverride = HoverAttackableMat;
+                    CurrTiles.MaterialOverride = AttackableMat;
                 break;
         }
     }

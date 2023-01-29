@@ -11,6 +11,11 @@ public class TacticsCamera : KinematicBody
     public PhysicsBody Target = null;
     Spatial Pivot;
 
+    public TacticsCamera()
+    {
+        // _Ready();
+    }
+
     public void MoveCamera(float h, float v, bool joystick)
     {
         if (!joystick && h == 0 && v == 0 || Target != null)
@@ -44,6 +49,7 @@ public class TacticsCamera : KinematicBody
         Vector3 from = GlobalTransform.origin;
         Vector3 to = Target.GlobalTransform.origin;
         Vector3 velocity = (to - from) * MoveSpeed / 4;
+        velocity=MoveAndSlide(velocity, Vector3.Up);
         if (from.DistanceTo(to) <= 0.25)
             Target = null;
     }

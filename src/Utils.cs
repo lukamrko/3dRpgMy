@@ -16,19 +16,18 @@ public static class Utils
     public static void ConvertTilesIntoStaticBodies(Spatial tilesObj)
     {
         var script = ResourceLoader.Load<Reference>(TileSrc);
-        foreach(var tileObj in tilesObj.GetChildren().As<MeshInstance>())
+        foreach (MeshInstance tileObj in tilesObj.GetChildren().As<MeshInstance>())
         {
-            MeshInstance meshInstance = tileObj;
-            meshInstance.CreateTrimeshCollision();
-            StaticBody staticBody = meshInstance.GetChild(0) as StaticBody;
-            staticBody.Translation=meshInstance.Translation;
-            meshInstance.Translation = Vector3.Zero;
-            meshInstance.Name = "Tile";
+            tileObj.CreateTrimeshCollision();
+            StaticBody staticBody = tileObj.GetChild(0) as StaticBody;
+            staticBody.Translation = tileObj.Translation;
 
-            meshInstance.RemoveChild(staticBody);
-            tilesObj.RemoveChild(meshInstance);
-            staticBody.AddChild(meshInstance);
+            tileObj.Translation = Vector3.Zero;
+            tileObj.Name = "Tile";
+            tileObj.RemoveChild(staticBody);
+            tilesObj.RemoveChild(tileObj);
 
+            staticBody.AddChild(tileObj);
             var instanceID = staticBody.GetInstanceId();
             // Resource script = GD.Load(TileSrc);
 
@@ -36,8 +35,10 @@ public static class Utils
             // var a = ResourceLoader.Load<Reference>(TileSrc);
             // staticBody.SetScript(ResourceLoader.Load<Reference>(TileSrc));
             Tile staticBodyTile = (Tile)GD.InstanceFromId(instanceID);
+            GD.Print(staticBodyTile.Testic);
             // Tile staticBodyTile = staticBody as Tile;
             staticBodyTile._Ready();
+            // GD.Print(staticBodyTile.Testic);
             staticBodyTile.ConfigureTile();
             staticBodyTile.SetProcess(true);
             tilesObj.AddChild(staticBodyTile);
@@ -45,7 +46,7 @@ public static class Utils
         }
     }
 
-    public static SpatialMaterial CreateMaterial(Color color, Texture texture=null)
+    public static SpatialMaterial CreateMaterial(Color color, Texture texture = null)
     {
         SpatialMaterial material = new SpatialMaterial();
         material.FlagsTransparent = true;
@@ -194,7 +195,7 @@ public static class Utils
 
     public static Vector3 VectorRemoveY(Vector3 vector)
     {
-        vector.y=0;
+        vector.y = 0;
         return vector;
     }
 
@@ -205,19 +206,19 @@ public static class Utils
 }
 
 public enum PawnClass
-{ 
-    Knight, 
-    Archer, 
-    Chemist, 
-    Cleric, 
-    Skeleton, 
-    SkeletonCPT, 
-    SkeletonMage 
+{
+    Knight,
+    Archer,
+    Chemist,
+    Cleric,
+    Skeleton,
+    SkeletonCPT,
+    SkeletonMage
 }
 
 public enum PawnStrategy
-{ 
-    Tank, 
-    Flank, 
-    Support 
+{
+    Tank,
+    Flank,
+    Support
 }

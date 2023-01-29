@@ -13,6 +13,10 @@ public class EnemyController : Spatial
     PlayerController Targets = null;
     Godot.Collections.Array<Pawn> TargetPawns;
 
+    public EnemyController()
+    {
+        // _Ready();
+    }
     public bool CanAct()
     {
         foreach (Pawn p in GetChildren())

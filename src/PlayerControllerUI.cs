@@ -10,6 +10,11 @@ public class PlayerControllerUI : Control
     private TextureRect _ControllerHints;
     private VBoxContainer _Actions;
 
+    public PlayerControllerUI()
+    {
+        // _Ready();
+    }
+
     public override void _Ready()
     {
         _ControllerHints = GetNode<TextureRect>("HBox/VBox/ControllerHints");

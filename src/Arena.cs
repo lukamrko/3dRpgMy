@@ -6,6 +6,11 @@ public class Arena : Spatial
 {
     Godot.Collections.Array<StaticBody> TilesChildren;
 
+    public Arena()
+    {
+        // _Ready();
+    }
+
     public void LinkTiles(Tile root, float height, Godot.Collections.Array<Pawn> allies = null)
     {
         Godot.Collections.Array<Tile> pq = new Godot.Collections.Array<Tile> { root };
@@ -15,9 +20,10 @@ public class Arena : Spatial
             pq.RemoveAt(0);
             foreach (Tile neighbor in currentTile.GetNeighbors(height))
             {
-                if (neighbor.Root != null && neighbor != root)
+                if (neighbor.Root == null && neighbor != root)
                 {
-                    if (!(neighbor.IsTaken() && allies != null && !allies.Contains(neighbor.GetObjectAbove())))
+                    //Tu je nešto krivo
+                    if (!(neighbor.IsTaken() && allies != null && !allies.Contains(neighbor.GetObjectAbove() as Pawn)))
                     {
                         neighbor.Root = currentTile;
                         neighbor.Distance = currentTile.Distance + 1;
