@@ -3,7 +3,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Pawn : KinematicBody
+public class Pawn : APawn
 {
     const float PI = 3.141593f;
     const float Speed = 5f;
@@ -78,12 +78,12 @@ public class Pawn : KinematicBody
         DisplayPawnStats(false);
     }
 
-    public Tile GetTile()
+    public override Tile GetTile()
     {
         return CurrTiles.GetCollider() as Tile;
     }
 
-    public void RotatePawnSprite()
+    public override void RotatePawnSprite()
     {
         Vector3 cameraForward = -GetViewport().GetCamera().GlobalTransform.basis.z;
         float dot = GlobalTransform.basis.z.Dot(cameraForward);
@@ -94,7 +94,7 @@ public class Pawn : KinematicBody
             Character.Frame = CurrFrame + 1 * AnimationFrames;
     }
 
-    public void LookAtDirection(Vector3 dir)
+    public override void LookAtDirection(Vector3 dir)
     {
         Vector3 fixedDir = Math.Abs(dir.x) > Math.Abs(dir.z)
             ? dir * new Vector3(1, 0, 0)
@@ -103,7 +103,7 @@ public class Pawn : KinematicBody
         Rotation = Vector3.Up * +angle;
     }
 
-    public void FollowThePath(float delta)
+    public override void FollowThePath(float delta)
     {
         if (!CanMove)
             return;
@@ -146,13 +146,13 @@ public class Pawn : KinematicBody
         CanMove = PathStack.Count() > 0;
     }
 
-    public void AdjustToCenter()
+    public override void AdjustToCenter()
     {
         MoveDirection = GetTile().GlobalTransform.origin - GlobalTransform.origin;
         MoveAndSlide(MoveDirection * Speed * 4, Vector3.Up);
     }
 
-    public void StartAnimator()
+    public override void StartAnimator()
     {
         if (MoveDirection == Vector3.Zero)
             Animator.Travel("IDLE");
@@ -160,7 +160,7 @@ public class Pawn : KinematicBody
             Animator.Travel("JUMP");
     }
 
-    public void ApplyMovement(float delta)
+    public override void ApplyMovement(float delta)
     {
         if (PathStack.Count != 0)
             FollowThePath(delta);
@@ -168,13 +168,13 @@ public class Pawn : KinematicBody
             AdjustToCenter();
     }
 
-    public void DoWait()
+    public override void DoWait()
     {
         CanMove = false;
         CanAttack = false;
     }
 
-    public bool DoAttack(Pawn pawn, float delta)
+    public override bool DoAttack(Pawn pawn, float delta)
     {
         LookAtDirection(pawn.GlobalTransform.origin - GlobalTransform.origin);
         if (CanAttack && WaitDelay > MinTimeForAttack / 4)
@@ -191,18 +191,26 @@ public class Pawn : KinematicBody
         return true;
     }
 
-    public void Reset()
+    public override void Reset()
     {
         CanMove = true;
         CanAttack = true;
     }
 
-    public bool CanAct()
+    public override bool CanAct()
     {
-        return (CanMove || CanAttack) && CurrHealth>0;
+        return (CanMove || CanAttack) && CurrHealth > 0;
+    }
+    public override bool EnemyCanFirstAct()
+    {
+        return (CanMove) && CurrHealth > 0;
+    }
+    public override bool EnemyCanSecondAct()
+    {
+        return CanAttack && CurrHealth > 0;
     }
 
-    private void LoadStats()
+    protected override void LoadStats()
     {
         MoveRadius = Utils.GetPawnMoveRadius(PawnClass);
         JumpHeight = Utils.GetPawnJumpHeight(PawnClass);
@@ -212,7 +220,7 @@ public class Pawn : KinematicBody
         CurrHealth = MaxHealth;
     }
 
-    private void LoadAnimatorSprite()
+    protected override void LoadAnimatorSprite()
     {
         Animator = AnimationTree.Get("parameters/playback") as AnimationNodeStateMachinePlayback;
         Animator.Start("IDLE");
@@ -220,22 +228,22 @@ public class Pawn : KinematicBody
 
         Character.Texture = Utils.GetPawnSprite(PawnClass);
 
-        NameLabel.Text = PawnName+", The "+PawnClass.ToString();
+        NameLabel.Text = PawnName + ", The " + PawnClass.ToString();
     }
 
-    public void TintWhenNotAbleToAct()
+    public override void TintWhenNotAbleToAct()
     {
-        Character.Modulate = !CanAct() 
-        ? new Color (0.7f, 0.7f, 0.7f) 
+        Character.Modulate = !CanAct()
+        ? new Color(0.7f, 0.7f, 0.7f)
         : new Color(1, 1, 1);
     }
 
-    public void DisplayPawnStats(bool characterStatsVisible)
+    public override void DisplayPawnStats(bool characterStatsVisible)
     {
         CharacterStats.Visible = characterStatsVisible;
     }
 
-    
+
 
     public override void _Process(float delta)
     {
@@ -245,4 +253,5 @@ public class Pawn : KinematicBody
         TintWhenNotAbleToAct();
         HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
     }
+
 }
