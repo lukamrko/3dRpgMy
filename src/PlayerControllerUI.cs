@@ -50,7 +50,7 @@ public class PlayerControllerUI : Control
         return false;
     }
 
-    public void SetVisibilityOfActionsMenu(bool visible, Pawn pawn)
+    public void SetVisibilityOfActionsMenu(bool visible, PlayerPawn pawn)
     {
         Button btnMove = GetNode<Button>("HBox/Actions/Move");
         Button btnAttack = GetNode<Button>("HBox/Actions/Attack");

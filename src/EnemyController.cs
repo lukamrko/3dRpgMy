@@ -5,29 +5,37 @@ using System;
 public class EnemyController : Spatial
 {
     EnemyStage Stage = EnemyStage.ChoosePawn;
-    Pawn CurrentPawn;
-    Pawn AttackablePawn;
+    EnemyPawn CurrentPawn;
+    PlayerPawn AttackablePawn;
 
     TacticsCamera TacticsCamera = null;
     Arena Arena = null;
     PlayerController Targets = null;
-    Godot.Collections.Array<Pawn> TargetPawns;
+    Godot.Collections.Array<PlayerPawn> TargetPawns;
 
     public EnemyController()
     {
         // _Ready();
     }
-    public bool CanAct()
+    public bool CanFirstAct()
     {
-        foreach (Pawn p in GetChildren())
-            if (p.CanAct())
+        foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
+            if (p.EnemyCanFirstAct())
+                return true;
+        return Stage != EnemyStage.ChoosePawn;
+    }
+
+    public bool CanSecondAct()
+    {
+        foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
+            if (p.EnemyCanSecondAct())
                 return true;
         return Stage != EnemyStage.ChoosePawn;
     }
 
     public void Reset()
     {
-        foreach (Pawn p in GetChildren())
+        foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
             p.Reset();
     }
 
@@ -37,7 +45,7 @@ public class EnemyController : Spatial
         Arena = arena;
         Godot.Collections.Array pawns = GetChildren();
         if (pawns.Count > 0)
-            CurrentPawn = pawns[0] as Pawn;
+            CurrentPawn = pawns[0] as EnemyPawn;
     }
 
     public void ChoosePawn()
@@ -46,8 +54,9 @@ public class EnemyController : Spatial
         var pawns = GetChildren();
         foreach (var pawnObj in pawns)
         {
-            Pawn pawn = pawnObj as Pawn;
-            if (pawn.CanAct())
+            EnemyPawn pawn = pawnObj as EnemyPawn;
+            //TODO change this then check
+            if (pawn.EnemyCanFirstAct())
                 CurrentPawn = pawn;
         }
         Stage = EnemyStage.ChoseNearestEnemy;
@@ -56,10 +65,10 @@ public class EnemyController : Spatial
     public void ChoseNearestEnemy()
     {
         Arena.Reset();
-        Godot.Collections.Array<Pawn> allies = GetChildren().As<Pawn>();
+        Godot.Collections.Array<PlayerPawn> allies = GetChildren().As<PlayerPawn>();
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, allies);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
-        Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, Targets.GetChildren().As<Pawn>());
+        Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, Targets.GetChildren().As<PlayerPawn>());
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);
         TacticsCamera.Target = to;
         Stage = EnemyStage.MovePawn;
@@ -68,7 +77,10 @@ public class EnemyController : Spatial
     public void MovePawn()
     {
         if (CurrentPawn.PathStack.Count == 0)
+        {     
             Stage = EnemyStage.ChosePawnToAttack;
+            CurrentPawn.CanMove = false;
+        }
     }
 
     public void ChoosePawnToAttack()
@@ -104,11 +116,11 @@ public class EnemyController : Spatial
     public override void _Ready()
     {
         Targets = GetParent().GetNode<PlayerController>("Player");
-        TargetPawns = Targets.GetChildren().As<Pawn>();
+        TargetPawns = Targets.GetChildren().As<PlayerPawn>();
 
     }
 
-    public void Act(float delta)
+    public void FirstAct(float delta)
     {
         switch (Stage)
         {
@@ -121,6 +133,16 @@ public class EnemyController : Spatial
             case EnemyStage.MovePawn:
                 MovePawn();
                 break;
+            // case EnemyStage.ChosePawnToAttack:
+            //     ChoosePawnToAttack();
+            //     break;
+        }
+    }
+
+    public void SecondAct(float delta)
+    {
+        switch (Stage)
+        {
             case EnemyStage.ChosePawnToAttack:
                 ChoosePawnToAttack();
                 break;

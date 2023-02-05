@@ -4,8 +4,8 @@ using System;
 
 public class PlayerController : Spatial
 {
-    Pawn CurrentPawn = null;
-    Pawn AttackablePawn = null;
+    PlayerPawn CurrentPawn = null;
+    PlayerPawn AttackablePawn = null;
 
     float WaitTime = 0;
 
@@ -17,7 +17,7 @@ public class PlayerController : Spatial
     PlayerStage Stage = PlayerStage.SelectPawn;
 
     PlayerControllerUI UIControl;
-    Godot.Collections.Array<Pawn> Pawns;
+    Godot.Collections.Array<PlayerPawn> Pawns;
 
     public PlayerController()
     {
@@ -59,7 +59,7 @@ public class PlayerController : Spatial
 
     public bool CanAct()
     {
-        foreach (Pawn pawn in Pawns)
+        foreach (PlayerPawn pawn in Pawns)
             if (pawn.CanAct())
                 return true;
         return (int)Stage > 0;
@@ -67,7 +67,7 @@ public class PlayerController : Spatial
 
     public void Reset()
     {
-        foreach (Pawn pawn in Pawns)
+        foreach (PlayerPawn pawn in Pawns)
             pawn.Reset();
     }
 
@@ -94,9 +94,9 @@ public class PlayerController : Spatial
         Stage = PlayerStage.DisplayAttackableTargets;
     }
 
-    private Pawn AuxSelectPawn()
+    private PlayerPawn AuxSelectPawn()
     {
-        Pawn pawn = GetMouseOverObject(2) as Pawn;
+        PlayerPawn pawn = GetMouseOverObject(2) as PlayerPawn;
         Tile tile = pawn == null
             ? GetMouseOverObject(1) as Tile
             : pawn.GetTile();
@@ -106,7 +106,7 @@ public class PlayerController : Spatial
         else
         {
             if (tile != null)
-                return tile.GetObjectAbove() as Pawn;
+                return tile.GetObjectAbove() as PlayerPawn;
             else
                 return null;
         }
@@ -114,7 +114,7 @@ public class PlayerController : Spatial
 
     private Tile AuxSelectTile()
     {
-        Pawn pawn = GetMouseOverObject(2) as Pawn;
+        PlayerPawn pawn = GetMouseOverObject(2) as PlayerPawn;
         Tile tile = pawn == null
             ? GetMouseOverObject(1) as Tile
             : pawn.GetTile();
@@ -188,7 +188,7 @@ public class PlayerController : Spatial
             AttackablePawn.DisplayPawnStats(false);
         Tile tile = AuxSelectTile();
         if (tile != null)
-            AttackablePawn = tile.GetObjectAbove() as Pawn;
+            AttackablePawn = tile.GetObjectAbove() as PlayerPawn;
         else
             AttackablePawn = null;
 
@@ -249,7 +249,7 @@ public class PlayerController : Spatial
             TacticsCamera.YRot += 90;
     }
 
-    public void _Act(float delta)
+    public void Act(float delta)
     {
         MoveCamera();
         CameraRotation();
@@ -306,7 +306,7 @@ public class PlayerController : Spatial
     #endregion
     public override void _Ready()
     {
-        Pawns = GetChildren().As<Pawn>();
+        Pawns = GetChildren().As<PlayerPawn>();
 
     }
 

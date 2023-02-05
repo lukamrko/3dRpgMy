@@ -1,6 +1,6 @@
 [gd_scene load_steps=19 format=2]
 
-[ext_resource path="res://src/Pawn.cs" type="Script" id=1]
+[ext_resource path="res://src/PlayerPawn.cs" type="Script" id=1]
 [ext_resource path="res://assets/sprites/characters/chr_pawn_placeholder.png" type="Texture" id=2]
 
 [sub_resource type="CapsuleShape" id=13]

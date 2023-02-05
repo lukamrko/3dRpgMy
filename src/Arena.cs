@@ -11,7 +11,7 @@ public class Arena : Spatial
         // _Ready();
     }
 
-    public void LinkTiles(Tile root, float height, Godot.Collections.Array<Pawn> allies = null)
+    public void LinkTiles(Tile root, float height, Godot.Collections.Array<PlayerPawn> allies = null)
     {
         Godot.Collections.Array<Tile> pq = new Godot.Collections.Array<Tile> { root };
         while (pq.Count > 0)
@@ -23,7 +23,7 @@ public class Arena : Spatial
                 if (neighbor.Root == null && neighbor != root)
                 {
                     //Tu je nešto krivo
-                    if (!(neighbor.IsTaken() && allies != null && !allies.Contains(neighbor.GetObjectAbove() as Pawn)))
+                    if (!(neighbor.IsTaken() && allies != null && !allies.Contains(neighbor.GetObjectAbove() as PlayerPawn)))
                     {
                         neighbor.Root = currentTile;
                         neighbor.Distance = currentTile.Distance + 1;
@@ -91,10 +91,10 @@ public class Arena : Spatial
         TilesChildren = GetNode("Tiles").GetChildren().As<StaticBody>();
     }
 
-    public Tile GetNearestNeighborToPawn(Pawn pawn, Godot.Collections.Array<Pawn> pawns)
+    public Tile GetNearestNeighborToPawn(APawn pawn, Godot.Collections.Array<PlayerPawn> pawns)
     {
         Tile nearestTile = null;
-        foreach(Pawn _pawn in pawns)
+        foreach(PlayerPawn _pawn in pawns)
         {
             if(_pawn.CurrHealth<=0)
                 continue;
@@ -111,10 +111,10 @@ public class Arena : Spatial
         return pawn.GetTile();
     }
 
-    public Pawn GetWeakestPawnToAttack(Godot.Collections.Array<Pawn> pawns)
+    public PlayerPawn GetWeakestPawnToAttack(Godot.Collections.Array<PlayerPawn> pawns)
     {
-        Pawn weakest = null;
-        foreach(Pawn pawn in pawns)
+        PlayerPawn weakest = null;
+        foreach(PlayerPawn pawn in pawns)
         {
             if((weakest==null  || pawn.CurrHealth<weakest.CurrHealth) && pawn.CurrHealth>0 && pawn.GetTile().Attackable)
                 weakest=pawn;

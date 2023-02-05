@@ -33,12 +33,12 @@ public class TileRaycasting : Spatial
         return objects;
     }
 
-    public Pawn GetObjectAbove()
+    public PlayerPawn GetObjectAbove()
     {
-        Pawn pawn = _above.GetCollider() as Pawn;
+        PlayerPawn pawn = _above.GetCollider() as PlayerPawn;
         if(_above==null)
             GD.Print("Oh no Im null :D");
-        return _above.GetCollider() as Pawn;
+        return _above.GetCollider() as PlayerPawn;
     }
 
 

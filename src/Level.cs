@@ -38,10 +38,12 @@ public class Level : Spatial
 
     public void TurnHandler(float delta)
     {
-        if (Player.CanAct())
-            Player._Act(delta);
-        else if (Enemy.CanAct())
-            Enemy.Act(delta);
+        if(Enemy.CanFirstAct())
+            Enemy.FirstAct(delta);
+        else if (Player.CanAct())
+            Player.Act(delta);
+        else if (Enemy.CanSecondAct())
+            Enemy.SecondAct(delta);
         else
         {
             Player.Reset();
