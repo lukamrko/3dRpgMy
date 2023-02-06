@@ -5,7 +5,7 @@ using System;
 public class PlayerController : Spatial
 {
     PlayerPawn CurrentPawn = null;
-    PlayerPawn AttackablePawn = null;
+    APawn AttackablePawn = null;
 
     float WaitTime = 0;
 
@@ -188,7 +188,7 @@ public class PlayerController : Spatial
             AttackablePawn.DisplayPawnStats(false);
         Tile tile = AuxSelectTile();
         if (tile != null)
-            AttackablePawn = tile.GetObjectAbove() as PlayerPawn;
+            AttackablePawn = tile.GetObjectAbove() as APawn;
         else
             AttackablePawn = null;
 

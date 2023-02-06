@@ -22,8 +22,9 @@ public class Arena : Spatial
             {
                 if (neighbor.Root == null && neighbor != root)
                 {
-                    //Tu je nešto krivo
-                    if (!(neighbor.IsTaken() && allies != null && !allies.Contains(neighbor.GetObjectAbove() as PlayerPawn)))
+                    if (!(neighbor.IsTaken() 
+                        && allies != null 
+                        && !allies.Contains(neighbor.GetObjectAbove() as APawn)))
                     {
                         neighbor.Root = currentTile;
                         neighbor.Distance = currentTile.Distance + 1;

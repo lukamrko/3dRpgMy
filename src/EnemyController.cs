@@ -4,7 +4,12 @@ using System;
 
 public class EnemyController : Spatial
 {
-    EnemyStage Stage = EnemyStage.ChoosePawn;
+    EnemyStage stage = EnemyStage.ChoosePawn;
+    EnemyStage Stage 
+    {
+        get{return stage;} 
+        set{stage=value;}
+    }
     EnemyPawn CurrentPawn;
     PlayerPawn AttackablePawn;
 
@@ -22,6 +27,7 @@ public class EnemyController : Spatial
         foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
             if (p.EnemyCanFirstAct())
                 return true;
+        //TODO improve this condition
         return Stage != EnemyStage.MovePawn;
     }
 
@@ -54,7 +60,6 @@ public class EnemyController : Spatial
         var pawns = GetChildren().As<EnemyPawn>();
         foreach (EnemyPawn pawn in pawns)
         {
-            //TODO change this then check
             if (pawn.EnemyCanFirstAct())
                 CurrentPawn = pawn;
         }
@@ -104,7 +109,7 @@ public class EnemyController : Spatial
         {
             if (!CurrentPawn.DoAttack(AttackablePawn, delta))
                 return;
-            AttackablePawn.DisplayPawnStats(false);
+            AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = CurrentPawn;
         }
         AttackablePawn = null;
@@ -145,22 +150,25 @@ public class EnemyController : Spatial
     {
         switch (Stage)
         {
-            // case EnemyStage.ChosePawnToAttack:
-            //     ChoosePawnToAttack();
-            //     break;
             case EnemyStage.AttackPawn:
                 AttackPawn(delta);
+                break;
+            default:
+                ChoosePawnThenPrepareAttack();
                 break;
         }
     }
 
-
-
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    //  public override void _Process(float delta)
-    //  {
-    //      
-    //  }
+    private void ChoosePawnThenPrepareAttack()
+    {
+        var pawns = GetChildren().As<EnemyPawn>();
+        foreach (EnemyPawn pawn in pawns)
+        {
+            if (pawn.EnemyCanSecondAct())
+                CurrentPawn = pawn;
+        }
+        Stage = EnemyStage.AttackPawn;
+    }
 }
 
 

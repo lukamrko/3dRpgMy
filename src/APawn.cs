@@ -82,10 +82,11 @@ public abstract class APawn : KinematicBody
     {
         Vector3 fixedDir = Math.Abs(dir.x) > Math.Abs(dir.z)
             ? dir * new Vector3(1, 0, 0)
-            : new Vector3(0, 0, 1);
+            : dir * new Vector3(0, 0, 1);
         float angle = Vector3.Forward.SignedAngleTo(fixedDir.Normalized(), Vector3.Up) + PI;
-        Rotation = Vector3.Up * +angle;
+        Rotation = Vector3.Up * angle;
     }
+
     public void StartAnimator()
     {
         if (MoveDirection == Vector3.Zero)

@@ -48,3 +48,9 @@ PawnClass = 4
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.5, 0.5, 5.5 )
 script = ExtResource( 7 )
 PawnClass = 4
+
+[node name="Pawn6" parent="Enemy" instance=ExtResource( 8 )]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -4, 2.5, 5.5 )
+script = ExtResource( 7 )
+PawnClass = 4
+PawnStrategy = 1

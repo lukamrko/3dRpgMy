@@ -16,7 +16,7 @@ public class EnemyPawn : APawn
         CurrTiles = GetNode<RayCast>("Tile");
         LoadStats();
         LoadAnimatorSprite();
-        DisplayPawnStats(false);
+        DisplayPawnStats(true);
     }
 
     public bool EnemyCanFirstAct()
