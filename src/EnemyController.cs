@@ -22,7 +22,7 @@ public class EnemyController : Spatial
         foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
             if (p.EnemyCanFirstAct())
                 return true;
-        return Stage != EnemyStage.ChoosePawn;
+        return Stage != EnemyStage.MovePawn;
     }
 
     public bool CanSecondAct()
@@ -30,7 +30,7 @@ public class EnemyController : Spatial
         foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
             if (p.EnemyCanSecondAct())
                 return true;
-        return Stage != EnemyStage.ChoosePawn;
+        return Stage != EnemyStage.MovePawn;
     }
 
     public void Reset()
@@ -51,10 +51,9 @@ public class EnemyController : Spatial
     public void ChoosePawn()
     {
         Arena.Reset();
-        var pawns = GetChildren();
-        foreach (var pawnObj in pawns)
+        var pawns = GetChildren().As<EnemyPawn>();
+        foreach (EnemyPawn pawn in pawns)
         {
-            EnemyPawn pawn = pawnObj as EnemyPawn;
             //TODO change this then check
             if (pawn.EnemyCanFirstAct())
                 CurrentPawn = pawn;
@@ -133,9 +132,12 @@ public class EnemyController : Spatial
             case EnemyStage.MovePawn:
                 MovePawn();
                 break;
-            // case EnemyStage.ChosePawnToAttack:
-            //     ChoosePawnToAttack();
-            //     break;
+            case EnemyStage.ChosePawnToAttack:
+                ChoosePawnToAttack();
+                break;
+            default:
+                ChoosePawn();
+                break;
         }
     }
 
@@ -143,9 +145,9 @@ public class EnemyController : Spatial
     {
         switch (Stage)
         {
-            case EnemyStage.ChosePawnToAttack:
-                ChoosePawnToAttack();
-                break;
+            // case EnemyStage.ChosePawnToAttack:
+            //     ChoosePawnToAttack();
+            //     break;
             case EnemyStage.AttackPawn:
                 AttackPawn(delta);
                 break;

@@ -19,7 +19,6 @@ public class EnemyPawn : APawn
         DisplayPawnStats(false);
     }
 
-
     public bool EnemyCanFirstAct()
     {
         return (CanMove) && CurrHealth > 0;

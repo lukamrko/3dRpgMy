@@ -236,8 +236,6 @@ public class PlayerController : Spatial
     {
         float h = -Input.GetActionStrength("camera_left") + Input.GetActionStrength("camera_right");
         float v = Input.GetActionStrength("camera_forward") - Input.GetActionStrength("camera_backwards");
-        if(h!=0)
-            GD.Print("TUTE");
         TacticsCamera.MoveCamera(h, v, IsJoyStick);
     }
 

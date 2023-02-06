@@ -17,15 +17,7 @@ public class Level : Spatial
 
     public override void _Ready()
     {
-        try
-        {
-            Player = GetNode<PlayerController>("Player");
-        }
-        catch (InvalidCastException e)
-        {
-            GD.Print(e.Message);
-            GD.Print("Zajeb");
-        }
+        Player = GetNode<PlayerController>("Player");
         Enemy = GetNode<EnemyController>("Enemy");
 
         Arena arena = GetNode<Arena>("Arena");
@@ -38,7 +30,7 @@ public class Level : Spatial
 
     public void TurnHandler(float delta)
     {
-        if(Enemy.CanFirstAct())
+        if (Enemy.CanFirstAct())
             Enemy.FirstAct(delta);
         else if (Player.CanAct())
             Player.Act(delta);
