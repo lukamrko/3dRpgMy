@@ -4,6 +4,7 @@ using System;
 
 public class EnemyController : Spatial
 {
+    private EnemyPhase _currentPhase = EnemyPhase.FirstPhase;
     EnemyStage stage = EnemyStage.ChoosePawn;
     EnemyStage Stage 
     {
@@ -28,7 +29,9 @@ public class EnemyController : Spatial
             if (p.EnemyCanFirstAct())
                 return true;
         //TODO improve this condition
-        return Stage != EnemyStage.MovePawn;
+        // return Stage != EnemyStage.MovePawn;
+
+        return false;
     }
 
     public bool CanSecondAct()
@@ -36,7 +39,8 @@ public class EnemyController : Spatial
         foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
             if (p.EnemyCanSecondAct())
                 return true;
-        return Stage != EnemyStage.MovePawn;
+        // return Stage != EnemyStage.MovePawn;
+        return false;
     }
 
     public void Reset()
@@ -92,7 +96,9 @@ public class EnemyController : Spatial
         Arena.Reset();
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
-        AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
+        // AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
+        AttackablePawn = TargetPawns.GetRandom();
+
         if (AttackablePawn != null)
         {
             AttackablePawn.DisplayPawnStats(true);
