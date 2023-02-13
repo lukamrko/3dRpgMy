@@ -91,11 +91,11 @@ public static class Utils
             case PawnClass.Cleric:
                 return 4;
             case PawnClass.Skeleton:
-                return 5;
+                return 10;
             case PawnClass.SkeletonCPT:
-                return 3;
+                return 6;
             case PawnClass.SkeletonMage:
-                return 4;
+                return 7;
             default:
                 return 1;
         }

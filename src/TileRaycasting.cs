@@ -36,7 +36,7 @@ public class TileRaycasting : Spatial
     public APawn GetObjectAbove()
     {
         APawn pawn = _above.GetCollider() as APawn;
-        return _above.GetCollider() as APawn;
+        return pawn;
     }
 
 

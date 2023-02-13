@@ -138,11 +138,13 @@ public abstract class APawn : KinematicBody
         Gravity = Vector3.Zero;
         CanMove = PathStack.Count() > 0;
     }
+
     public void AdjustToCenter()
     {
         MoveDirection = GetTile().GlobalTransform.origin - GlobalTransform.origin;
         MoveAndSlide(MoveDirection * Speed * 4, Vector3.Up);
     }
+    
     public void ApplyMovement(float delta)
     {
         if (PathStack.Count != 0)

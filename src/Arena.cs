@@ -122,4 +122,16 @@ public class Arena : Spatial
         }
         return weakest;
     }
+
+    // public PlayerPawn GetRandomPawnToAttack(Godot.Collections.Array<PlayerPawn> pawns)
+    // {
+    //     PlayerPawn randomPawn = pawns.
+    //     PlayerPawn weakest = null;
+    //     foreach (PlayerPawn pawn in pawns)
+    //     {
+    //         if ((weakest == null || pawn.CurrHealth < weakest.CurrHealth) && pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
+    //             weakest = pawn;
+    //     }
+    //     return weakest;
+    // }
 }
