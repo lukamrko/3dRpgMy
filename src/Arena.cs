@@ -11,7 +11,7 @@ public class Arena : Spatial
         // _Ready();
     }
 
-    public void LinkTiles(Tile root, float height, Godot.Collections.Array<PlayerPawn> allies = null)
+    public void LinkTiles<T>(Tile root, float height, Godot.Collections.Array<T> allies = null) where T : APawn
     {
         Godot.Collections.Array<Tile> pq = new Godot.Collections.Array<Tile> { root };
         while (pq.Count > 0)

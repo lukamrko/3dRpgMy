@@ -20,7 +20,6 @@ public class Tile : StaticBody
     PackedScene TileRaycastingTSCN;
     TileRaycasting TileRaycasting;
 
-    public int Testic = 0;
 
     public Tile()
     {
@@ -70,12 +69,10 @@ public class Tile : StaticBody
     {
         // var TileRaycastingHelper = ResourceLoader.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
         // TileRaycastingTSCN = TileRaycastingHelper.Instance();
-        Testic=5;
         TileRaycastingTSCN = ResourceLoader.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
         // TileRaycasting = GetNode<TileRaycasting>("RayCasting");
 
-        if(TileRaycastingTSCN==null)
-            GD.Print("OH NO IM NULL. WHAT DO");
+
         CurrTiles = GetNode<MeshInstance>("Tile");
         // try
         // {

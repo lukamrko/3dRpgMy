@@ -18,6 +18,7 @@ public class EnemyController : Spatial
     Arena Arena = null;
     PlayerController Targets = null;
     Godot.Collections.Array<PlayerPawn> TargetPawns;
+    Godot.Collections.Array<EnemyPawn> EnemyPawns;
 
     public EnemyController()
     {
@@ -25,7 +26,7 @@ public class EnemyController : Spatial
     }
     public bool CanFirstAct()
     {
-        foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
+        foreach (EnemyPawn p in EnemyPawns)
             if (p.EnemyCanFirstAct())
                 return true;
         //TODO improve this condition
@@ -36,7 +37,7 @@ public class EnemyController : Spatial
 
     public bool CanSecondAct()
     {
-        foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
+        foreach (EnemyPawn p in EnemyPawns)
             if (p.EnemyCanSecondAct())
                 return true;
         // return Stage != EnemyStage.MovePawn;
@@ -45,7 +46,7 @@ public class EnemyController : Spatial
 
     public void Reset()
     {
-        foreach (EnemyPawn p in GetChildren().As<EnemyPawn>())
+        foreach (EnemyPawn p in EnemyPawns)
             p.Reset();
     }
 
@@ -61,8 +62,7 @@ public class EnemyController : Spatial
     public void ChoosePawn()
     {
         Arena.Reset();
-        var pawns = GetChildren().As<EnemyPawn>();
-        foreach (EnemyPawn pawn in pawns)
+        foreach (EnemyPawn pawn in EnemyPawns)
         {
             if (pawn.EnemyCanFirstAct())
                 CurrentPawn = pawn;
@@ -73,8 +73,7 @@ public class EnemyController : Spatial
     public void ChoseNearestEnemy()
     {
         Arena.Reset();
-        Godot.Collections.Array<PlayerPawn> allies = GetChildren().As<PlayerPawn>();
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, allies);
+        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, EnemyPawns);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
         Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, Targets.GetChildren().As<PlayerPawn>());
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);
@@ -94,7 +93,8 @@ public class EnemyController : Spatial
     public void ChoosePawnToAttack()
     {
         Arena.Reset();
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
+        Godot.Collections.Array<EnemyPawn> emptyArray = null;
+        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         // AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
         AttackablePawn = TargetPawns.GetRandom();
@@ -127,6 +127,7 @@ public class EnemyController : Spatial
     {
         Targets = GetParent().GetNode<PlayerController>("Player");
         TargetPawns = Targets.GetChildren().As<PlayerPawn>();
+        EnemyPawns = GetChildren().As<EnemyPawn>();
 
     }
 
@@ -167,8 +168,7 @@ public class EnemyController : Spatial
 
     private void ChoosePawnThenPrepareAttack()
     {
-        var pawns = GetChildren().As<EnemyPawn>();
-        foreach (EnemyPawn pawn in pawns)
+        foreach (EnemyPawn pawn in EnemyPawns)
         {
             if (pawn.EnemyCanSecondAct())
                 CurrentPawn = pawn;

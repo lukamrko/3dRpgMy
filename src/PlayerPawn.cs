@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class PlayerPawn : APawn
 {
+    public bool skipped = false;
+
     public PlayerPawn()
     {
         // _Ready();

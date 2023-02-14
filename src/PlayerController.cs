@@ -4,7 +4,29 @@ using System;
 
 public class PlayerController : Spatial
 {
-    PlayerPawn CurrentPawn = null;
+    private PlayerPawn _currentPawn = null;
+
+    PlayerPawn CurrentPawn
+    {
+        get { return _currentPawn; }
+        set
+        {
+            if (value is null && _currentPawn is object)
+            {
+                GD.Print("Thus I became null");
+                ResetSkipFieldOnFriendlyPawns();
+            }
+            _currentPawn = value;
+            
+        }
+    }
+
+    private void ResetSkipFieldOnFriendlyPawns()
+    {
+        foreach (PlayerPawn pawn in Pawns)
+            pawn.skipped = false;
+    }
+
     APawn AttackablePawn = null;
 
     float WaitTime = 0;
@@ -78,8 +100,8 @@ public class PlayerController : Spatial
 
     public void PlayerWantsToCancel()
     {
-        Stage = (int)Stage > 1 
-            ? PlayerStage.DisplayAvailableActionsForPawn 
+        Stage = (int)Stage > 1
+            ? PlayerStage.DisplayAvailableActionsForPawn
             : PlayerStage.SelectPawn;
     }
 
@@ -164,7 +186,8 @@ public class PlayerController : Spatial
         if (CurrentPawn == null)
             return;
         TacticsCamera.Target = CurrentPawn;
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
+        Godot.Collections.Array<PlayerPawn> emptyArray = null;
+        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         Stage = PlayerStage.SelectPawnToAttack;
     }
@@ -230,27 +253,11 @@ public class PlayerController : Spatial
     }
     #endregion
 
-    #region Camera
 
-    public void MoveCamera()
-    {
-        float h = -Input.GetActionStrength("camera_left") + Input.GetActionStrength("camera_right");
-        float v = Input.GetActionStrength("camera_forward") - Input.GetActionStrength("camera_backwards");
-        TacticsCamera.MoveCamera(h, v, IsJoyStick);
-    }
-
-    public void CameraRotation()
-    {
-        if (Input.IsActionJustPressed("camera_rotate_left"))
-            TacticsCamera.YRot -= 90;
-        if (Input.IsActionJustPressed("camera_rotate_right"))
-            TacticsCamera.YRot += 90;
-    }
 
     public void Act(float delta)
     {
-        MoveCamera();
-        CameraRotation();
+        ListenShortcuts();
         UIControl.SetVisibilityOfActionsMenu(VisibilityBasedOnStage(), CurrentPawn);
         switch (Stage)
         {
@@ -282,29 +289,82 @@ public class PlayerController : Spatial
 
     }
 
-    private bool VisibilityBasedOnStage()
+    private void ListenShortcuts()
     {
-        PlayerStage[] Stages = new PlayerStage[] 
-        { 
-            PlayerStage.DisplayAvailableActionsForPawn, 
-            PlayerStage.DisplayAvailableMovements, 
-            PlayerStage.SelectNewLocation, 
-            PlayerStage.DisplayAttackableTargets,
-            PlayerStage.SelectPawnToAttack 
-        };
-        for (int i = 0; i < Stages.Length; i++)
-        {
-            if (Stage == Stages[i])
-                return true;
-        }
-        return false;
-
+        MoveCamera();
+        CameraRotation();
+        PlayerShortcuts();
     }
 
-    #endregion
+    #region Camera
+    public void MoveCamera()
+    {
+        float h = -Input.GetActionStrength("camera_left") + Input.GetActionStrength("camera_right");
+        float v = Input.GetActionStrength("camera_forward") - Input.GetActionStrength("camera_backwards");
+        TacticsCamera.MoveCamera(h, v, IsJoyStick);
+    }
+
+    public void CameraRotation()
+    {
+        if (Input.IsActionJustPressed("camera_rotate_left"))
+            TacticsCamera.YRot -= 90;
+        if (Input.IsActionJustPressed("camera_rotate_right"))
+            TacticsCamera.YRot += 90;
+    }
+    #endregion 
+
+    private void PlayerShortcuts()
+    {
+        if (Input.IsActionJustPressed("ui_focus_next"))
+        {
+            FastGetCurrentPawn();
+            if (CurrentPawn == null)
+            {
+                FastGetCurrentPawn();
+            }
+        }
+    }
+
+    private void FastGetCurrentPawn()
+    {
+        foreach (PlayerPawn pawn in Pawns)
+        {
+            var currentPawnAllows = CurrentPawn is null || pawn.skipped == false;
+            var isCurrentPawn = pawn.CanAct() && currentPawnAllows;
+            if (isCurrentPawn)
+            {
+                CurrentPawn = pawn;
+                CurrentPawn.skipped = true;
+                Stage = PlayerStage.DisplayAvailableActionsForPawn;
+                return;
+            }
+        }
+        CurrentPawn = null;
+    }
+
     public override void _Ready()
     {
         Pawns = GetChildren().As<PlayerPawn>();
+
+    }
+
+    private PlayerStage[] ButtonVisibilityOnStages = new PlayerStage[]
+        {
+            PlayerStage.DisplayAvailableActionsForPawn,
+            PlayerStage.DisplayAvailableMovements,
+            PlayerStage.SelectNewLocation,
+            PlayerStage.DisplayAttackableTargets,
+            PlayerStage.SelectPawnToAttack
+        };
+
+    private bool VisibilityBasedOnStage()
+    {
+        for (int i = 0; i < ButtonVisibilityOnStages.Length; i++)
+        {
+            if (Stage == ButtonVisibilityOnStages[i])
+                return true;
+        }
+        return false;
 
     }
 

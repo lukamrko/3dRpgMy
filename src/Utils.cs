@@ -35,10 +35,8 @@ public static class Utils
             // var a = ResourceLoader.Load<Reference>(TileSrc);
             // staticBody.SetScript(ResourceLoader.Load<Reference>(TileSrc));
             Tile staticBodyTile = (Tile)GD.InstanceFromId(instanceID);
-            GD.Print(staticBodyTile.Testic);
             // Tile staticBodyTile = staticBody as Tile;
             staticBodyTile._Ready();
-            // GD.Print(staticBodyTile.Testic);
             staticBodyTile.ConfigureTile();
             staticBodyTile.SetProcess(true);
             tilesObj.AddChild(staticBodyTile);
