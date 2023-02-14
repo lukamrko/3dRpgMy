@@ -22,8 +22,8 @@ public class Arena : Spatial
             {
                 if (neighbor.Root == null && neighbor != root)
                 {
-                    if (!(neighbor.IsTaken() 
-                        && allies != null 
+                    if (!(neighbor.IsTaken()
+                        && allies != null
                         && !allies.Contains(neighbor.GetObjectAbove() as APawn)))
                     {
                         neighbor.Root = currentTile;
@@ -66,18 +66,18 @@ public class Arena : Spatial
 
     public Godot.Collections.Array<Vector3> GeneratePathStack(Tile to)
     {
-        Godot.Collections.Array<Vector3> pathStack= new Godot.Collections.Array<Vector3>();
-        while(to!=null)
+        Godot.Collections.Array<Vector3> pathStack = new Godot.Collections.Array<Vector3>();
+        while (to != null)
         {
             pathStack.Insert(0, to.GlobalTransform.origin);
-            to=to.Root;
+            to = to.Root;
         }
         return pathStack;
     }
 
     public void Reset()
     {
-        foreach(var helpT in TilesChildren)
+        foreach (var helpT in TilesChildren)
         {
             Tile t = helpT as Tile;
             t.Reset();
@@ -95,19 +95,19 @@ public class Arena : Spatial
     public Tile GetNearestNeighborToPawn(APawn pawn, Godot.Collections.Array<PlayerPawn> pawns)
     {
         Tile nearestTile = null;
-        foreach(PlayerPawn _pawn in pawns)
+        foreach (PlayerPawn _pawn in pawns)
         {
-            if(_pawn.CurrHealth<=0)
+            if (_pawn.CurrHealth <= 0)
                 continue;
-            foreach(Tile n in _pawn.GetTile().GetNeighbors(pawn.JumpHeight))
+            foreach (Tile n in _pawn.GetTile().GetNeighbors(pawn.JumpHeight))
             {
-                 if((nearestTile==null || n.Distance<nearestTile.Distance)&& n.Distance > 0 && !n.IsTaken())
-                    nearestTile=n; 
+                if ((nearestTile == null || n.Distance < nearestTile.Distance) && n.Distance > 0 && !n.IsTaken())
+                    nearestTile = n;
             }
         }
-        while(nearestTile!=null && !nearestTile.Reachable)
-            nearestTile=nearestTile.Root;
-        if(nearestTile!=null)
+        while (nearestTile != null && !nearestTile.Reachable)
+            nearestTile = nearestTile.Root;
+        if (nearestTile != null)
             return nearestTile;
         return pawn.GetTile();
     }
@@ -115,12 +115,25 @@ public class Arena : Spatial
     public PlayerPawn GetWeakestPawnToAttack(Godot.Collections.Array<PlayerPawn> pawns)
     {
         PlayerPawn weakest = null;
-        foreach(PlayerPawn pawn in pawns)
+        foreach (PlayerPawn pawn in pawns)
         {
-            if((weakest==null  || pawn.CurrHealth<weakest.CurrHealth) && pawn.CurrHealth>0 && pawn.GetTile().Attackable)
-                weakest=pawn;
+            if ((weakest == null || pawn.CurrHealth < weakest.CurrHealth) && pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
+                weakest = pawn;
         }
         return weakest;
+    }
+
+    public PlayerPawn GetRandomPawnToAttack(Godot.Collections.Array<PlayerPawn> pawns)
+    {
+        Godot.Collections.Array<PlayerPawn> potentiallyAttackablePawns = new Godot.Collections.Array<PlayerPawn>();
+        foreach (PlayerPawn pawn in pawns)
+        {
+            if (pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
+                potentiallyAttackablePawns.Add(pawn);
+        }
+        if (potentiallyAttackablePawns.Count > 0)
+            return potentiallyAttackablePawns.GetRandom();
+        return null;
     }
 
     // public PlayerPawn GetRandomPawnToAttack(Godot.Collections.Array<PlayerPawn> pawns)

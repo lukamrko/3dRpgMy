@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class EnemyPawn : APawn
 {
+    public Vector3? AttackingTowards;
     public EnemyPhase CurrentPhase = EnemyPhase.NotAnEnemyPhase;
     public override void _Ready()
     {

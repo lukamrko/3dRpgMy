@@ -87,6 +87,7 @@ public class EnemyController : Spatial
         {     
             Stage = EnemyStage.ChosePawnToAttack;
             CurrentPawn.CanMove = false;
+            ChoosePawnToAttack();
         }
     }
 
@@ -97,14 +98,29 @@ public class EnemyController : Spatial
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         // AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
-        AttackablePawn = TargetPawns.GetRandom();
-
+        AttackablePawn = Arena.GetRandomPawnToAttack(TargetPawns);
+        CurrentPawn.AttackingTowards = GetNormalizedVectorWhereToAttack();
         if (AttackablePawn != null)
         {
             AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = AttackablePawn;
         }
         Stage = EnemyStage.AttackPawn;
+    }
+
+    private Vector3? GetNormalizedVectorWhereToAttack()
+    {
+        if(AttackablePawn is null)
+        {
+            GD.Print("I, the great rattle bones skeleton {0} am unable to attack", CurrentPawn.PawnName);
+            return null;
+        }
+        Vector3 attackingTowardsNormalized = this.Translation.Normalized()-AttackablePawn.Translation.Normalized();
+        Vector3 attackingTowards = this.Translation - AttackablePawn.Translation;
+        GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this normalized position: {1} otherwise known {2}. Name of nemesis is {3}", 
+            CurrentPawn.PawnName, attackingTowardsNormalized.ToString(), attackingTowards.ToString(), AttackablePawn.PawnName)
+            );
+        return attackingTowardsNormalized;
     }
 
     public void AttackPawn(float delta)
@@ -144,9 +160,9 @@ public class EnemyController : Spatial
             case EnemyStage.MovePawn:
                 MovePawn();
                 break;
-            case EnemyStage.ChosePawnToAttack:
-                ChoosePawnToAttack();
-                break;
+            // case EnemyStage.ChosePawnToAttack:
+            //     ChoosePawnToAttack();
+            //     break;
             default:
                 ChoosePawn();
                 break;

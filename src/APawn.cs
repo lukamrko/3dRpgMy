@@ -5,7 +5,7 @@ using Godot;
 public abstract class APawn : KinematicBody
 {
     protected const float PI = 3.141593f;
-    protected const float Speed = 5f;
+    protected const float Speed = 5f; //todo RETURN TO 5
     protected const int AnimationFrames = 1;
     protected const int MinHeightToJump = 1;
     protected const int GravityStrength = 7;
@@ -136,7 +136,6 @@ public abstract class APawn : KinematicBody
         MoveDirection = Vector3.Zero;
         IsJumping = false;
         Gravity = Vector3.Zero;
-        CanMove = PathStack.Count() > 0;
     }
 
     public void AdjustToCenter()
