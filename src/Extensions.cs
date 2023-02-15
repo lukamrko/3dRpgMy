@@ -21,5 +21,15 @@ public static class Extensions
         }
         return newArray;
     }
+
+    public static Vector3 Rounded(this Vector3 originalVector)
+    {
+        return new Vector3
+        (
+            Convert.ToInt32(originalVector.x),
+            Convert.ToInt32(originalVector.y),
+            Convert.ToInt32(originalVector.z)
+        );
+    }
   
 }

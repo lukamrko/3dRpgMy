@@ -99,7 +99,7 @@ public class EnemyController : Spatial
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         // AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
         AttackablePawn = Arena.GetRandomPawnToAttack(TargetPawns);
-        CurrentPawn.AttackingTowards = GetNormalizedVectorWhereToAttack();
+        CurrentPawn.AttackingTowards = GetDirectionToWhichShouldAttack();
         if (AttackablePawn != null)
         {
             AttackablePawn.DisplayPawnStats(true);
@@ -108,19 +108,18 @@ public class EnemyController : Spatial
         Stage = EnemyStage.AttackPawn;
     }
 
-    private Vector3? GetNormalizedVectorWhereToAttack()
+    private Vector3? GetDirectionToWhichShouldAttack()
     {
         if(AttackablePawn is null)
         {
-            GD.Print("I, the great rattle bones skeleton {0} am unable to attack", CurrentPawn.PawnName);
+            GD.Print(String.Format("I, the great rattle bones skeleton {0} am unable to attack", CurrentPawn.PawnName));
             return null;
         }
-        Vector3 attackingTowardsNormalized = this.Translation.Normalized()-AttackablePawn.Translation.Normalized();
-        Vector3 attackingTowards = this.Translation - AttackablePawn.Translation;
-        GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this normalized position: {1} otherwise known {2}. Name of nemesis is {3}", 
-            CurrentPawn.PawnName, attackingTowardsNormalized.ToString(), attackingTowards.ToString(), AttackablePawn.PawnName)
-            );
-        return attackingTowardsNormalized;
+        Vector3 directionRounded = this.Translation.DirectionTo(AttackablePawn.Translation).Rounded();
+        GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
+           CurrentPawn.PawnName, directionRounded, AttackablePawn.PawnName)
+           );
+        return directionRounded;
     }
 
     public void AttackPawn(float delta)
