@@ -199,7 +199,10 @@ public abstract class APawn : KinematicBody
         foreach(APawn pawn in allActiveUnits)
         {
             GD.Print(String.Format("Pawn {0}, position: {1}", pawn.PawnName, pawn.Translation.Rounded()));
-            if (pawn.Translation.Rounded().Equals(positionOfAttack))
+            Vector3 directionTowardsPawn = this.Translation.DirectionTo(pawn.Translation).Rounded();
+            // if (pawn.Translation.Rounded().Equals(positionOfAttack))
+            //     return pawn;
+            if (directionTowardsPawn.Equals(positionOfAttack))
                 return pawn;
         }
         return null;
