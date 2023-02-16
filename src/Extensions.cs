@@ -31,5 +31,15 @@ public static class Extensions
             Convert.ToInt32(originalVector.z)
         );
     }
-  
+
+    public static void AddRangeAs<T, A>(this Godot.Collections.Array<A> originalArray, Godot.Collections.Array<T> newArray ) 
+    where T : class
+    where A : class
+    {
+        foreach(var element in newArray)
+        {
+            originalArray.Add(element as A);
+        }
+    }
+
 }

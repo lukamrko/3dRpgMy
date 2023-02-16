@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Godot;
+using Godot.Collections;
 
 public abstract class APawn : KinematicBody
 {
@@ -48,6 +50,8 @@ public abstract class APawn : KinematicBody
     protected bool IsJumping = false;
     protected Vector3 Gravity = Vector3.Zero;
     protected float WaitDelay = 0;
+    protected int WaitDelayMilliseconds = 1000;
+
     #endregion
 
     protected Label HealthLabel;
@@ -174,6 +178,33 @@ public abstract class APawn : KinematicBody
         WaitDelay = 0;
         return true;
     }
+
+    public void DoAttackOnLocation(Godot.Collections.Array<APawn> allActiveUnits, Vector3 positionOfAttack, float delta)
+    {
+        if (CanAttack)
+        {
+            APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, positionOfAttack);
+            if (pawnAtLocation != null)
+            {
+                pawnAtLocation.CurrHealth = Godot.Mathf.Clamp(pawnAtLocation.CurrHealth - AttackPower, 0, 999);
+            }
+            CanAttack = false;
+        }
+        System.Threading.Thread.Sleep(WaitDelayMilliseconds);
+    }
+
+    private APawn GetPawnAtAttackLocation(Array<APawn> allActiveUnits, Vector3 positionOfAttack)
+    {
+        GD.Print(String.Format("Target position {0}", positionOfAttack));
+        foreach(APawn pawn in allActiveUnits)
+        {
+            GD.Print(String.Format("Pawn {0}, position: {1}", pawn.PawnName, pawn.Translation.Rounded()));
+            if (pawn.Translation.Rounded().Equals(positionOfAttack))
+                return pawn;
+        }
+        return null;
+    }
+
 
     public void Reset()
     {

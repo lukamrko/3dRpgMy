@@ -1,15 +1,16 @@
 using System.Linq;
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public class EnemyController : Spatial
 {
     private EnemyPhase _currentPhase = EnemyPhase.FirstPhase;
     EnemyStage stage = EnemyStage.ChoosePawn;
-    EnemyStage Stage 
+    EnemyStage Stage
     {
-        get{return stage;} 
-        set{stage=value;}
+        get { return stage; }
+        set { stage = value; }
     }
     EnemyPawn CurrentPawn;
     PlayerPawn AttackablePawn;
@@ -17,8 +18,10 @@ public class EnemyController : Spatial
     TacticsCamera TacticsCamera = null;
     Arena Arena = null;
     PlayerController Targets = null;
-    Godot.Collections.Array<PlayerPawn> TargetPawns;
+    Godot.Collections.Array<PlayerPawn> PlayerPawns;
     Godot.Collections.Array<EnemyPawn> EnemyPawns;
+
+    Godot.Collections.Array<APawn> AllActiveUnits;
 
     public EnemyController()
     {
@@ -84,7 +87,7 @@ public class EnemyController : Spatial
     public void MovePawn()
     {
         if (CurrentPawn.PathStack.Count == 0)
-        {     
+        {
             Stage = EnemyStage.ChosePawnToAttack;
             CurrentPawn.CanMove = false;
             ChoosePawnToAttack();
@@ -98,7 +101,7 @@ public class EnemyController : Spatial
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         // AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
-        AttackablePawn = Arena.GetRandomPawnToAttack(TargetPawns);
+        AttackablePawn = Arena.GetRandomPawnToAttack(PlayerPawns);
         CurrentPawn.AttackingTowards = GetDirectionToWhichShouldAttack();
         if (AttackablePawn != null)
         {
@@ -110,7 +113,7 @@ public class EnemyController : Spatial
 
     private Vector3? GetDirectionToWhichShouldAttack()
     {
-        if(AttackablePawn is null)
+        if (AttackablePawn is null)
         {
             GD.Print(String.Format("I, the great rattle bones skeleton {0} am unable to attack", CurrentPawn.PawnName));
             return null;
@@ -122,18 +125,21 @@ public class EnemyController : Spatial
         return directionRounded;
     }
 
-    public void AttackPawn(float delta)
+    public void Attack(float delta)
     {
-        if (AttackablePawn == null)
-            CurrentPawn.CanAttack = false;
-        else
-        {
-            if (!CurrentPawn.DoAttack(AttackablePawn, delta))
-                return;
-            AttackablePawn.DisplayPawnStats(true);
-            TacticsCamera.Target = CurrentPawn;
-        }
-        AttackablePawn = null;
+        // if (AttackablePawn == null)
+        //     CurrentPawn.CanAttack = false;
+        // else
+        // {
+        //     if (!CurrentPawn.DoAttack(AttackablePawn, delta))
+        //         return;
+        //     AttackablePawn.DisplayPawnStats(true);
+        //     TacticsCamera.Target = CurrentPawn;
+        // }
+        // AttackablePawn = null;
+        Vector3 attackingTowards = CurrentPawn.AttackingTowards ?? new Vector3(0, 0, 0);
+        Vector3 positionOfAttack = this.Translation.Rounded() + attackingTowards;
+        CurrentPawn.DoAttackOnLocation(AllActiveUnits, positionOfAttack, delta);
         Stage = EnemyStage.ChoosePawn;
     }
 
@@ -141,9 +147,11 @@ public class EnemyController : Spatial
     public override void _Ready()
     {
         Targets = GetParent().GetNode<PlayerController>("Player");
-        TargetPawns = Targets.GetChildren().As<PlayerPawn>();
+        PlayerPawns = Targets.GetChildren().As<PlayerPawn>();
         EnemyPawns = GetChildren().As<EnemyPawn>();
-
+        AllActiveUnits = new Godot.Collections.Array<APawn>();
+        AllActiveUnits.AddRangeAs(PlayerPawns);
+        AllActiveUnits.AddRangeAs(EnemyPawns);
     }
 
     public void FirstAct(float delta)
@@ -173,7 +181,7 @@ public class EnemyController : Spatial
         switch (Stage)
         {
             case EnemyStage.AttackPawn:
-                AttackPawn(delta);
+                Attack(delta);
                 break;
             default:
                 ChoosePawnThenPrepareAttack();
