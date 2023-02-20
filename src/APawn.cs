@@ -35,7 +35,20 @@ public abstract class APawn : KinematicBody
     public int AttackRadius;
     public int AttackPower;
     public int MaxHealth = 100;
-    public int CurrHealth = 100;
+    private int currHealth = 100;
+    public int CurrHealth
+    {
+        get{return currHealth;}
+        set
+        {
+            currHealth=value;
+            if(currHealth<=0)
+            {
+                GD.Print("I have died, but my time will come!");
+                // this.Dispose();
+            }
+        }
+    }
     #endregion
 
     #region Animation
