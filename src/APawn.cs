@@ -38,13 +38,14 @@ public abstract class APawn : KinematicBody
     private int currHealth = 100;
     public int CurrHealth
     {
-        get{return currHealth;}
+        get { return currHealth; }
         set
         {
-            currHealth=value;
-            if(currHealth<=0)
+            currHealth = value;
+            if (currHealth <= 0)
             {
                 GD.Print("I have died, but my time will come!");
+                this.QueueFree();
                 // this.Dispose();
             }
         }
@@ -160,7 +161,7 @@ public abstract class APawn : KinematicBody
         MoveDirection = GetTile().GlobalTransform.origin - GlobalTransform.origin;
         MoveAndSlide(MoveDirection * Speed * 4, Vector3.Up);
     }
-    
+
     public void ApplyMovement(float delta)
     {
         if (PathStack.Count != 0)
@@ -180,7 +181,9 @@ public abstract class APawn : KinematicBody
         LookAtDirection(pawn.GlobalTransform.origin - GlobalTransform.origin);
         if (CanAttack && WaitDelay > MinTimeForAttack / 4)
         {
-            pawn.CurrHealth = Godot.Mathf.Clamp(pawn.CurrHealth - AttackPower, 0, 999);
+            pawn.CurrHealth = pawn.CurrHealth - AttackPower;
+            if(pawn.CurrHealth<=0)
+                pawn.QueueFree();
             CanAttack = false;
         }
         if (WaitDelay < MinTimeForAttack)
@@ -199,17 +202,20 @@ public abstract class APawn : KinematicBody
             APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, positionOfAttack);
             if (pawnAtLocation != null)
             {
-                pawnAtLocation.CurrHealth = Godot.Mathf.Clamp(pawnAtLocation.CurrHealth - AttackPower, 0, 999);
+                pawnAtLocation.CurrHealth = pawnAtLocation.CurrHealth - AttackPower;
+                if (pawnAtLocation.CurrHealth <= 0)
+                    allActiveUnits.Remove(pawnAtLocation);
             }
             CanAttack = false;
         }
-        System.Threading.Thread.Sleep(WaitDelayMilliseconds);
+        GD.Print("Pretend I sleep!");
+        // System.Threading.Thread.Sleep(WaitDelayMilliseconds);
     }
 
     private APawn GetPawnAtAttackLocation(Array<APawn> allActiveUnits, Vector3 positionOfAttack)
     {
         GD.Print(String.Format("Target position {0}", positionOfAttack));
-        foreach(APawn pawn in allActiveUnits)
+        foreach (APawn pawn in allActiveUnits)
         {
             GD.Print(String.Format("Pawn {0}, position: {1}", pawn.PawnName, pawn.Translation.Rounded()));
             Vector3 directionTowardsPawn = this.Translation.DirectionTo(pawn.Translation).Rounded();

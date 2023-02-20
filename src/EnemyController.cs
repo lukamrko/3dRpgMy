@@ -29,9 +29,33 @@ public class EnemyController : Spatial
     }
     public bool CanFirstAct()
     {
-        foreach (EnemyPawn p in EnemyPawns)
-            if (p.EnemyCanFirstAct())
+        for(int i=0; i<EnemyPawns.Count; i++)
+        {
+            EnemyPawn pawn = EnemyPawns[i];
+            if (!IsInstanceValid(pawn))
+            {
+                EnemyPawns.RemoveAt(i);
+                continue;
+            }
+
+            if (pawn.EnemyCanFirstAct())
+            {
                 return true;
+            }
+        }
+
+        // foreach (EnemyPawn p in EnemyPawns)
+        // {
+        //     if(!IsInstanceValid(p))
+        //     {
+        //         EnemyPawns.Remove(p)
+        //     }
+        //     if (p.EnemyCanFirstAct())
+        //     {
+        //         return true;
+        //     }
+        // }
+
         //TODO improve this condition
         // return Stage != EnemyStage.MovePawn;
 
