@@ -176,23 +176,17 @@ public abstract class APawn : KinematicBody
         CanAttack = false;
     }
 
-    public bool DoAttack(APawn pawn, float delta)
+    public void DoAttack(APawn pawn, float delta)
     {
         LookAtDirection(pawn.GlobalTransform.origin - GlobalTransform.origin);
-        if (CanAttack && WaitDelay > MinTimeForAttack / 4)
+        if (CanAttack)
         {
             pawn.CurrHealth = pawn.CurrHealth - AttackPower;
             if(pawn.CurrHealth<=0)
                 pawn.QueueFree();
             CanAttack = false;
         }
-        if (WaitDelay < MinTimeForAttack)
-        {
-            WaitDelay += delta;
-            return false;
-        }
-        WaitDelay = 0;
-        return true;
+        GD.Print("Pretend I do attack!");
     }
 
     public void DoAttackOnLocation(Godot.Collections.Array<APawn> allActiveUnits, Vector3 positionOfAttack, float delta)

@@ -240,8 +240,7 @@ public class PlayerController : Spatial
             CurrentPawn.CanAttack = false;
         else
         {
-            if (!CurrentPawn.DoAttack(AttackablePawn, delta))
-                return;
+            CurrentPawn.DoAttack(AttackablePawn, delta);
             AttackablePawn.DisplayPawnStats(false);
             TacticsCamera.Target = CurrentPawn;
         }
