@@ -3,6 +3,11 @@ using System;
 
 public class Level : Spatial
 {
+    [Export]
+    public int RoundWhenPlayerWins = 5;
+
+    int currentRound = 0;
+
     object TFrom = null;
     object TTo = null;
     object CurrentT = null;
@@ -38,6 +43,8 @@ public class Level : Spatial
             Enemy.SecondAct(delta);
         else
         {
+            currentRound++;
+            var print = string.Format("Round {0} finished. New round is: {1}", currentRound-1, currentRound);
             Player.Reset();
             Enemy.Reset();
         }

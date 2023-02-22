@@ -202,6 +202,8 @@ public class EnemyController : Spatial
 
     public void SecondAct(float delta)
     {
+        if(!IsInstanceValid(CurrentPawn))
+            ChoosePawnThenPrepareAttack();
         switch (Stage)
         {
             case EnemyStage.AttackPawn:
