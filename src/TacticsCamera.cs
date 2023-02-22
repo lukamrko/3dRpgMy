@@ -47,9 +47,10 @@ public class TacticsCamera : KinematicBody
         if (Target == null)
             return;
         Vector3 from = GlobalTransform.origin;
-        Vector3 to = IsInstanceValid(Target)
-            ? Target.GlobalTransform.origin
-            : Vector3.Zero;
+        Vector3 to = Target.GlobalTransform.origin;
+        // Vector3 to = IsInstanceValid(Target)
+        //     ? Target.GlobalTransform.origin
+        //     : Vector3.Zero;
         Vector3 velocity = (to - from) * MoveSpeed / 4;
         velocity=MoveAndSlide(velocity, Vector3.Up);
         if (from.DistanceTo(to) <= 0.25)

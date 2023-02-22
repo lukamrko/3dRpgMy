@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Godot;
 using Godot.Collections;
 
-public abstract class APawn : KinematicBody
+public abstract class APawn : KinematicBody, ISubject
 {
     protected const float PI = 3.141593f;
     protected const float Speed = 5f; //todo RETURN TO 5
@@ -183,7 +184,10 @@ public abstract class APawn : KinematicBody
         {
             pawn.CurrHealth = pawn.CurrHealth - AttackPower;
             if(pawn.CurrHealth<=0)
+            {
+                pawn.Notify();
                 pawn.QueueFree();
+            }
             CanAttack = false;
         }
         GD.Print("Pretend I do attack!");
@@ -257,4 +261,23 @@ public abstract class APawn : KinematicBody
 
     public abstract void TintWhenNotAbleToAct();
 
+
+    private List<IObserver> _observers = new List<IObserver>();
+    public void Attach(IObserver observer)
+    {
+        this._observers.Add(observer);
+    }
+
+    public void Detach(IObserver observer)
+    {
+        this._observers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+        foreach (var observer in _observers)
+        {
+            observer.Update(this);
+        }
+    }
 }

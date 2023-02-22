@@ -31,7 +31,19 @@ public class Level : Spatial
 
         Player.Configure(arena, tacticsCamera, playerControllerUI);
         Enemy.Configure(arena, tacticsCamera);
+
+        // FirstObserverAttachments();
     }
+
+
+    private void FirstObserverAttachments()
+    {
+        foreach(APawn pawn in Enemy.AllActiveUnits)
+        {
+            pawn.Attach(Enemy);
+        }
+    }
+
 
     public void TurnHandler(float delta)
     {

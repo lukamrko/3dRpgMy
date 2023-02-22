@@ -3,7 +3,7 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 
-public class EnemyController : Spatial
+public class EnemyController : Spatial, IObserver
 {
     private EnemyPhase _currentPhase = EnemyPhase.FirstPhase;
     EnemyStage stage = EnemyStage.ChoosePawn;
@@ -21,7 +21,7 @@ public class EnemyController : Spatial
     Godot.Collections.Array<PlayerPawn> PlayerPawns;
     Godot.Collections.Array<EnemyPawn> EnemyPawns;
 
-    Godot.Collections.Array<APawn> AllActiveUnits;
+    public Godot.Collections.Array<APawn> AllActiveUnits;
 
     public EnemyController()
     {
@@ -32,33 +32,12 @@ public class EnemyController : Spatial
         for(int i=0; i<EnemyPawns.Count; i++)
         {
             EnemyPawn pawn = EnemyPawns[i];
-            if (!IsInstanceValid(pawn))
-            {
-                EnemyPawns.RemoveAt(i);
-                continue;
-            }
 
             if (pawn.EnemyCanFirstAct())
             {
                 return true;
             }
         }
-
-        // foreach (EnemyPawn p in EnemyPawns)
-        // {
-        //     if(!IsInstanceValid(p))
-        //     {
-        //         EnemyPawns.Remove(p)
-        //     }
-        //     if (p.EnemyCanFirstAct())
-        //     {
-        //         return true;
-        //     }
-        // }
-
-        //TODO improve this condition
-        // return Stage != EnemyStage.MovePawn;
-
         return false;
     }
 
@@ -176,6 +155,13 @@ public class EnemyController : Spatial
         AllActiveUnits = new Godot.Collections.Array<APawn>();
         AllActiveUnits.AddRangeAs(PlayerPawns);
         AllActiveUnits.AddRangeAs(EnemyPawns);
+        AttachObserverToAllPawns();
+    }
+
+    private void AttachObserverToAllPawns()
+    {
+        foreach(APawn pawn in AllActiveUnits)
+            pawn.Attach(this);
     }
 
     public void FirstAct(float delta)
@@ -202,17 +188,21 @@ public class EnemyController : Spatial
 
     public void SecondAct(float delta)
     {
-        if(!IsInstanceValid(CurrentPawn))
-            ChoosePawnThenPrepareAttack();
-        switch (Stage)
+        ChoosePawnThenPrepareAttack();
+        if(Stage == EnemyStage.AttackPawn)
         {
-            case EnemyStage.AttackPawn:
-                Attack(delta);
-                break;
-            default:
-                ChoosePawnThenPrepareAttack();
-                break;
+            Attack(delta);
         }
+
+        // switch (Stage)
+        // {
+        //     case EnemyStage.AttackPawn:
+        //         Attack(delta);
+        //         break;
+        //     default:
+        //         ChoosePawnThenPrepareAttack();
+        //         break;
+        // }
     }
 
     private void ChoosePawnThenPrepareAttack()
@@ -223,6 +213,31 @@ public class EnemyController : Spatial
                 CurrentPawn = pawn;
         }
         Stage = EnemyStage.AttackPawn;
+    }
+
+    // Inherited from IObserver
+    public void Update(ISubject subject)
+    {
+        GD.Print("I got notification. Somebody probably died!");
+        var abstractPawn = subject as APawn;
+        AllActiveUnits.Remove(abstractPawn);
+
+        if(subject is PlayerPawn)
+        {
+            var playerPawn = subject as PlayerPawn;
+            PlayerPawns.Remove(playerPawn);
+        }
+
+        if (subject is EnemyPawn)
+        {
+            var enemyPawn = subject as EnemyPawn;
+            EnemyPawns.Remove(enemyPawn);
+            if(CurrentPawn.Equals(enemyPawn))
+            {
+                CurrentPawn = null;
+            }
+        }
+        
     }
 }
 
