@@ -14,6 +14,7 @@ public class Level : Spatial
 
     PlayerController Player;
     EnemyController Enemy;
+    Spawner Spawner;
 
     public Level()
     {
@@ -31,6 +32,8 @@ public class Level : Spatial
 
         Player.Configure(arena, tacticsCamera, playerControllerUI);
         Enemy.Configure(arena, tacticsCamera);
+
+        Spawner = GetNode<Spawner>("EnemySpawner");
 
         // FirstObserverAttachments();
     }
@@ -56,6 +59,7 @@ public class Level : Spatial
         else
         {
             currentRound++;
+            Spawner.SpawnEnemies();
             var print = string.Format("Round {0} finished. New round is: {1}", currentRound-1, currentRound);
             Player.Reset();
             Enemy.Reset();
