@@ -29,7 +29,7 @@ public class EnemyController : Spatial, IObserver
     }
     public bool CanFirstAct()
     {
-        for(int i=0; i<EnemyPawns.Count; i++)
+        for (int i = 0; i < EnemyPawns.Count; i++)
         {
             EnemyPawn pawn = EnemyPawns[i];
 
@@ -160,7 +160,7 @@ public class EnemyController : Spatial, IObserver
 
     private void AttachObserverToAllPawns()
     {
-        foreach(APawn pawn in AllActiveUnits)
+        foreach (APawn pawn in AllActiveUnits)
             pawn.Attach(this);
     }
 
@@ -189,7 +189,7 @@ public class EnemyController : Spatial, IObserver
     public void SecondAct(float delta)
     {
         ChoosePawnThenPrepareAttack();
-        if(Stage == EnemyStage.AttackPawn)
+        if (Stage == EnemyStage.AttackPawn)
         {
             Attack(delta);
         }
@@ -222,7 +222,7 @@ public class EnemyController : Spatial, IObserver
         var abstractPawn = subject as APawn;
         AllActiveUnits.Remove(abstractPawn);
 
-        if(subject is PlayerPawn)
+        if (subject is PlayerPawn)
         {
             var playerPawn = subject as PlayerPawn;
             PlayerPawns.Remove(playerPawn);
@@ -232,12 +232,14 @@ public class EnemyController : Spatial, IObserver
         {
             var enemyPawn = subject as EnemyPawn;
             EnemyPawns.Remove(enemyPawn);
-            if(CurrentPawn.Equals(enemyPawn))
+
+            if (CurrentPawn != null
+                && CurrentPawn.Equals(enemyPawn))
             {
                 CurrentPawn = null;
             }
         }
-        
+
     }
 }
 
