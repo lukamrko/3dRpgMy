@@ -233,7 +233,7 @@ public abstract class APawn : KinematicBody, ISubject
     }
 
 
-    protected void LoadStats()
+    public void LoadStats()
     {
         MoveRadius = Utils.GetPawnMoveRadius(PawnClass);
         JumpHeight = Utils.GetPawnJumpHeight(PawnClass);
@@ -243,7 +243,7 @@ public abstract class APawn : KinematicBody, ISubject
         CurrHealth = MaxHealth;
     }
 
-    protected void LoadAnimatorSprite()
+    public void LoadAnimatorSprite()
     {
         Animator = AnimationTree.Get("parameters/playback") as AnimationNodeStateMachinePlayback;
         Animator.Start("IDLE");

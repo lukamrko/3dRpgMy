@@ -140,7 +140,11 @@ public class EnemyController : Spatial, IObserver
         //     TacticsCamera.Target = CurrentPawn;
         // }
         // AttackablePawn = null;
-        Vector3 attackingTowards = CurrentPawn.AttackingTowards ?? new Vector3(0, 0, 0);
+        if(CurrentPawn.AttackingTowards is null)
+        {
+            return;
+        }
+        Vector3 attackingTowards = CurrentPawn.AttackingTowards.Value;
         Vector3 positionOfAttack = this.Translation.Rounded() + attackingTowards;
         CurrentPawn.DoAttackOnLocation(AllActiveUnits, positionOfAttack, delta);
         Stage = EnemyStage.ChoosePawn;
@@ -193,16 +197,6 @@ public class EnemyController : Spatial, IObserver
         {
             Attack(delta);
         }
-
-        // switch (Stage)
-        // {
-        //     case EnemyStage.AttackPawn:
-        //         Attack(delta);
-        //         break;
-        //     default:
-        //         ChoosePawnThenPrepareAttack();
-        //         break;
-        // }
     }
 
     private void ChoosePawnThenPrepareAttack()
@@ -210,7 +204,10 @@ public class EnemyController : Spatial, IObserver
         foreach (EnemyPawn pawn in EnemyPawns)
         {
             if (pawn.EnemyCanSecondAct())
+            {
                 CurrentPawn = pawn;
+                break;
+            }
         }
         Stage = EnemyStage.AttackPawn;
     }
