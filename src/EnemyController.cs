@@ -23,6 +23,8 @@ public class EnemyController : Spatial, IObserver
 
     public Godot.Collections.Array<APawn> AllActiveUnits;
 
+    Spawner Spawner;
+
     public EnemyController()
     {
         // _Ready();
@@ -142,6 +144,7 @@ public class EnemyController : Spatial, IObserver
         // AttackablePawn = null;
         if(CurrentPawn.AttackingTowards is null)
         {
+            CurrentPawn.CanAttack = false;
             return;
         }
         Vector3 attackingTowards = CurrentPawn.AttackingTowards.Value;
@@ -156,15 +159,16 @@ public class EnemyController : Spatial, IObserver
         Targets = GetParent().GetNode<PlayerController>("Player");
         PlayerPawns = Targets.GetChildren().As<PlayerPawn>();
         EnemyPawns = GetChildren().As<EnemyPawn>();
+        Spawner = GetParent().GetNode<Spawner>("EnemySpawner");
         AllActiveUnits = new Godot.Collections.Array<APawn>();
         AllActiveUnits.AddRangeAs(PlayerPawns);
         AllActiveUnits.AddRangeAs(EnemyPawns);
-        AttachObserverToAllPawns();
+        AttachObserverToPawns(AllActiveUnits);
     }
 
-    private void AttachObserverToAllPawns()
+    private void AttachObserverToPawns(Godot.Collections.Array<APawn> pawns)
     {
-        foreach (APawn pawn in AllActiveUnits)
+        foreach (APawn pawn in pawns)
             pawn.Attach(this);
     }
 
@@ -236,8 +240,20 @@ public class EnemyController : Spatial, IObserver
                 CurrentPawn = null;
             }
         }
-
     }
+
+    public void SpawnEnemies()
+    {
+        Godot.Collections.Array<EnemyPawn> pawns = Spawner.SpawnEnemies();
+        foreach(EnemyPawn pawn in pawns)
+        {
+            AddChild(pawn);
+            pawn.Attach(this);
+        }
+        EnemyPawns.AddRangeAs(pawns);
+        AllActiveUnits.AddRangeAs(pawns);
+    }
+
 }
 
 

@@ -59,8 +59,10 @@ public class Level : Spatial
         else
         {
             currentRound++;
-            Spawner.SpawnEnemies();
+            Enemy.SpawnEnemies();
+            // Spawner.SpawnEnemies();
             var print = string.Format("Round {0} finished. New round is: {1}", currentRound-1, currentRound);
+            GD.Print(print);
             Player.Reset();
             Enemy.Reset();
         }

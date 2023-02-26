@@ -6,6 +6,8 @@ using Godot.Collections;
 
 public class EnemyPawn : APawn
 {
+    [Export]
+    public PackedScene EnemyScene;
     public Vector3? AttackingTowards;
     public EnemyPhase CurrentPhase = EnemyPhase.NotAnEnemyPhase;
     public override void _Ready()

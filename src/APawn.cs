@@ -79,13 +79,11 @@ public abstract class APawn : KinematicBody, ISubject
     protected RayCast CurrTiles;
     #endregion
 
-
-
     public Tile GetTile()
     {
         return CurrTiles.GetCollider() as Tile;
-
     }
+
     public void RotatePawnSprite()
     {
         Vector3 cameraForward = -GetViewport().GetCamera().GlobalTransform.basis.z;
@@ -159,7 +157,18 @@ public abstract class APawn : KinematicBody, ISubject
 
     public void AdjustToCenter()
     {
-        MoveDirection = GetTile().GlobalTransform.origin - GlobalTransform.origin;
+        var tile = GetTile();
+        var tilePoint = Vector3.Zero;
+        //THIS IS WRONG. REFACTOR THIS. TODO
+        if (tile is null)
+        {
+            tile = GetTile();
+        }
+        else
+        {
+            tilePoint = tile.GlobalTransform.origin;
+        }
+        MoveDirection = tilePoint - GlobalTransform.origin;
         MoveAndSlide(MoveDirection * Speed * 4, Vector3.Up);
     }
 
@@ -183,7 +192,7 @@ public abstract class APawn : KinematicBody, ISubject
         if (CanAttack)
         {
             pawn.CurrHealth = pawn.CurrHealth - AttackPower;
-            if(pawn.CurrHealth<=0)
+            if (pawn.CurrHealth <= 0)
             {
                 pawn.Notify();
                 pawn.QueueFree();
