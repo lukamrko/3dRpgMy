@@ -132,16 +132,6 @@ public class EnemyController : Spatial, IObserver
 
     public void Attack(float delta)
     {
-        // if (AttackablePawn == null)
-        //     CurrentPawn.CanAttack = false;
-        // else
-        // {
-        //     if (!CurrentPawn.DoAttack(AttackablePawn, delta))
-        //         return;
-        //     AttackablePawn.DisplayPawnStats(true);
-        //     TacticsCamera.Target = CurrentPawn;
-        // }
-        // AttackablePawn = null;
         if(CurrentPawn.AttackingTowards is null)
         {
             CurrentPawn.CanAttack = false;
@@ -242,7 +232,7 @@ public class EnemyController : Spatial, IObserver
         }
     }
 
-    public void SpawnEnemies()
+    public Godot.Collections.Array<EnemyPawn> SpawnEnemies()
     {
         Godot.Collections.Array<EnemyPawn> pawns = Spawner.SpawnEnemies();
         foreach(EnemyPawn pawn in pawns)
@@ -252,6 +242,7 @@ public class EnemyController : Spatial, IObserver
         }
         EnemyPawns.AddRangeAs(pawns);
         AllActiveUnits.AddRangeAs(pawns);
+        return pawns;
     }
 
 }

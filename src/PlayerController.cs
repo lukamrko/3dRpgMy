@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Godot;
 using System;
+using Godot.Collections;
 
 public class PlayerController : Spatial, IObserver
 {
@@ -40,6 +41,7 @@ public class PlayerController : Spatial, IObserver
 
     PlayerControllerUI UIControl;
     Godot.Collections.Array<PlayerPawn> PlayerPawns;
+    Godot.Collections.Array<APawn> AllActiveUnits;
 
     public PlayerController()
     {
@@ -344,7 +346,18 @@ public class PlayerController : Spatial, IObserver
     public override void _Ready()
     {
         PlayerPawns = GetChildren().As<PlayerPawn>();
+        EnemyController enemyController = GetParent().GetNode<EnemyController>("Enemy");
+        var EnemyPawns = enemyController.GetChildren().As<EnemyPawn>();
+        AllActiveUnits = new Godot.Collections.Array<APawn>();
+        AllActiveUnits.AddRangeAs(PlayerPawns);
+        AllActiveUnits.AddRangeAs(EnemyPawns);
+        AttachObserverToPawns(AllActiveUnits);
+    }
 
+    private void AttachObserverToPawns(Array<APawn> pawns)
+    {
+        foreach (APawn pawn in pawns)
+            pawn.Attach(this);
     }
 
     private PlayerStage[] ButtonVisibilityOnStages = new PlayerStage[]
@@ -381,6 +394,15 @@ public class PlayerController : Spatial, IObserver
     {
         PlayerPawn playerPawn = subject as PlayerPawn;
         PlayerPawns.Remove(playerPawn);
+    }
+
+    internal void NotifyAboutNewEnemies(Array<EnemyPawn> enemies)
+    {
+        foreach(var enemyPawn in enemies)
+        {
+            enemyPawn.Attach(this);
+            AllActiveUnits.Add(enemyPawn);
+        }
     }
 }
 
