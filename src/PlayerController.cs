@@ -392,8 +392,14 @@ public class PlayerController : Spatial, IObserver
 
     public void Update(ISubject subject)
     {
-        PlayerPawn playerPawn = subject as PlayerPawn;
-        PlayerPawns.Remove(playerPawn);
+        var abstractPawn = subject as APawn;
+        AllActiveUnits.Remove(abstractPawn);
+
+        if (subject is PlayerPawn)
+        {
+            var playerPawn = subject as PlayerPawn;
+            PlayerPawns.Remove(playerPawn);
+        }
     }
 
     internal void NotifyAboutNewEnemies(Array<EnemyPawn> enemies)
