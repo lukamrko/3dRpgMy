@@ -19,7 +19,7 @@ public class Spawner : Spatial
     {
         Godot.Collections.Array<EnemyPawn> enemyPawns = new Godot.Collections.Array<EnemyPawn>();
         Points.Shuffle();
-        int numberToSpawn = 3;
+        int numberToSpawn = 4;
         for (int i = 0; i < numberToSpawn; i++)
         {
             // EnemyPawn enemyPawn = GetRandomEnemyPawn();

@@ -79,6 +79,8 @@ public abstract class APawn : KinematicBody, ISubject
     protected RayCast CurrTiles;
     #endregion
 
+    private const int distanceBetweenTiles = 1;
+
     public Tile GetTile()
     {
         return CurrTiles.GetCollider() as Tile;
@@ -186,21 +188,47 @@ public abstract class APawn : KinematicBody, ISubject
         CanAttack = false;
     }
 
-    public void DoAttack(APawn pawn, float delta)
+    public void DoAttack(APawn targetPawn, Godot.Collections.Array<APawn> AllActiveUnits, float delta)
     {
-        LookAtDirection(pawn.GlobalTransform.origin - GlobalTransform.origin);
+        LookAtDirection(targetPawn.GlobalTransform.origin - GlobalTransform.origin);
         if (CanAttack)
         {
-            // AnybodyBehindTarget();
-            pawn.CurrHealth = pawn.CurrHealth - AttackPower;
-            if (pawn.CurrHealth <= 0)
+            AnybodyBehindTarget(targetPawn, AllActiveUnits);
+            targetPawn.CurrHealth = targetPawn.CurrHealth - AttackPower;
+            if (targetPawn.CurrHealth <= 0)
             {
-                pawn.Notify();
-                pawn.QueueFree();
+                targetPawn.Notify();
+                targetPawn.QueueFree();
             }
             CanAttack = false;
         }
         GD.Print("Pretend I do attack!");
+    }
+
+    private void AnybodyBehindTarget(APawn targetPawn, Array<APawn> allActiveUnits)
+    {
+        var directionTowardsPawn = this.Translation.DirectionTo(targetPawn.Translation).Rounded();
+        var tileBehindDirection = new Vector3
+        {
+            x = directionTowardsPawn.x != 0
+                ? directionTowardsPawn.x + distanceBetweenTiles
+                : 0,
+            z = directionTowardsPawn.z != 0
+                ? directionTowardsPawn.z + distanceBetweenTiles
+                : 0,
+            y = directionTowardsPawn.y //TODO maybe implement something better for Y axis?
+        };
+        APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, tileBehindDirection);
+        if(pawnAtLocation is null)
+        {
+            GD.Print("Nobody behind pawn boss!");
+        }
+        else
+        {
+            GD.Print("BOSS WE GOTT EM! There is somebody behind him");
+        }
+
+
     }
 
     public void DoAttackOnLocation(Godot.Collections.Array<APawn> allActiveUnits, Vector3 positionOfAttack, float delta)
@@ -213,7 +241,7 @@ public abstract class APawn : KinematicBody, ISubject
             {
                 pawnAtLocation.CurrHealth = pawnAtLocation.CurrHealth - AttackPower;
                 if (pawnAtLocation.CurrHealth <= 0)
-                {   
+                {
                     pawnAtLocation.Notify();
                     pawnAtLocation.QueueFree();
                 }
