@@ -63,9 +63,19 @@ public class Level : Spatial
             // Spawner.SpawnEnemies();
             var print = string.Format("Round {0} finished. New round is: {1}", currentRound-1, currentRound);
             GD.Print(print);
+            if(currentRound == RoundWhenPlayerWins)
+            {
+                LevelWonOperation();
+            }
             Player.Reset();
             Enemy.Reset();
         }
+    }
+
+    private void LevelWonOperation()
+    {
+        var print = string.Format("Battle was hard, but we won");
+        GD.Print(print);
     }
 
     public override void _PhysicsProcess(float delta)

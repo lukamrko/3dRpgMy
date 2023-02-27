@@ -211,7 +211,9 @@ public abstract class APawn : KinematicBody, ISubject
             {
                 pawnAtLocation.CurrHealth = pawnAtLocation.CurrHealth - AttackPower;
                 if (pawnAtLocation.CurrHealth <= 0)
+                {    
                     allActiveUnits.Remove(pawnAtLocation);
+                }
             }
             CanAttack = false;
         }

@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Godot;
 using System;
 
-public class PlayerController : Spatial
+public class PlayerController : Spatial, IObserver
 {
     private PlayerPawn _currentPawn = null;
 
@@ -23,7 +23,7 @@ public class PlayerController : Spatial
 
     private void ResetSkipFieldOnFriendlyPawns()
     {
-        foreach (PlayerPawn pawn in Pawns)
+        foreach (PlayerPawn pawn in PlayerPawns)
             pawn.skipped = false;
     }
 
@@ -39,7 +39,7 @@ public class PlayerController : Spatial
     PlayerStage Stage = PlayerStage.SelectPawn;
 
     PlayerControllerUI UIControl;
-    Godot.Collections.Array<PlayerPawn> Pawns;
+    Godot.Collections.Array<PlayerPawn> PlayerPawns;
 
     public PlayerController()
     {
@@ -51,7 +51,7 @@ public class PlayerController : Spatial
         Arena = myArena;
         TacticsCamera = myCamera;
         UIControl = myControl;
-        TacticsCamera.Target = Pawns[0];
+        TacticsCamera.Target = PlayerPawns[0];
         Button MoveButton = UIControl.GetAct("Move");
         Button WaitButton = UIControl.GetAct("Wait");
         Button CancelButton = UIControl.GetAct("Cancel");
@@ -81,7 +81,7 @@ public class PlayerController : Spatial
 
     public bool CanAct()
     {
-        foreach (PlayerPawn pawn in Pawns)
+        foreach (PlayerPawn pawn in PlayerPawns)
             if (pawn.CanAct())
                 return true;
         return (int)Stage > 0;
@@ -89,7 +89,7 @@ public class PlayerController : Spatial
 
     public void Reset()
     {
-        foreach (PlayerPawn pawn in Pawns)
+        foreach (PlayerPawn pawn in PlayerPawns)
             pawn.Reset();
     }
 
@@ -155,7 +155,7 @@ public class PlayerController : Spatial
             return;
 
         CurrentPawn.DisplayPawnStats(true);
-        if (Input.IsActionJustPressed("ui_accept") && CurrentPawn.CanAct() && Pawns.Contains(CurrentPawn))
+        if (Input.IsActionJustPressed("ui_accept") && CurrentPawn.CanAct() && PlayerPawns.Contains(CurrentPawn))
         {
             TacticsCamera.Target = CurrentPawn;
             Stage = PlayerStage.DisplayAvailableActionsForPawn;
@@ -175,7 +175,7 @@ public class PlayerController : Spatial
         if (CurrentPawn == null)
             return;
         TacticsCamera.Target = CurrentPawn;
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, Pawns);
+        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, PlayerPawns);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
         Stage = PlayerStage.SelectNewLocation;
     }
@@ -326,7 +326,7 @@ public class PlayerController : Spatial
 
     private void FastGetCurrentPawn()
     {
-        foreach (PlayerPawn pawn in Pawns)
+        foreach (PlayerPawn pawn in PlayerPawns)
         {
             var currentPawnAllows = CurrentPawn is null || pawn.skipped == false;
             var isCurrentPawn = pawn.CanAct() && currentPawnAllows;
@@ -343,7 +343,7 @@ public class PlayerController : Spatial
 
     public override void _Ready()
     {
-        Pawns = GetChildren().As<PlayerPawn>();
+        PlayerPawns = GetChildren().As<PlayerPawn>();
 
     }
 
@@ -377,7 +377,11 @@ public class PlayerController : Spatial
         UIControl.IsJoyStick = IsJoyStick;
     }
 
-
+    public void Update(ISubject subject)
+    {
+        PlayerPawn playerPawn = subject as PlayerPawn;
+        PlayerPawns.Remove(playerPawn);
+    }
 }
 
 public enum PlayerStage
