@@ -191,6 +191,7 @@ public abstract class APawn : KinematicBody, ISubject
         LookAtDirection(pawn.GlobalTransform.origin - GlobalTransform.origin);
         if (CanAttack)
         {
+            // AnybodyBehindTarget();
             pawn.CurrHealth = pawn.CurrHealth - AttackPower;
             if (pawn.CurrHealth <= 0)
             {
@@ -204,6 +205,7 @@ public abstract class APawn : KinematicBody, ISubject
 
     public void DoAttackOnLocation(Godot.Collections.Array<APawn> allActiveUnits, Vector3 positionOfAttack, float delta)
     {
+        LookAtDirection(positionOfAttack);
         if (CanAttack)
         {
             APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, positionOfAttack);
