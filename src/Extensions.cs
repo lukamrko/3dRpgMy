@@ -24,12 +24,18 @@ public static class Extensions
 
     public static Vector3 Rounded(this Vector3 originalVector)
     {
+        // return new Vector3
+        // (
+        //     Convert.ToInt32(originalVector.x),
+        //     Convert.ToInt32(originalVector.y),
+        //     Convert.ToInt32(originalVector.z)
+        // );
         return new Vector3
-        (
-            Convert.ToInt32(originalVector.x),
-            Convert.ToInt32(originalVector.y),
-            Convert.ToInt32(originalVector.z)
-        );
+    (
+        (float)Math.Round(originalVector.x, 1),
+        (float)Math.Round(originalVector.y, 1),
+        (float)Math.Round(originalVector.z, 1)
+    );
     }
 
     public static void AddRangeAs<T, A>(this Godot.Collections.Array<A> originalArray, Godot.Collections.Array<T> newArray ) 

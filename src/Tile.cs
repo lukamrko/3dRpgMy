@@ -44,7 +44,7 @@ public class Tile : StaticBody
 
     public bool IsTaken()
     {
-        return GetObjectAbove() != null;
+        return GetObjectAbove() is object;
     }
 
     public void Reset()

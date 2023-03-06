@@ -81,6 +81,9 @@ public abstract class APawn : KinematicBody, ISubject
 
     private const int distanceBetweenTiles = 1;
 
+    public bool shouldBeForciblyMoved = false;
+    public Vector3 directionOfForcedMovement = Vector3.Zero;
+
     public Tile GetTile()
     {
         return CurrTiles.GetCollider() as Tile;
@@ -165,6 +168,8 @@ public abstract class APawn : KinematicBody, ISubject
         if (tile is null)
         {
             tile = GetTile();
+            tilePoint = GlobalTransform.origin;
+            return;
         }
         else
         {
@@ -177,9 +182,60 @@ public abstract class APawn : KinematicBody, ISubject
     public void ApplyMovement(float delta)
     {
         if (PathStack.Count != 0)
-            FollowThePath(delta);
+        {
+            if(shouldBeForciblyMoved == true)
+            {
+                ForciblyMovePawn(delta);
+            }
+            else
+            {
+                FollowThePath(delta);
+            }
+        }
         else
+        {
             AdjustToCenter();
+        }
+    }
+
+    private void ForciblyMovePawn(float delta)
+    {
+        if (MoveDirection == Vector3.Zero)
+            MoveDirection = PathStack.FirstOrDefault() - GlobalTransform.origin;
+        if (MoveDirection.Length() > 0.5)
+        {
+            Vector3 velocity = MoveDirection.Normalized();
+            float currentSpeed = Speed;
+
+            //apply jump
+            // if (MoveDirection.y > MinHeightToJump)
+            // {
+            //     currentSpeed = Godot.Mathf.Clamp(Math.Abs(MoveDirection.y) * 2.3f, 3f, Godot.Mathf.Inf);
+            //     IsJumping = true;
+            // }
+
+            // //fall or move to the edge before failing
+            // else 
+            if (MoveDirection.y < -MinHeightToJump)
+            {
+                if (Utils.VectorDistanceWithoutY(PathStack.FirstOrDefault(), GlobalTransform.origin) <= 0.2)
+                {
+                    Gravity += Vector3.Down * delta * GravityStrength;
+                    velocity = (PathStack.FirstOrDefault() - GlobalTransform.origin).Normalized() + Gravity;
+                }
+                else
+                    velocity = Utils.VectorRemoveY(MoveDirection).Normalized();
+            }
+
+            Vector3 _v = MoveAndSlide(velocity * currentSpeed, Vector3.Up);
+            if (GlobalTransform.origin.DistanceTo(PathStack.FirstOrDefault()) >= 0.2)
+                return;
+        }
+        if (PathStack.Count > 0)
+            PathStack.RemoveAt(0);
+        MoveDirection = Vector3.Zero;
+        IsJumping = false;
+        Gravity = Vector3.Zero;
     }
 
     public void DoWait()
@@ -194,12 +250,7 @@ public abstract class APawn : KinematicBody, ISubject
         if (CanAttack)
         {
             AnybodyBehindTarget(targetPawn, AllActiveUnits);
-            targetPawn.CurrHealth = targetPawn.CurrHealth - AttackPower;
-            if (targetPawn.CurrHealth <= 0)
-            {
-                targetPawn.Notify();
-                targetPawn.QueueFree();
-            }
+            DealDamageAndRemoveIfDead(targetPawn, AttackPower);
             CanAttack = false;
         }
         GD.Print("Pretend I do attack!");
@@ -208,27 +259,48 @@ public abstract class APawn : KinematicBody, ISubject
     private void AnybodyBehindTarget(APawn targetPawn, Array<APawn> allActiveUnits)
     {
         var directionTowardsPawn = this.Translation.DirectionTo(targetPawn.Translation).Rounded();
-        var tileBehindDirection = new Vector3
+        var distanceBetweenBehindAndTowardDirection = new Vector3
         {
             x = directionTowardsPawn.x != 0
-                ? directionTowardsPawn.x + distanceBetweenTiles
+                ? distanceBetweenTiles
                 : 0,
             z = directionTowardsPawn.z != 0
-                ? directionTowardsPawn.z + distanceBetweenTiles
+                ? distanceBetweenTiles
                 : 0,
-            y = directionTowardsPawn.y //TODO maybe implement something better for Y axis?
+            y = 0
         };
-        APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, tileBehindDirection);
-        if(pawnAtLocation is null)
+        var locationBehindDirection = directionTowardsPawn + distanceBetweenBehindAndTowardDirection;
+        APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, locationBehindDirection);
+        if (pawnAtLocation is null)
         {
+            //TODO should probably check if is out of bounds or similar stuff
+            // Vector3 supposedLocation = (targetPawn.Translation + distanceBetweenBehindAndTowardDirection);
+            // Vector3 supposedLocationRounded =supposedLocation.Rounded(); 
+            // targetPawn.TranslateObjectLocal(supposedLocationRounded);
             GD.Print("Nobody behind pawn boss!");
+            targetPawn.shouldBeForciblyMoved = true;
+            targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
+            // var tile = Arena.GetTileAtLocation(supposedLocation);
+            // targetPawn.PathStack = Arena.GeneratePathStack(tile);
+
+            //TODO this line pulls enemy towards you. Might be fun
+            // targetPawn.TranslateObjectLocal(tileBehindDirection);
         }
         else
         {
+            DealDamageAndRemoveIfDead(pawnAtLocation, 1);
             GD.Print("BOSS WE GOTT EM! There is somebody behind him");
         }
+    }
 
-
+    private void DealDamageAndRemoveIfDead(APawn pawn, int damage)
+    {
+        pawn.CurrHealth -= damage;
+        if (pawn.CurrHealth <= 0)
+        {
+            pawn.Notify();
+            pawn.QueueFree();
+        }
     }
 
     public void DoAttackOnLocation(Godot.Collections.Array<APawn> allActiveUnits, Vector3 positionOfAttack, float delta)
@@ -239,12 +311,7 @@ public abstract class APawn : KinematicBody, ISubject
             APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, positionOfAttack);
             if (pawnAtLocation != null)
             {
-                pawnAtLocation.CurrHealth = pawnAtLocation.CurrHealth - AttackPower;
-                if (pawnAtLocation.CurrHealth <= 0)
-                {
-                    pawnAtLocation.Notify();
-                    pawnAtLocation.QueueFree();
-                }
+                DealDamageAndRemoveIfDead(pawnAtLocation, AttackPower);
             }
             CanAttack = false;
         }

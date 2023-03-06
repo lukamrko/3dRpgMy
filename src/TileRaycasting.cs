@@ -6,6 +6,8 @@ public class TileRaycasting : Spatial
     private Spatial _neighbors;
     private RayCast _above;
 
+    private Godot.Collections.Array<RayCast> _neighborRayCasts;
+
     public TileRaycasting()
     {
         _Ready();
@@ -14,23 +16,37 @@ public class TileRaycasting : Spatial
     {
         _neighbors = GetNode<Spatial>("Neighbors");
         _above = GetNode<RayCast>("Above");
+        _neighborRayCasts = new Godot.Collections.Array<RayCast>();
     }
 
     public Godot.Collections.Array<Tile> GetAllNeighbors(float height)
     {
-        Godot.Collections.Array<Tile> objects = new Godot.Collections.Array<Tile>();
-        foreach (Node ray in _neighbors.GetChildren())
+        FetchNeighborRayCastsIfEmpty();
+        Godot.Collections.Array<Tile> tileNeighbors = new Godot.Collections.Array<Tile>();
+        foreach (RayCast rayCast in _neighborRayCasts)
         {
-            RayCast rayCast = ray as RayCast;
             Tile obj = rayCast.GetCollider() as Tile; //Those might be some sort of collision since they end like tile093_col
             Tile parent = GetParent() as Tile;
-            if (parent == null || obj==null)
+            if (parent is null || obj is null)
                 continue;
             bool objectFulfillsYAxis = Math.Abs(obj.Translation.y - parent.Translation.y) <= height;
             if (objectFulfillsYAxis)
-                objects.Add(obj);
+                tileNeighbors.Add(obj);
         }
-        return objects;
+        return tileNeighbors;
+    }
+
+    /// <summary>
+    /// Because of the way I instance RayCasting I can't do it on ready and so I devised this method to fetch once needed
+    /// </summary>
+    private void FetchNeighborRayCastsIfEmpty()
+    {
+        if (_neighborRayCasts.Count != 0)
+        {
+            return;
+        }
+        _neighborRayCasts = _neighbors.GetChildren().As<RayCast>();
+
     }
 
     public APawn GetObjectAbove()

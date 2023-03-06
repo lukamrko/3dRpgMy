@@ -83,7 +83,7 @@ public class EnemyController : Spatial, IObserver
         Arena.Reset();
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, EnemyPawns);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
-        Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, Targets.GetChildren().As<PlayerPawn>());
+        Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, PlayerPawns);
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);
         TacticsCamera.Target = to;
         Stage = EnemyStage.MovePawn;
@@ -132,7 +132,7 @@ public class EnemyController : Spatial, IObserver
 
     public void Attack(float delta)
     {
-        if(CurrentPawn.AttackingTowards is null)
+        if (CurrentPawn.AttackingTowards is null)
         {
             CurrentPawn.CanAttack = false;
             return;
@@ -235,7 +235,7 @@ public class EnemyController : Spatial, IObserver
     public Godot.Collections.Array<EnemyPawn> SpawnEnemies()
     {
         Godot.Collections.Array<EnemyPawn> pawns = Spawner.SpawnEnemies();
-        foreach(EnemyPawn pawn in pawns)
+        foreach (EnemyPawn pawn in pawns)
         {
             AddChild(pawn);
             pawn.Attach(this);
@@ -243,6 +243,55 @@ public class EnemyController : Spatial, IObserver
         EnemyPawns.AddRangeAs(pawns);
         AllActiveUnits.AddRangeAs(pawns);
         return pawns;
+    }
+
+    private EnemyStage oldStage;
+    public bool ShouldApplyForce()
+    {
+        foreach (var enemy in EnemyPawns)
+        {
+            if (enemy.shouldBeForciblyMoved
+            && Stage != EnemyStage.ForceBeingApplied)
+            {
+                oldStage = Stage;
+                Stage = EnemyStage.ForceBeingCalculated;
+                CurrentPawn = enemy;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void DoForcedMovement(float delta)
+    {
+        if (Stage == EnemyStage.ForceBeingCalculated)
+        {
+            CalculateForce();
+        }
+        else
+        {
+            ApplyForce();
+        }
+    }
+
+    private void CalculateForce()
+    {
+        // Arena.Reset();
+        // Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, EnemyPawns);
+        var location = (CurrentPawn.GlobalTranslation + CurrentPawn.directionOfForcedMovement).Rounded();
+        Tile to = Arena.GetTileAtLocation(location);
+        CurrentPawn.PathStack = Arena.GeneratePathStack(to);
+        TacticsCamera.Target = to;
+        Stage = EnemyStage.ForceBeingApplied;
+    }
+
+    private void ApplyForce()
+    {
+        if (CurrentPawn.PathStack.Count == 0)
+        {
+            Stage = oldStage;
+            CurrentPawn.shouldBeForciblyMoved = false;
+        }
     }
 
 }
@@ -254,5 +303,7 @@ public enum EnemyStage
     ChoseNearestEnemy = 1,
     MovePawn = 2,
     ChosePawnToAttack = 3,
-    AttackPawn = 4
+    AttackPawn = 4,
+    ForceBeingCalculated = 5,
+    ForceBeingApplied = 6
 }

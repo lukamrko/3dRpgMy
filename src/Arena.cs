@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using System;
 
 public class Arena : Spatial
 {
-    Godot.Collections.Array<StaticBody> TilesChildren;
+    Godot.Collections.Array<Tile> TilesChildren;
+    Dictionary<Vector3, Tile> RoundDownedTilesDictionary = new Dictionary<Vector3, Tile>();
 
     public Arena()
     {
@@ -13,23 +15,25 @@ public class Arena : Spatial
 
     public void LinkTiles<T>(Tile root, float height, Godot.Collections.Array<T> allies = null) where T : APawn
     {
-        Godot.Collections.Array<Tile> pq = new Godot.Collections.Array<Tile> { root };
-        while (pq.Count > 0)
+        Godot.Collections.Array<Tile> tiles = new Godot.Collections.Array<Tile> { root };
+        while (tiles.Count > 0)
         {
-            Tile currentTile = pq[0];
-            pq.RemoveAt(0);
-            foreach (Tile neighbor in currentTile.GetNeighbors(height))
+            Tile currentTile = tiles[0];
+            tiles.RemoveAt(0);
+            var neighbors = currentTile.GetNeighbors(height);
+            foreach (Tile neighbor in neighbors)
             {
-                if (neighbor.Root == null && neighbor != root)
+                var neighborRootState = neighbor.Root is null && neighbor != root;
+                var pawnsOccupy = neighbor.IsTaken()
+                    && allies != null
+                    && !allies.Contains(neighbor.GetObjectAbove() as APawn);
+                var shouldLinkTiles = neighborRootState && !pawnsOccupy;
+
+                if(shouldLinkTiles)
                 {
-                    if (!(neighbor.IsTaken()
-                        && allies != null
-                        && !allies.Contains(neighbor.GetObjectAbove() as APawn)))
-                    {
-                        neighbor.Root = currentTile;
-                        neighbor.Distance = currentTile.Distance + 1;
-                        pq.Add(neighbor);
-                    }
+                    neighbor.Root = currentTile;
+                    neighbor.Distance = currentTile.Distance + 1;
+                    tiles.Add(neighbor);
                 }
             }
         }
@@ -64,6 +68,39 @@ public class Arena : Spatial
         }
     }
 
+/// <summary>
+/// Thy shall pass rounded location to this method
+/// </summary>
+/// <param name="location"></param>
+/// <returns></returns>
+    public Tile GetTileAtLocation(Vector3 location)
+    {
+        // foreach (var tHelp in TilesChildren)
+        // {
+        //     Tile t = tHelp as Tile;
+        //     var gdPrint = string.Format(@"
+        //     Location of tile globally: {0}. 
+        //     Location where I should move: {1}", t.GlobalTranslation, location);
+        //     GD.Print(gdPrint);
+        //     if(location.IsEqualApprox(t.GlobalTranslation))
+        //     {
+        //         return t;
+        //     }
+        // }
+        Tile tile = null;
+        RoundDownedTilesDictionary.TryGetValue(location, out tile);
+        if(tile is object)
+        {
+            GD.Print("The madman actually found the tille");
+        }
+        // if (RoundDownedTilesDictionary.ContainsKey(location))
+        // {
+        //     return RoundDownedTilesDictionary.TryGetValue(location, tile);
+        // }
+        return tile;
+    }
+
+
     public Godot.Collections.Array<Vector3> GeneratePathStack(Tile to)
     {
         Godot.Collections.Array<Vector3> pathStack = new Godot.Collections.Array<Vector3>();
@@ -89,7 +126,17 @@ public class Arena : Spatial
         var Tiles = GetNode<Spatial>("Tiles");
         Tiles.Visible = true;
         Utils.ConvertTilesIntoStaticBodies(Tiles);
-        TilesChildren = GetNode("Tiles").GetChildren().As<StaticBody>();
+        TilesChildren = GetNode("Tiles").GetChildren().As<Tile>();
+        GenerateDictionaryForTiles();
+    }
+
+    private void GenerateDictionaryForTiles()
+    {
+        foreach(Tile Tile in TilesChildren)
+        {
+            var tileLocation = Tile.GlobalTranslation.Rounded();
+            RoundDownedTilesDictionary.Add(tileLocation, Tile);
+        }
     }
 
     public Tile GetNearestNeighborToPawn(APawn pawn, Godot.Collections.Array<PlayerPawn> pawns)

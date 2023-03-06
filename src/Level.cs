@@ -50,12 +50,22 @@ public class Level : Spatial
 
     public void TurnHandler(float delta)
     {
-        if (Enemy.CanFirstAct())
+        if(Enemy.ShouldApplyForce())
+            {
+                Enemy.DoForcedMovement(delta);
+            }
+        else if (Enemy.CanFirstAct())
+        {
             Enemy.FirstAct(delta);
+        }
         else if (Player.CanAct())
+        {
             Player.Act(delta);
+        }
         else if (Enemy.CanSecondAct())
+        {
             Enemy.SecondAct(delta);
+        }
         else
         {
             currentRound++;
