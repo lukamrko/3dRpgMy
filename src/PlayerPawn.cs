@@ -5,12 +5,7 @@ using System.Collections.Generic;
 
 public class PlayerPawn : APawn
 {
-    public bool skipped = false;
-
-    public PlayerPawn()
-    {
-        // _Ready();
-    }
+    public bool Skipped = false;
 
     public override void _Ready()
     {
@@ -27,14 +22,15 @@ public class PlayerPawn : APawn
 
     public bool CanAct()
     {
-        return (CanMove || CanAttack) && CurrHealth > 0;
+        return (CanMove || CanAttack)
+            && CurrHealth > 0;
     }
 
     public override void TintWhenNotAbleToAct()
     {
         Character.Modulate = !CanAct()
-        ? new Color(0.7f, 0.7f, 0.7f)
-        : new Color(1, 1, 1);
+            ? new Color(0.7f, 0.7f, 0.7f)
+            : new Color(1, 1, 1);
     }
 
     public override void _Process(float delta)

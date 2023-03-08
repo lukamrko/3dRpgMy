@@ -5,13 +5,13 @@ public class TileRaycasting : Spatial
 {
     private Spatial _neighbors;
     private RayCast _above;
-
     private Godot.Collections.Array<RayCast> _neighborRayCasts;
 
     public TileRaycasting()
     {
         _Ready();
     }
+
     public override void _Ready()
     {
         _neighbors = GetNode<Spatial>("Neighbors");
@@ -28,10 +28,14 @@ public class TileRaycasting : Spatial
             Tile obj = rayCast.GetCollider() as Tile; //Those might be some sort of collision since they end like tile093_col
             Tile parent = GetParent() as Tile;
             if (parent is null || obj is null)
+            {
                 continue;
+            }
             bool objectFulfillsYAxis = Math.Abs(obj.Translation.y - parent.Translation.y) <= height;
             if (objectFulfillsYAxis)
+            {
                 tileNeighbors.Add(obj);
+            }
         }
         return tileNeighbors;
     }
@@ -54,7 +58,5 @@ public class TileRaycasting : Spatial
         APawn pawn = _above.GetCollider() as APawn;
         return pawn;
     }
-
-
 
 }

@@ -16,11 +16,6 @@ public class Level : Spatial
     EnemyController Enemy;
     Spawner Spawner;
 
-    public Level()
-    {
-        // _Ready();
-    }
-
     public override void _Ready()
     {
         Player = GetNode<PlayerController>("Player");
@@ -34,8 +29,6 @@ public class Level : Spatial
         Enemy.Configure(arena, tacticsCamera);
 
         Spawner = GetNode<Spawner>("EnemySpawner");
-
-        // FirstObserverAttachments();
     }
 
 
@@ -51,9 +44,9 @@ public class Level : Spatial
     public void TurnHandler(float delta)
     {
         if(Enemy.ShouldApplyForce())
-            {
-                Enemy.DoForcedMovement(delta);
-            }
+        {
+            Enemy.DoForcedMovement(delta);
+        }
         else if (Enemy.CanFirstAct())
         {
             Enemy.FirstAct(delta);
@@ -71,7 +64,6 @@ public class Level : Spatial
             currentRound++;
             var enemies = Enemy.SpawnEnemies();
             Player.NotifyAboutNewEnemies(enemies);
-            // Spawner.SpawnEnemies();
             var print = string.Format("Round {0} finished. New round is: {1}", currentRound-1, currentRound);
             GD.Print(print);
             if(currentRound == RoundWhenPlayerWins)
@@ -94,9 +86,4 @@ public class Level : Spatial
         TurnHandler(delta);
     }
 
-    //  // Called every frame. 'delta' is the elapsed time since the previous frame.
-    //  public override void _Process(float delta)
-    //  {
-    //      
-    //  }
 }

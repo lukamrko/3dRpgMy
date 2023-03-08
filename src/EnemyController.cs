@@ -25,29 +25,29 @@ public class EnemyController : Spatial, IObserver
 
     Spawner Spawner;
 
-    public EnemyController()
-    {
-        // _Ready();
-    }
     public bool CanFirstAct()
     {
         for (int i = 0; i < EnemyPawns.Count; i++)
         {
             EnemyPawn pawn = EnemyPawns[i];
-
             if (pawn.EnemyCanFirstAct())
             {
                 return true;
             }
         }
+
         return false;
     }
 
     public bool CanSecondAct()
     {
         foreach (EnemyPawn p in EnemyPawns)
+        {
             if (p.EnemyCanSecondAct())
+            {
                 return true;
+            }
+        }
         // return Stage != EnemyStage.MovePawn;
         return false;
     }
@@ -55,16 +55,19 @@ public class EnemyController : Spatial, IObserver
     public void Reset()
     {
         foreach (EnemyPawn p in EnemyPawns)
+        {
             p.Reset();
+        }
     }
 
     public void Configure(Arena arena, TacticsCamera camera)
     {
         TacticsCamera = camera;
         Arena = arena;
-        Godot.Collections.Array pawns = GetChildren();
-        if (pawns.Count > 0)
-            CurrentPawn = pawns[0] as EnemyPawn;
+        if (EnemyPawns.Count > 0)
+        {
+            CurrentPawn = EnemyPawns[0];
+        }
     }
 
     public void ChoosePawn()
@@ -73,8 +76,11 @@ public class EnemyController : Spatial, IObserver
         foreach (EnemyPawn pawn in EnemyPawns)
         {
             if (pawn.EnemyCanFirstAct())
+            {
                 CurrentPawn = pawn;
+            }
         }
+
         Stage = EnemyStage.ChoseNearestEnemy;
     }
 
@@ -125,8 +131,7 @@ public class EnemyController : Spatial, IObserver
         }
         Vector3 directionRounded = this.Translation.DirectionTo(AttackablePawn.Translation).Rounded();
         GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
-           CurrentPawn.PawnName, directionRounded, AttackablePawn.PawnName)
-           );
+           CurrentPawn.PawnName, directionRounded, AttackablePawn.PawnName));
         return directionRounded;
     }
 
@@ -159,7 +164,9 @@ public class EnemyController : Spatial, IObserver
     private void AttachObserverToPawns(Godot.Collections.Array<APawn> pawns)
     {
         foreach (APawn pawn in pawns)
+        {
             pawn.Attach(this);
+        }
     }
 
     public void FirstAct(float delta)
@@ -251,7 +258,7 @@ public class EnemyController : Spatial, IObserver
         foreach (var enemy in EnemyPawns)
         {
             if (enemy.shouldBeForciblyMoved
-            && Stage != EnemyStage.ForceBeingApplied)
+                && Stage != EnemyStage.ForceBeingApplied)
             {
                 oldStage = Stage;
                 Stage = EnemyStage.ForceBeingCalculated;
@@ -276,8 +283,6 @@ public class EnemyController : Spatial, IObserver
 
     private void CalculateForce()
     {
-        // Arena.Reset();
-        // Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, EnemyPawns);
         var location = (CurrentPawn.GlobalTranslation + CurrentPawn.directionOfForcedMovement).Rounded();
         Tile to = Arena.GetTileAtLocation(location);
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);

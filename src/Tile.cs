@@ -3,7 +3,6 @@ using System;
 
 public class Tile : StaticBody
 {
-
     public Material HoverMat = Utils.CreateMaterial(new Color("33ffffff"));
     public Material ReachableMat = Utils.CreateMaterial(new Color("e6143464"));
     public Material HoverReachableMat = Utils.CreateMaterial(new Color("d92d548f"));
@@ -20,7 +19,6 @@ public class Tile : StaticBody
     PackedScene TileRaycastingTSCN;
     TileRaycasting TileRaycasting;
 
-
     public Tile()
     {
         _Ready();
@@ -28,16 +26,11 @@ public class Tile : StaticBody
 
     public Godot.Collections.Array<Tile> GetNeighbors(float height)
     {
-        // TileRaycasting rayCasting = GetNode<TileRaycasting>("RayCasting");
-        // return rayCasting.GetAllNeighbors(height);
-
         return TileRaycasting.GetAllNeighbors(height);
     }
 
     public object GetObjectAbove()
     {
-        // TileRaycasting rayCasting = GetNode<TileRaycasting>("RayCasting");
-        // return rayCasting.GetObjectAbove() as Pawn;
         object objectAbove = TileRaycasting.GetObjectAbove();
         return objectAbove;
     }
@@ -63,47 +56,42 @@ public class Tile : StaticBody
         TileRaycasting = GetNode<TileRaycasting>("RayCasting");
     }
 
-
-
     public override void _Ready()
     {
-        // var TileRaycastingHelper = ResourceLoader.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
-        // TileRaycastingTSCN = TileRaycastingHelper.Instance();
         TileRaycastingTSCN = ResourceLoader.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
-        // TileRaycasting = GetNode<TileRaycasting>("RayCasting");
-
-
         CurrTiles = GetNode<MeshInstance>("Tile");
-        // try
-        // {
-        // }
-        // catch (InvalidCastException e)
-        // {
-        //     GD.Print("GRRRR nisan naša");
-        //     GD.Print(e);
-        //     GD.Print(e.Message);
-        // }
     }
 
     public override void _Process(float delta)
     {
         CurrTiles.Visible = Attackable || Reachable || Hover;
-        switch(Hover)
+        switch (Hover)
         {
             case true:
-                if(Reachable)
+                if (Reachable)
+                {
                     CurrTiles.MaterialOverride = HoverReachableMat;
+                }
                 else if (Attackable)
+                {
                     CurrTiles.MaterialOverride = HoverAttackableMat;
+                }
                 else
+                {
                     CurrTiles.MaterialOverride = HoverMat;
+                }
                 break;
             case false:
-                if(Reachable)
+                if (Reachable)
+                {
                     CurrTiles.MaterialOverride = ReachableMat;
+                }
                 else if (Attackable)
+                {
                     CurrTiles.MaterialOverride = AttackableMat;
+                }
                 break;
         }
     }
+
 }

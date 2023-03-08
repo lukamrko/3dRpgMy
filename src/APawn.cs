@@ -15,7 +15,6 @@ public abstract class APawn : KinematicBody, ISubject
     protected const int MinTimeForAttack = 1;
 
     #region class infoE
-
     [Export]
     public PawnClass PawnClass;
     [Export]
@@ -47,7 +46,6 @@ public abstract class APawn : KinematicBody, ISubject
             {
                 GD.Print("I have died, but my time will come!");
                 this.QueueFree();
-                // this.Dispose();
             }
         }
     }
@@ -57,6 +55,7 @@ public abstract class APawn : KinematicBody, ISubject
     [Export]
     public int CurrFrame = 0;
     protected AnimationNodeStateMachinePlayback Animator = null;
+    private const float dotOnWhichToRotate = 0.306f;
     #endregion
 
     #region Pathfinding
@@ -94,10 +93,14 @@ public abstract class APawn : KinematicBody, ISubject
         Vector3 cameraForward = -GetViewport().GetCamera().GlobalTransform.basis.z;
         float dot = GlobalTransform.basis.z.Dot(cameraForward);
         Character.FlipH = GlobalTransform.basis.x.Dot(cameraForward) > 0;
-        if (dot < -0.306)
+        if (dot < -dotOnWhichToRotate)
+        {
             Character.Frame = CurrFrame;
-        else if (dot > 0.306)
+        }
+        else if (dot > dotOnWhichToRotate)
+        {
             Character.Frame = CurrFrame + 1 * AnimationFrames;
+        }
     }
 
     public void LookAtDirection(Vector3 dir)
@@ -112,18 +115,29 @@ public abstract class APawn : KinematicBody, ISubject
     public void StartAnimator()
     {
         if (MoveDirection == Vector3.Zero)
+        {
             Animator.Travel("IDLE");
+        }
         else if (IsJumping)
+        {
             Animator.Travel("JUMP");
+        }
     }
 
 
     public void FollowThePath(float delta)
     {
         if (!CanMove)
+        {
             return;
+        }
+
         if (MoveDirection == Vector3.Zero)
+        {
             MoveDirection = PathStack.FirstOrDefault() - GlobalTransform.origin;
+        }
+
+        //TODO extract 0.5 to const
         if (MoveDirection.Length() > 0.5)
         {
             LookAtDirection(MoveDirection);
@@ -146,15 +160,23 @@ public abstract class APawn : KinematicBody, ISubject
                     velocity = (PathStack.FirstOrDefault() - GlobalTransform.origin).Normalized() + Gravity;
                 }
                 else
+                {
                     velocity = Utils.VectorRemoveY(MoveDirection).Normalized();
+                }
             }
 
             Vector3 _v = MoveAndSlide(velocity * currentSpeed, Vector3.Up);
             if (GlobalTransform.origin.DistanceTo(PathStack.FirstOrDefault()) >= 0.2)
+            {
                 return;
+            }
         }
+
         if (PathStack.Count > 0)
+        {
             PathStack.RemoveAt(0);
+        }
+
         MoveDirection = Vector3.Zero;
         IsJumping = false;
         Gravity = Vector3.Zero;
@@ -201,7 +223,9 @@ public abstract class APawn : KinematicBody, ISubject
     private void ForciblyMovePawn(float delta)
     {
         if (MoveDirection == Vector3.Zero)
+        {
             MoveDirection = PathStack.FirstOrDefault() - GlobalTransform.origin;
+        }
         if (MoveDirection.Length() > 0.5)
         {
             Vector3 velocity = MoveDirection.Normalized();
@@ -224,15 +248,23 @@ public abstract class APawn : KinematicBody, ISubject
                     velocity = (PathStack.FirstOrDefault() - GlobalTransform.origin).Normalized() + Gravity;
                 }
                 else
+                {
                     velocity = Utils.VectorRemoveY(MoveDirection).Normalized();
+                }
             }
 
             Vector3 _v = MoveAndSlide(velocity * currentSpeed, Vector3.Up);
             if (GlobalTransform.origin.DistanceTo(PathStack.FirstOrDefault()) >= 0.2)
+            {
                 return;
+            }
         }
+
         if (PathStack.Count > 0)
+        {
             PathStack.RemoveAt(0);
+        }
+
         MoveDirection = Vector3.Zero;
         IsJumping = false;
         Gravity = Vector3.Zero;
@@ -289,7 +321,7 @@ public abstract class APawn : KinematicBody, ISubject
         else
         {
             DealDamageAndRemoveIfDead(pawnAtLocation, 1);
-            GD.Print("BOSS WE GOTT EM! There is somebody behind him");
+            GD.Print("BOSS WE GOT EM! There is somebody behind him");
         }
     }
 
@@ -309,14 +341,13 @@ public abstract class APawn : KinematicBody, ISubject
         if (CanAttack)
         {
             APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, positionOfAttack);
-            if (pawnAtLocation != null)
+            if (pawnAtLocation is object)
             {
                 DealDamageAndRemoveIfDead(pawnAtLocation, AttackPower);
             }
             CanAttack = false;
         }
         GD.Print("Pretend I sleep!");
-        // System.Threading.Thread.Sleep(WaitDelayMilliseconds);
     }
 
     private APawn GetPawnAtAttackLocation(Array<APawn> allActiveUnits, Vector3 positionOfAttack)
@@ -326,10 +357,10 @@ public abstract class APawn : KinematicBody, ISubject
         {
             GD.Print(String.Format("Pawn {0}, position: {1}", pawn.PawnName, pawn.Translation.Rounded()));
             Vector3 directionTowardsPawn = this.Translation.DirectionTo(pawn.Translation).Rounded();
-            // if (pawn.Translation.Rounded().Equals(positionOfAttack))
-            //     return pawn;
             if (directionTowardsPawn.Equals(positionOfAttack))
+            {
                 return pawn;
+            }
         }
         return null;
     }
@@ -357,9 +388,7 @@ public abstract class APawn : KinematicBody, ISubject
         Animator = AnimationTree.Get("parameters/playback") as AnimationNodeStateMachinePlayback;
         Animator.Start("IDLE");
         AnimationTree.Active = true;
-
         Character.Texture = Utils.GetPawnSprite(PawnClass);
-
         NameLabel.Text = PawnName + ", The " + PawnClass.ToString();
     }
 
@@ -369,7 +398,6 @@ public abstract class APawn : KinematicBody, ISubject
     }
 
     public abstract void TintWhenNotAbleToAct();
-
 
     private List<IObserver> _observers = new List<IObserver>();
     public void Attach(IObserver observer)

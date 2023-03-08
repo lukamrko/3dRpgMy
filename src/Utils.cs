@@ -13,6 +13,26 @@ public static class Utils
 
 
     static string TileSrc = "res://src/Tile.cs";
+
+    /// <summary>
+    /// Given a Spatial Node as parameter (tilesObj), this function will iterate over each
+    /// of its children converting them into a static body and attaching the Tile.cs script.
+    /// e.g.this function will transform the 'Tiles' into the following structure:
+    /// 	> Tiles:                                > Tiles:
+    /// 		> Tile1                                 > StaticBody (Tile.cs):
+    /// 		> Tile2                                     > Tile1
+    ///         ...                                         > CollisionShape
+    /// 		> TileN       -- TRANSFORM INTO ->      > StaticBody2 (Tile.cs):
+    /// 													> Tile2
+    /// 													> CollisionShape
+    ///                                                 ...
+    /// 												> StaticBodyN (Tile.cs):
+    /// 													> TileN
+    /// 													> CollisionShape
+    /// This is very useful for configure walkable tiles as fast as possible
+    /// especially if the map used was exported from Blender using the Godot Extension
+    /// </summary>
+    /// <param name="tilesObj"></param>
     public static void ConvertTilesIntoStaticBodies(Spatial tilesObj)
     {
         var script = ResourceLoader.Load<Reference>(TileSrc);
@@ -29,18 +49,13 @@ public static class Utils
 
             staticBody.AddChild(tileObj);
             var instanceID = staticBody.GetInstanceId();
-            // Resource script = GD.Load(TileSrc);
 
             staticBody.SetScript(script);
-            // var a = ResourceLoader.Load<Reference>(TileSrc);
-            // staticBody.SetScript(ResourceLoader.Load<Reference>(TileSrc));
             Tile staticBodyTile = (Tile)GD.InstanceFromId(instanceID);
-            // Tile staticBodyTile = staticBody as Tile;
             staticBodyTile._Ready();
             staticBodyTile.ConfigureTile();
             staticBodyTile.SetProcess(true);
             tilesObj.AddChild(staticBodyTile);
-
         }
     }
 

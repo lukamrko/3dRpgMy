@@ -6,8 +6,6 @@ using Godot.Collections;
 
 public class EnemyPawn : APawn
 {
-    [Export]
-    public PackedScene EnemyScene;
     public Vector3? AttackingTowards;
     public EnemyPhase CurrentPhase = EnemyPhase.NotAnEnemyPhase;
     public override void _Ready()
@@ -25,7 +23,7 @@ public class EnemyPawn : APawn
 
     public bool EnemyCanFirstAct()
     {
-        return (CanMove) && CurrHealth > 0;
+        return CanMove && CurrHealth > 0;
     }
     public bool EnemyCanSecondAct()
     {
@@ -64,7 +62,6 @@ public class EnemyPawn : APawn
             ? new Color(0.7f, 0.7f, 0.7f)
             : new Color(1, 1, 1);
     }
-
     
 }
 

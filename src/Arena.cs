@@ -8,11 +8,6 @@ public class Arena : Spatial
     Godot.Collections.Array<Tile> TilesChildren;
     Dictionary<Vector3, Tile> RoundDownedTilesDictionary = new Dictionary<Vector3, Tile>();
 
-    public Arena()
-    {
-        // _Ready();
-    }
-
     public void LinkTiles<T>(Tile root, float height, Godot.Collections.Array<T> allies = null) where T : APawn
     {
         Godot.Collections.Array<Tile> tiles = new Godot.Collections.Array<Tile> { root };
@@ -25,7 +20,7 @@ public class Arena : Spatial
             {
                 var neighborRootState = neighbor.Root is null && neighbor != root;
                 var pawnsOccupy = neighbor.IsTaken()
-                    && allies != null
+                    && allies is object
                     && !allies.Contains(neighbor.GetObjectAbove() as APawn);
                 var shouldLinkTiles = neighborRootState && !pawnsOccupy;
 
@@ -39,32 +34,32 @@ public class Arena : Spatial
         }
     }
 
-    public void MarkHoverTile(Tile tile)
+    public void MarkHoverTile(Tile markedTile)
     {
-        foreach (var tHelp in TilesChildren)
+        foreach (var tile in TilesChildren)
         {
-            Tile t = tHelp as Tile;
-            t.Hover = false;
+            tile.Hover = false;
         }
-        if (tile != null)
-            tile.Hover = true;
+
+        if (markedTile is object)
+        {
+            markedTile.Hover = true;
+        }
     }
 
     public void MarkReachableTiles(Tile root, int distance)
     {
-        foreach (var tHelp in TilesChildren)
+        foreach (var tile in TilesChildren)
         {
-            Tile t = tHelp as Tile;
-            t.Reachable = t.Distance > 0 && t.Distance <= distance && !t.IsTaken() || t.Equals(root);
+            tile.Reachable = tile.Distance > 0 && tile.Distance <= distance && !tile.IsTaken() || tile.Equals(root);
         }
     }
 
     public void MarkAttackableTiles(Tile root, float distance)
     {
-        foreach (var tHelp in TilesChildren)
+        foreach (var tile in TilesChildren)
         {
-            Tile t = tHelp as Tile;
-            t.Attackable = t.Distance > 0 && t.Distance <= distance || t.Equals(root);
+            tile.Attackable = tile.Distance > 0 && tile.Distance <= distance || tile.Equals(root);
         }
     }
 
@@ -75,28 +70,13 @@ public class Arena : Spatial
 /// <returns></returns>
     public Tile GetTileAtLocation(Vector3 location)
     {
-        // foreach (var tHelp in TilesChildren)
-        // {
-        //     Tile t = tHelp as Tile;
-        //     var gdPrint = string.Format(@"
-        //     Location of tile globally: {0}. 
-        //     Location where I should move: {1}", t.GlobalTranslation, location);
-        //     GD.Print(gdPrint);
-        //     if(location.IsEqualApprox(t.GlobalTranslation))
-        //     {
-        //         return t;
-        //     }
-        // }
         Tile tile = null;
         RoundDownedTilesDictionary.TryGetValue(location, out tile);
         if(tile is object)
         {
-            GD.Print("The madman actually found the tille");
+            GD.Print("The madman actually found the tile");
         }
-        // if (RoundDownedTilesDictionary.ContainsKey(location))
-        // {
-        //     return RoundDownedTilesDictionary.TryGetValue(location, tile);
-        // }
+
         return tile;
     }
 
@@ -104,7 +84,7 @@ public class Arena : Spatial
     public Godot.Collections.Array<Vector3> GeneratePathStack(Tile to)
     {
         Godot.Collections.Array<Vector3> pathStack = new Godot.Collections.Array<Vector3>();
-        while (to != null)
+        while (to is object)
         {
             pathStack.Insert(0, to.GlobalTransform.origin);
             to = to.Root;
@@ -114,10 +94,9 @@ public class Arena : Spatial
 
     public void Reset()
     {
-        foreach (var helpT in TilesChildren)
+        foreach (var tile in TilesChildren)
         {
-            Tile t = helpT as Tile;
-            t.Reset();
+            tile.Reset();
         }
     }
 
@@ -145,17 +124,34 @@ public class Arena : Spatial
         foreach (PlayerPawn _pawn in pawns)
         {
             if (_pawn.CurrHealth <= 0)
-                continue;
-            foreach (Tile n in _pawn.GetTile().GetNeighbors(pawn.JumpHeight))
             {
-                if ((nearestTile == null || n.Distance < nearestTile.Distance) && n.Distance > 0 && !n.IsTaken())
-                    nearestTile = n;
+                continue;
+            }
+
+            foreach (Tile newTile in _pawn.GetTile().GetNeighbors(pawn.JumpHeight))
+            {
+                var isNewTileNearestTile = (nearestTile is null || newTile.Distance < nearestTile.Distance) 
+                    && newTile.Distance > 0 
+                    && !newTile.IsTaken();
+
+                if (isNewTileNearestTile)
+                {
+                    nearestTile = newTile;
+                }
             }
         }
-        while (nearestTile != null && !nearestTile.Reachable)
+
+        while (nearestTile is object 
+            && !nearestTile.Reachable)
+        {
             nearestTile = nearestTile.Root;
-        if (nearestTile != null)
+        }
+        
+        if (nearestTile is object)
+        {
             return nearestTile;
+        }
+
         return pawn.GetTile();
     }
 
@@ -164,8 +160,14 @@ public class Arena : Spatial
         PlayerPawn weakest = null;
         foreach (PlayerPawn pawn in pawns)
         {
-            if ((weakest == null || pawn.CurrHealth < weakest.CurrHealth) && pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
+            var isPawnWeakestPawn = (weakest is null || pawn.CurrHealth < weakest.CurrHealth) 
+                && pawn.CurrHealth > 0 
+                && pawn.GetTile().Attackable;
+
+            if (isPawnWeakestPawn)
+            {
                 weakest = pawn;
+            }
         }
         return weakest;
     }
@@ -176,10 +178,16 @@ public class Arena : Spatial
         foreach (PlayerPawn pawn in pawns)
         {
             if (pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
+            {
                 potentiallyAttackablePawns.Add(pawn);
+            }
         }
+
         if (potentiallyAttackablePawns.Count > 0)
+        {
             return potentiallyAttackablePawns.GetRandom();
+        }
+
         return null;
     }
 
@@ -189,7 +197,7 @@ public class Arena : Spatial
     //     PlayerPawn weakest = null;
     //     foreach (PlayerPawn pawn in pawns)
     //     {
-    //         if ((weakest == null || pawn.CurrHealth < weakest.CurrHealth) && pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
+    //         if ((weakest is null || pawn.CurrHealth < weakest.CurrHealth) && pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
     //             weakest = pawn;
     //     }
     //     return weakest;

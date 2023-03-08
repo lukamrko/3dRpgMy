@@ -14,18 +14,18 @@ public class PlayerController : Spatial, IObserver
         {
             if (value is null && _currentPawn is object)
             {
-                GD.Print("Thus I became null");
                 ResetSkipFieldOnFriendlyPawns();
             }
             _currentPawn = value;
-            
         }
     }
 
     private void ResetSkipFieldOnFriendlyPawns()
     {
         foreach (PlayerPawn pawn in PlayerPawns)
-            pawn.skipped = false;
+        {
+            pawn.Skipped = false;
+        }
     }
 
     APawn AttackablePawn = null;
@@ -42,11 +42,6 @@ public class PlayerController : Spatial, IObserver
     PlayerControllerUI UIControl;
     Godot.Collections.Array<PlayerPawn> PlayerPawns;
     Godot.Collections.Array<APawn> AllActiveUnits;
-
-    public PlayerController()
-    {
-        // _Ready();
-    }
 
     public void Configure(Arena myArena, TacticsCamera myCamera, PlayerControllerUI myControl)
     {
@@ -68,7 +63,9 @@ public class PlayerController : Spatial, IObserver
     public object GetMouseOverObject(uint lmask)
     {
         if (UIControl.IsMouseHoverButton())
+        {
             return null;
+        }
         Camera camera = GetViewport().GetCamera();
         Vector2 origin = !IsJoyStick
             ? GetViewport().GetMousePosition()
@@ -77,22 +74,31 @@ public class PlayerController : Spatial, IObserver
         Vector3 to = from + camera.ProjectRayNormal(origin) * 1000;
         Godot.Collections.Dictionary rayIntersections = GetWorld().DirectSpaceState.IntersectRay(from, to, null, lmask);
         if (rayIntersections.Contains("collider"))
+        {
             return rayIntersections["collider"];
+        }
         return null;
     }
 
     public bool CanAct()
     {
         foreach (PlayerPawn pawn in PlayerPawns)
+        {
             if (pawn.CanAct())
+            {
                 return true;
+            }
+        }
+
         return (int)Stage > 0;
     }
 
     public void Reset()
     {
         foreach (PlayerPawn pawn in PlayerPawns)
+        {
             pawn.Reset();
+        }
     }
 
     public void PlayerWantsToMove()
@@ -121,25 +127,31 @@ public class PlayerController : Spatial, IObserver
     private PlayerPawn AuxSelectPawn()
     {
         PlayerPawn pawn = GetMouseOverObject(2) as PlayerPawn;
-        Tile tile = pawn == null
+        Tile tile = pawn is null
             ? GetMouseOverObject(1) as Tile
             : pawn.GetTile();
         Arena.MarkHoverTile(tile);
-        if (pawn != null)
+        if (pawn is object)
+        {
             return pawn;
+        }
         else
         {
-            if (tile != null)
+            if (tile is object)
+            {
                 return tile.GetObjectAbove() as PlayerPawn;
+            }
             else
+            {
                 return null;
+            }
         }
     }
 
     private Tile AuxSelectTile()
     {
         PlayerPawn pawn = GetMouseOverObject(2) as PlayerPawn;
-        Tile tile = pawn == null
+        Tile tile = pawn is null
             ? GetMouseOverObject(1) as Tile
             : pawn.GetTile();
         Arena.MarkHoverTile(tile);
@@ -150,14 +162,21 @@ public class PlayerController : Spatial, IObserver
     public void SelectPawn()
     {
         Arena.Reset();
-        if (CurrentPawn != null)
+        if (CurrentPawn is object)
+        {
             CurrentPawn.DisplayPawnStats(false);
+        }
+
         CurrentPawn = AuxSelectPawn();
-        if (CurrentPawn == null)
+        if (CurrentPawn is null)
+        {
             return;
+        }
 
         CurrentPawn.DisplayPawnStats(true);
-        if (Input.IsActionJustPressed("ui_accept") && CurrentPawn.CanAct() && PlayerPawns.Contains(CurrentPawn))
+        if (Input.IsActionJustPressed("ui_accept") 
+            && CurrentPawn.CanAct() 
+            && PlayerPawns.Contains(CurrentPawn))
         {
             TacticsCamera.Target = CurrentPawn;
             Stage = PlayerStage.DisplayAvailableActionsForPawn;
@@ -174,8 +193,10 @@ public class PlayerController : Spatial, IObserver
     public void DisplayAvailableMovements()
     {
         Arena.Reset();
-        if (CurrentPawn == null)
+        if (CurrentPawn is null)
+        {
             return;
+        }
         TacticsCamera.Target = CurrentPawn;
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, PlayerPawns);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
@@ -185,8 +206,10 @@ public class PlayerController : Spatial, IObserver
     public void DisplayAttackableTargets()
     {
         Arena.Reset();
-        if (CurrentPawn == null)
+        if (CurrentPawn is null)
+        {
             return;
+        }
         TacticsCamera.Target = CurrentPawn;
         Godot.Collections.Array<PlayerPawn> emptyArray = null;
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
@@ -198,7 +221,9 @@ public class PlayerController : Spatial, IObserver
     {
         Tile tile = GetMouseOverObject(1) as Tile;
         Arena.MarkHoverTile(tile);
-        if (Input.IsActionJustPressed("ui_accept") && tile != null && tile.Reachable)
+        if (Input.IsActionJustPressed("ui_accept") 
+            && tile is object 
+            && tile.Reachable)
         {
             CurrentPawn.PathStack = Arena.GeneratePathStack(tile);
             TacticsCamera.Target = tile;
@@ -209,17 +234,29 @@ public class PlayerController : Spatial, IObserver
     public void SelectPawnToAttack()
     {
         CurrentPawn.DisplayPawnStats(true);
-        if (AttackablePawn != null)
+        if (AttackablePawn is object)
+        {
             AttackablePawn.DisplayPawnStats(false);
-        Tile tile = AuxSelectTile();
-        if (tile != null)
-            AttackablePawn = tile.GetObjectAbove() as APawn;
-        else
-            AttackablePawn = null;
+        }
 
-        if (AttackablePawn != null)
+        Tile tile = AuxSelectTile();
+        if (tile is object)
+        {
+            AttackablePawn = tile.GetObjectAbove() as APawn;
+        }
+        else
+        {
+            AttackablePawn = null;
+        }
+
+        if (AttackablePawn is object)
+        {
             AttackablePawn.DisplayPawnStats(true);
-        if (Input.IsActionJustPressed("ui_accept") && tile != null && tile.Attackable)
+        }
+
+        if (Input.IsActionJustPressed("ui_accept") 
+            && tile is object 
+            && tile.Attackable)
         {
             TacticsCamera.Target = AttackablePawn;
             Stage = PlayerStage.AttackPawn;
@@ -230,31 +267,43 @@ public class PlayerController : Spatial, IObserver
     {
         CurrentPawn.DisplayPawnStats(false);
         if (CurrentPawn.PathStack.Count == 0)
+        {
             if (!CurrentPawn.CanAct())
+            {
                 Stage = PlayerStage.SelectPawn;
+            }
             else
+            {
                 Stage = PlayerStage.DisplayAvailableActionsForPawn;
+            }
+        }
+            
     }
 
     public void AttackPawn(float delta)
     {
-        if (AttackablePawn == null)
+        if (AttackablePawn is null)
+        {
             CurrentPawn.CanAttack = false;
+        }
         else
         {
             CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits, delta);
             AttackablePawn.DisplayPawnStats(false);
             TacticsCamera.Target = CurrentPawn;
         }
+
         AttackablePawn = null;
         if (!CurrentPawn.CanAct())
+        {
             Stage = PlayerStage.SelectPawn;
+        }
         else
+        {
             Stage = PlayerStage.DisplayAvailableActionsForPawn;
+        }
     }
     #endregion
-
-
 
     public void Act(float delta)
     {
@@ -308,9 +357,13 @@ public class PlayerController : Spatial, IObserver
     public void CameraRotation()
     {
         if (Input.IsActionJustPressed("camera_rotate_left"))
+        {
             TacticsCamera.YRot -= 90;
+        }
         if (Input.IsActionJustPressed("camera_rotate_right"))
+        {
             TacticsCamera.YRot += 90;
+        }
     }
     #endregion 
 
@@ -319,7 +372,7 @@ public class PlayerController : Spatial, IObserver
         if (Input.IsActionJustPressed("ui_focus_next"))
         {
             FastGetCurrentPawn();
-            if (CurrentPawn == null)
+            if (CurrentPawn is null)
             {
                 FastGetCurrentPawn();
             }
@@ -330,12 +383,12 @@ public class PlayerController : Spatial, IObserver
     {
         foreach (PlayerPawn pawn in PlayerPawns)
         {
-            var currentPawnAllows = CurrentPawn is null || pawn.skipped == false;
+            var currentPawnAllows = CurrentPawn is null || pawn.Skipped == false;
             var isCurrentPawn = pawn.CanAct() && currentPawnAllows;
             if (isCurrentPawn)
             {
                 CurrentPawn = pawn;
-                CurrentPawn.skipped = true;
+                CurrentPawn.Skipped = true;
                 Stage = PlayerStage.DisplayAvailableActionsForPawn;
                 return;
             }
@@ -357,7 +410,9 @@ public class PlayerController : Spatial, IObserver
     private void AttachObserverToPawns(Array<APawn> pawns)
     {
         foreach (APawn pawn in pawns)
+        {
             pawn.Attach(this);
+        }
     }
 
     private PlayerStage[] ButtonVisibilityOnStages = new PlayerStage[]
@@ -374,14 +429,12 @@ public class PlayerController : Spatial, IObserver
         for (int i = 0; i < ButtonVisibilityOnStages.Length; i++)
         {
             if (Stage == ButtonVisibilityOnStages[i])
+            {
                 return true;
+            }
         }
+
         return false;
-
-    }
-
-    public override void _Process(float delta)
-    {
     }
 
     public override void _Input(InputEvent @event)
