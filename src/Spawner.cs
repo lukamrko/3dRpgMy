@@ -7,6 +7,11 @@ public class Spawner : Spatial
 {
 
     Godot.Collections.Array<string> possibleNames = new Godot.Collections.Array<string> { "K'", "Maxima", "Ryo", "Robert", "Heidern" };
+    Godot.Collections.Array<PawnClass> possibleClasses = new Godot.Collections.Array<PawnClass> 
+    {
+        PawnClass.Skeleton,
+        PawnClass.SkeletonArcher
+    };
     Godot.Collections.Array<StaticBody> Points;
     PackedScene Scene = new PackedScene();
 
@@ -35,7 +40,7 @@ public class Spawner : Spatial
     {
         var node = Scene.Instance();
         var enemyPawn = node as EnemyPawn;
-        enemyPawn.PawnClass = PawnClass.Skeleton;
+        enemyPawn.PawnClass = possibleClasses.GetRandom();
         enemyPawn.PawnStrategy = PawnStrategy.Flank;
         enemyPawn.PawnName = possibleNames.GetRandom();
         return node;
