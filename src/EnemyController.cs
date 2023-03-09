@@ -302,13 +302,3 @@ public class EnemyController : Spatial, IObserver
 }
 
 
-public enum EnemyStage
-{
-    ChoosePawn = 0,
-    ChoseNearestEnemy = 1,
-    MovePawn = 2,
-    ChosePawnToAttack = 3,
-    AttackPawn = 4,
-    ForceBeingCalculated = 5,
-    ForceBeingApplied = 6
-}

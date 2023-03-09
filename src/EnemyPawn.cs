@@ -66,9 +66,3 @@ public class EnemyPawn : APawn
 }
 
 
-public enum EnemyPhase
-{
-    FirstPhase,
-    SecondPhase,
-    NotAnEnemyPhase
-}

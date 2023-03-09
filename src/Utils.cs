@@ -217,21 +217,3 @@ public static class Utils
         return VectorRemoveY(a).DistanceTo(VectorRemoveY(b));
     }
 }
-
-public enum PawnClass
-{
-    Knight,
-    Archer,
-    Chemist,
-    Cleric,
-    Skeleton,
-    SkeletonCPT,
-    SkeletonMage
-}
-
-public enum PawnStrategy
-{
-    Tank,
-    Flank,
-    Support
-}
