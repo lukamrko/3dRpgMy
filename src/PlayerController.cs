@@ -465,14 +465,3 @@ public class PlayerController : Spatial, IObserver
     }
 }
 
-public enum PlayerStage
-{
-    SelectPawn = 0,
-    DisplayAvailableActionsForPawn = 1,
-    DisplayAvailableMovements = 2,
-    SelectNewLocation = 3,
-    MovePawn = 4,
-    DisplayAttackableTargets = 5,
-    SelectPawnToAttack = 6,
-    AttackPawn = 7
-}
