@@ -255,6 +255,11 @@ public class EnemyController : Spatial, IObserver
     private EnemyStage oldStage;
     public bool ShouldApplyForce()
     {
+        if (Stage == EnemyStage.ForceBeingApplied)
+        {
+            ApplyForce();
+            return true;
+        }
         foreach (var enemy in EnemyPawns)
         {
             if (enemy.shouldBeForciblyMoved
@@ -274,6 +279,7 @@ public class EnemyController : Spatial, IObserver
         if (Stage == EnemyStage.ForceBeingCalculated)
         {
             CalculateForce();
+            ApplyForce();
         }
         else
         {
@@ -292,6 +298,7 @@ public class EnemyController : Spatial, IObserver
 
     private void ApplyForce()
     {
+        GD.Print("I entered apply force method");
         if (CurrentPawn.PathStack.Count == 0)
         {
             Stage = oldStage;
