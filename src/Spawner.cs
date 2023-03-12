@@ -10,7 +10,7 @@ public class Spawner : Spatial
     Godot.Collections.Array<PawnClass> possibleClasses = new Godot.Collections.Array<PawnClass> 
     {
         PawnClass.Skeleton,
-        PawnClass.SkeletonArcher
+        //PawnClass.SkeletonArcher
     };
     Godot.Collections.Array<StaticBody> Points;
     PackedScene Scene = new PackedScene();

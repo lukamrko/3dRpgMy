@@ -87,7 +87,13 @@ public class EnemyController : Spatial, IObserver
     public void ChoseNearestEnemy()
     {
         Arena.Reset();
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, EnemyPawns);
+        Tile currentPawnTile = CurrentPawn.GetTile();
+        if(currentPawnTile is null)
+        {
+            GD.Print("we are null", CurrentPawn.PawnName);
+            currentPawnTile = CurrentPawn.GetTile();
+        }
+        Arena.LinkTiles(currentPawnTile, CurrentPawn.JumpHeight, EnemyPawns);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
         Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, PlayerPawns);
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);

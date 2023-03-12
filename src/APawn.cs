@@ -85,7 +85,13 @@ public abstract class APawn : KinematicBody, ISubject
 
     public Tile GetTile()
     {
-        return CurrTiles.GetCollider() as Tile;
+        var tile = CurrTiles.GetCollider() as Tile;
+        if(tile is null)
+        {
+            var isColliding = CurrTiles.IsColliding();
+            GD.Print("current tils colliding: "+ isColliding);
+        }
+        return tile;
     }
 
     public void RotatePawnSprite()
