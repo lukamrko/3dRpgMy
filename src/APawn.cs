@@ -300,10 +300,10 @@ public abstract class APawn : KinematicBody, ISubject
         var distanceBetweenBehindAndTowardDirection = new Vector3
         {
             x = directionTowardsPawn.x != 0
-                ? distanceBetweenTiles
+                ? distanceBetweenTiles*Math.Sign(directionTowardsPawn.x)
                 : 0,
             z = directionTowardsPawn.z != 0
-                ? distanceBetweenTiles
+                ? distanceBetweenTiles* Math.Sign(directionTowardsPawn.z)
                 : 0,
             y = 0
         };
