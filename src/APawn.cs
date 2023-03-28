@@ -312,10 +312,11 @@ public abstract class APawn : KinematicBody, ISubject
         var sideWherePawnIsGettingPushed = GetSideOfWorldBasedOnVector(distanceBetweenBehindAndTowardDirection);
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
+        var potentialPawn = tileWherePawnIsGettingPushed.GetObjectAbove() as APawn;
 
-        var neighboringTile = GetNeighboringTile(targetPawnTile, sideWherePawnIsGettingPushed);
-        APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, locationBehindDirection);
-        if (pawnAtLocation is null)
+        // var neighboringTile = GetNeighboringTile(targetPawnTile, sideWherePawnIsGettingPushed);
+        // APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, locationBehindDirection);
+        if (potentialPawn is null)
         {
             //TODO should probably check if is out of bounds or similar stuff
             // Vector3 supposedLocation = (targetPawn.Translation + distanceBetweenBehindAndTowardDirection);
@@ -332,8 +333,12 @@ public abstract class APawn : KinematicBody, ISubject
         }
         else
         {
-            DealDamageAndRemoveIfDead(pawnAtLocation, 1);
+            DealDamageAndRemoveIfDead(potentialPawn, 1);
             GD.Print("BOSS WE GOT EM! There is somebody behind him");
+        }
+        if(potentialPawn is object)
+        {
+            GD.Print("Something good here");
         }
     }
 
