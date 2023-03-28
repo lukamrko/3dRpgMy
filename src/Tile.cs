@@ -24,6 +24,12 @@ public class Tile : StaticBody
         _Ready();
     }
 
+    public Tile GetNeighborAtWorldSide(WorldSide side)
+    {
+        var tile = TileRaycasting.GetSpecificNeighbor(side);
+        return tile;
+    }
+
     public Godot.Collections.Array<Tile> GetNeighbors(float height)
     {
         return TileRaycasting.GetAllNeighbors(height);

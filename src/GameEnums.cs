@@ -46,3 +46,11 @@ public enum EnemyStage
     ForceBeingCalculated = 5,
     ForceBeingApplied = 6
 }
+
+public enum WorldSide
+{
+    North,
+    West,
+    South,
+    East
+}

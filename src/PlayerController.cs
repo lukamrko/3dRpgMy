@@ -289,7 +289,7 @@ public class PlayerController : Spatial, IObserver
         else
         {
             CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits, delta);
-            AttackablePawn.DisplayPawnStats(false);
+            AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = CurrentPawn;
         }
 

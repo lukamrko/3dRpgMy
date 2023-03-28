@@ -300,14 +300,20 @@ public abstract class APawn : KinematicBody, ISubject
         var distanceBetweenBehindAndTowardDirection = new Vector3
         {
             x = directionTowardsPawn.x != 0
-                ? distanceBetweenTiles*Math.Sign(directionTowardsPawn.x)
+                ? distanceBetweenTiles * Math.Sign(directionTowardsPawn.x)
                 : 0,
             z = directionTowardsPawn.z != 0
-                ? distanceBetweenTiles* Math.Sign(directionTowardsPawn.z)
+                ? distanceBetweenTiles * Math.Sign(directionTowardsPawn.z)
                 : 0,
             y = 0
         };
         var locationBehindDirection = directionTowardsPawn + distanceBetweenBehindAndTowardDirection;
+
+        var sideWherePawnIsGettingPushed = GetSideOfWorldBasedOnVector(distanceBetweenBehindAndTowardDirection);
+        var targetPawnTile = targetPawn.GetTile();
+        var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
+
+        var neighboringTile = GetNeighboringTile(targetPawnTile, sideWherePawnIsGettingPushed);
         APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, locationBehindDirection);
         if (pawnAtLocation is null)
         {
@@ -329,6 +335,37 @@ public abstract class APawn : KinematicBody, ISubject
             DealDamageAndRemoveIfDead(pawnAtLocation, 1);
             GD.Print("BOSS WE GOT EM! There is somebody behind him");
         }
+    }
+
+    private Tile GetNeighboringTile(Tile targetPawnTile, WorldSide sideWherePawnIsGettingPushed)
+    {
+
+        return null;
+    }
+
+    private WorldSide GetSideOfWorldBasedOnVector(Vector3 distanceBetweenBehindAndTowardDirection)
+    {
+        var x = distanceBetweenBehindAndTowardDirection.x;
+        if(x<0)
+        {
+            return WorldSide.West;
+        }
+        else if (x>0)
+        {
+            return WorldSide.East;
+        }
+
+        var z = distanceBetweenBehindAndTowardDirection.z;
+        if(z<0)
+        {
+            return WorldSide.North;
+        }
+        else if(z>0)
+        {
+            return WorldSide.South;
+        }
+
+        return WorldSide.North;
     }
 
     private void DealDamageAndRemoveIfDead(APawn pawn, int damage)

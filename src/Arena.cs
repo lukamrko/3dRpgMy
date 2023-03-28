@@ -127,8 +127,9 @@ public class Arena : Spatial
             {
                 continue;
             }
-
-            foreach (Tile newTile in _pawn.GetTile().GetNeighbors(pawn.JumpHeight))
+            var currentPawnTile = _pawn.GetTile();
+            var tiles = currentPawnTile.GetNeighbors(pawn.JumpHeight);
+            foreach (Tile newTile in tiles)
             {
                 var isNewTileNearestTile = (nearestTile is null || newTile.Distance < nearestTile.Distance) 
                     && newTile.Distance > 0 
@@ -177,7 +178,8 @@ public class Arena : Spatial
         Godot.Collections.Array<PlayerPawn> potentiallyAttackablePawns = new Godot.Collections.Array<PlayerPawn>();
         foreach (PlayerPawn pawn in pawns)
         {
-            if (pawn.CurrHealth > 0 && pawn.GetTile().Attackable)
+            var pawnTile = pawn.GetTile();
+            if (pawn.CurrHealth > 0 && pawnTile.Attackable)
             {
                 potentiallyAttackablePawns.Add(pawn);
             }

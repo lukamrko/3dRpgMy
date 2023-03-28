@@ -37,7 +37,8 @@ public static class Utils
     public static void ConvertTilesIntoStaticBodies(Spatial tilesObj)
     {
         var script = ResourceLoader.Load<Reference>(TileSrc);
-        foreach (MeshInstance tileObj in tilesObj.GetChildren().As<MeshInstance>())
+        var tilesObjects = tilesObj.GetChildren().As<MeshInstance>();
+        foreach (MeshInstance tileObj in tilesObjects)
         {
             tileObj.CreateTrimeshCollision();
             StaticBody staticBody = tileObj.GetChild(0) as StaticBody;
@@ -132,7 +133,7 @@ public static class Utils
             case PawnClass.Cleric:
                 return 1f;
             case PawnClass.Skeleton:
-                return 3f;
+                return 20f;
             case PawnClass.SkeletonArcher:
                 return 4f;
             case PawnClass.SkeletonCPT:

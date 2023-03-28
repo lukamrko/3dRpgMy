@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using System;
 
@@ -6,10 +7,18 @@ public class TileRaycasting : Spatial
     private Spatial _neighbors;
     private RayCast _above;
     private Godot.Collections.Array<RayCast> _neighborRayCasts;
+    private readonly Dictionary<WorldSide, string> worldSideToString;
 
     public TileRaycasting()
     {
         _Ready();
+        worldSideToString = new Dictionary<WorldSide, string>
+        {
+            { WorldSide.North, "N"},
+            { WorldSide.East, "E"},
+            { WorldSide.West, "W"},
+            { WorldSide.South, "S"},
+        };
     }
 
     public override void _Ready()
@@ -25,7 +34,7 @@ public class TileRaycasting : Spatial
         Godot.Collections.Array<Tile> tileNeighbors = new Godot.Collections.Array<Tile>();
         foreach (RayCast rayCast in _neighborRayCasts)
         {
-            Tile obj = rayCast.GetCollider() as Tile; //Those might be some sort of collision since they end like tile093_col
+            Tile obj = rayCast.GetCollider() as Tile;
             Tile parent = GetParent() as Tile;
             if (parent is null || obj is null)
             {
@@ -50,7 +59,30 @@ public class TileRaycasting : Spatial
             return;
         }
         _neighborRayCasts = _neighbors.GetChildren().As<RayCast>();
+    }
 
+    public Tile GetSpecificNeighbor(WorldSide worldSide)
+    {
+        FetchNeighborRayCastsIfEmpty();
+        var rayCastName = worldSideToString[worldSide];
+        var rayCast = new RayCast();
+        foreach(RayCast ray in _neighborRayCasts)
+        {
+            if(ray.Name.Equals(rayCastName))
+            {
+                rayCast = ray;
+                break;
+            }
+        }
+        if(rayCast is null)
+        {
+            GD.Print("Something went very wrong");
+            return null;
+        }
+
+        Tile obj = rayCast.GetCollider() as Tile;
+        GD.Print(string.Format(@"One tile that we searched for had value: {0}", obj is object));
+        return obj;
     }
 
     public APawn GetObjectAbove()
