@@ -135,10 +135,10 @@ public class EnemyController : Spatial, IObserver
             GD.Print(String.Format("I, the great rattle bones skeleton {0} am unable to attack", CurrentPawn.PawnName));
             return null;
         }
-        Vector3 directionRounded = this.Translation.DirectionTo(AttackablePawn.Translation).Rounded();
+        Vector3 attackDirectionRounded = AttackablePawn.Translation.Rounded() - this.Translation.Rounded();
         GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
-           CurrentPawn.PawnName, directionRounded, AttackablePawn.PawnName));
-        return directionRounded;
+           CurrentPawn.PawnName, attackDirectionRounded, AttackablePawn.PawnName));
+        return attackDirectionRounded;
     }
 
     public void Attack(float delta)
@@ -148,9 +148,8 @@ public class EnemyController : Spatial, IObserver
             CurrentPawn.CanAttack = false;
             return;
         }
-        Vector3 attackingTowards = CurrentPawn.AttackingTowards.Value;
-        Vector3 positionOfAttack = this.Translation.Rounded() + attackingTowards;
-        CurrentPawn.DoAttackOnLocation(AllActiveUnits, positionOfAttack, delta);
+        Vector3 attackingTowards = CurrentPawn.AttackingTowards.Value + this.Translation.Rounded();
+        CurrentPawn.DoAttackOnLocation(AllActiveUnits, attackingTowards, delta);
         Stage = EnemyStage.ChoosePawn;
     }
 

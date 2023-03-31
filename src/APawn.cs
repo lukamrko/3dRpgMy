@@ -7,6 +7,7 @@ using Godot.Collections;
 
 public abstract class APawn : KinematicBody, ISubject
 {
+    private const int PushDamage = 1;
     protected const float PI = 3.141593f;
     protected const float Speed = 5f; //todo RETURN TO 5
     protected const int AnimationFrames = 1;
@@ -86,10 +87,10 @@ public abstract class APawn : KinematicBody, ISubject
     public Tile GetTile()
     {
         var tile = CurrTiles.GetCollider() as Tile;
-        if(tile is null)
+        if (tile is null)
         {
             var isColliding = CurrTiles.IsColliding();
-            GD.Print("current tils colliding: "+ isColliding);
+            GD.Print("Current tiles colliding: " + isColliding);
         }
         return tile;
     }
@@ -211,7 +212,7 @@ public abstract class APawn : KinematicBody, ISubject
     {
         if (PathStack.Count != 0)
         {
-            if(shouldBeForciblyMoved == true)
+            if (shouldBeForciblyMoved == true)
             {
                 ForciblyMovePawn(delta);
             }
@@ -296,7 +297,7 @@ public abstract class APawn : KinematicBody, ISubject
 
     private void AnybodyBehindTarget(APawn targetPawn, Array<APawn> allActiveUnits)
     {
-        var directionTowardsPawn = this.Translation.DirectionTo(targetPawn.Translation).Rounded();
+        var directionTowardsPawn = targetPawn.Translation.Rounded() - this.Translation.Rounded();
         var distanceBetweenBehindAndTowardDirection = new Vector3
         {
             x = directionTowardsPawn.x != 0
@@ -333,10 +334,11 @@ public abstract class APawn : KinematicBody, ISubject
         }
         else
         {
-            DealDamageAndRemoveIfDead(potentialPawn, 1);
+            DealDamageAndRemoveIfDead(potentialPawn, PushDamage);
+            DealDamageAndRemoveIfDead(targetPawn, PushDamage);
             GD.Print("BOSS WE GOT EM! There is somebody behind him");
         }
-        if(potentialPawn is object)
+        if (potentialPawn is object)
         {
             GD.Print("Something good here");
         }
@@ -351,21 +353,21 @@ public abstract class APawn : KinematicBody, ISubject
     private WorldSide GetSideOfWorldBasedOnVector(Vector3 distanceBetweenBehindAndTowardDirection)
     {
         var x = distanceBetweenBehindAndTowardDirection.x;
-        if(x<0)
+        if (x < 0)
         {
             return WorldSide.West;
         }
-        else if (x>0)
+        else if (x > 0)
         {
             return WorldSide.East;
         }
 
         var z = distanceBetweenBehindAndTowardDirection.z;
-        if(z<0)
+        if (z < 0)
         {
             return WorldSide.North;
         }
-        else if(z>0)
+        else if (z > 0)
         {
             return WorldSide.South;
         }
@@ -404,7 +406,7 @@ public abstract class APawn : KinematicBody, ISubject
         foreach (APawn pawn in allActiveUnits)
         {
             GD.Print(String.Format("Pawn {0}, position: {1}", pawn.PawnName, pawn.Translation.Rounded()));
-            Vector3 directionTowardsPawn = this.Translation.DirectionTo(pawn.Translation).Rounded();
+            Vector3 directionTowardsPawn = pawn.Translation.Rounded() - this.Translation.Rounded();
             if (directionTowardsPawn.Equals(positionOfAttack))
             {
                 return pawn;
