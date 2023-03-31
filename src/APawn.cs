@@ -8,6 +8,7 @@ using Godot.Collections;
 public abstract class APawn : KinematicBody, ISubject
 {
     private const int PushDamage = 1;
+    private const int WallHeightToGetDamaged = 1;
     protected const float PI = 3.141593f;
     protected const float Speed = 5f; //todo RETURN TO 5
     protected const int AnimationFrames = 1;
@@ -313,6 +314,13 @@ public abstract class APawn : KinematicBody, ISubject
         var sideWherePawnIsGettingPushed = GetSideOfWorldBasedOnVector(distanceBetweenBehindAndTowardDirection);
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
+        if (tileWherePawnIsGettingPushed.Translation.y - this.Translation.y >= WallHeightToGetDamaged)
+        {
+            DealDamageAndRemoveIfDead(targetPawn, PushDamage);
+            GD.Print("The wall is too big!");
+            return;
+        }
+
         var potentialPawn = tileWherePawnIsGettingPushed.GetObjectAbove() as APawn;
 
         // var neighboringTile = GetNeighboringTile(targetPawnTile, sideWherePawnIsGettingPushed);
@@ -337,10 +345,6 @@ public abstract class APawn : KinematicBody, ISubject
             DealDamageAndRemoveIfDead(potentialPawn, PushDamage);
             DealDamageAndRemoveIfDead(targetPawn, PushDamage);
             GD.Print("BOSS WE GOT EM! There is somebody behind him");
-        }
-        if (potentialPawn is object)
-        {
-            GD.Print("Something good here");
         }
     }
 
@@ -406,7 +410,7 @@ public abstract class APawn : KinematicBody, ISubject
         foreach (APawn pawn in allActiveUnits)
         {
             GD.Print(String.Format("Pawn {0}, position: {1}", pawn.PawnName, pawn.Translation.Rounded()));
-            Vector3 directionTowardsPawn = pawn.Translation.Rounded() - this.Translation.Rounded();
+            Vector3 directionTowardsPawn = pawn.Translation.Rounded();
             if (directionTowardsPawn.Equals(positionOfAttack))
             {
                 return pawn;
