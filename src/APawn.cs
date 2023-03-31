@@ -331,9 +331,13 @@ public abstract class APawn : KinematicBody, ISubject
             // Vector3 supposedLocation = (targetPawn.Translation + distanceBetweenBehindAndTowardDirection);
             // Vector3 supposedLocationRounded =supposedLocation.Rounded(); 
             // targetPawn.TranslateObjectLocal(supposedLocationRounded);
+            var actualPlaceWherePawnShouldBeMoved = tileWherePawnIsGettingPushed.Translation - targetPawnTile.Translation;
+            var actualPlaceWherePawnShouldBeMovedRounded = actualPlaceWherePawnShouldBeMoved.Round();
             GD.Print("Nobody behind pawn boss!");
             targetPawn.shouldBeForciblyMoved = true;
-            targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
+            // targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
+            targetPawn.directionOfForcedMovement = actualPlaceWherePawnShouldBeMovedRounded;
+
             // var tile = Arena.GetTileAtLocation(supposedLocation);
             // targetPawn.PathStack = Arena.GeneratePathStack(tile);
 

@@ -22,7 +22,7 @@ script = ExtResource( 3 )
 script = ExtResource( 5 )
 
 [node name="Pawn" parent="Player" instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -3.5 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2, -0.5 )
 PawnClass = 2
 PawnName = "Chemist"
 
@@ -30,7 +30,7 @@ PawnName = "Chemist"
 script = ExtResource( 6 )
 
 [node name="Pawn4" parent="Enemy" instance=ExtResource( 8 )]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 2, -0.5 )
+transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 1, -3.5 )
 script = ExtResource( 7 )
 PawnClass = 4
 PawnName = "Joe"

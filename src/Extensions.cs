@@ -30,19 +30,20 @@ public static class Extensions
         //     Convert.ToInt32(originalVector.y),
         //     Convert.ToInt32(originalVector.z)
         // );
+        
         return new Vector3
-    (
-        (float)Math.Round(originalVector.x, 1),
-        (float)Math.Round(originalVector.y, 1),
-        (float)Math.Round(originalVector.z, 1)
-    );
+        (
+            (float)Math.Round(originalVector.x * 2, MidpointRounding.AwayFromZero) / 2,
+            (float)Math.Round(originalVector.y * 2, MidpointRounding.AwayFromZero) / 2,
+            (float)Math.Round(originalVector.z * 2, MidpointRounding.AwayFromZero) / 2
+        );
     }
 
-    public static void AddRangeAs<T, A>(this Godot.Collections.Array<A> originalArray, Godot.Collections.Array<T> newArray ) 
+    public static void AddRangeAs<T, A>(this Godot.Collections.Array<A> originalArray, Godot.Collections.Array<T> newArray)
     where T : class
     where A : class
     {
-        foreach(var element in newArray)
+        foreach (var element in newArray)
         {
             originalArray.Add(element as A);
         }
