@@ -34,17 +34,20 @@ public static class Utils
     /// especially if the map used was exported from Blender using the Godot Extension
     /// </summary>
     /// <param name="tilesObj"></param>
-    public static void ConvertTilesIntoStaticBodies(Spatial tilesObj)
+    public static void ConvertTilesIntoStaticBodies(Node3D tilesObj)
     {
-        var script = ResourceLoader.Load<Reference>(TileSrc);
-        var tilesObjects = tilesObj.GetChildren().As<MeshInstance>();
-        foreach (MeshInstance tileObj in tilesObjects)
+        var script = ResourceLoader.Load<RefCounted>(TileSrc);
+        var tilesObjects1 = tilesObj.GetChildren();
+
+        var tilesObjects = tilesObj.GetChildren().As<MeshInstance3D>();
+
+        foreach (MeshInstance3D tileObj in tilesObjects)
         {
             tileObj.CreateTrimeshCollision();
-            StaticBody staticBody = tileObj.GetChild(0) as StaticBody;
-            staticBody.Translation = tileObj.Translation;
+            StaticBody3D staticBody = tileObj.GetChild(0) as StaticBody3D;
+            staticBody.Position = tileObj.Position;
 
-            tileObj.Translation = Vector3.Zero;
+            tileObj.Position = Vector3.Zero;
             tileObj.Name = "Tile";
             tileObj.RemoveChild(staticBody);
             tilesObj.RemoveChild(tileObj);
@@ -53,7 +56,7 @@ public static class Utils
             var instanceID = staticBody.GetInstanceId();
 
             staticBody.SetScript(script);
-            Tile staticBodyTile = (Tile)GD.InstanceFromId(instanceID);
+            Tile staticBodyTile = (Tile)GodotObject.InstanceFromId(instanceID);
             staticBodyTile._Ready();
             staticBodyTile.ConfigureTile();
             staticBodyTile.SetProcess(true);
@@ -61,37 +64,39 @@ public static class Utils
         }
     }
 
-    public static SpatialMaterial CreateMaterial(Color color, Texture texture = null)
+    public static StandardMaterial3D CreateMaterial(Color color, Texture2D texture = null)
     {
-        SpatialMaterial material = new SpatialMaterial();
-        material.FlagsTransparent = true;
+        StandardMaterial3D material = new StandardMaterial3D();
+        //TODO Check if this is the right way to do things
+        // material.FlagsTransparent = true;
+        material.Transparency = BaseMaterial3D.TransparencyEnum.Max;
         material.AlbedoColor = color;
         material.AlbedoTexture = texture;
         return material;
     }
 
-    public static Texture GetPawnSprite(PawnClass pawnClass)
+    public static Texture2D GetPawnSprite(PawnClass pawnClass)
     {
         switch (pawnClass)
         {
             case PawnClass.Knight:
-                return ResourceLoader.Load(KnightSprite) as Texture;
+                return ResourceLoader.Load(KnightSprite) as Texture2D;
             case PawnClass.Archer:
-                return ResourceLoader.Load(ArcherSprite) as Texture;
+                return ResourceLoader.Load(ArcherSprite) as Texture2D;
             case PawnClass.Chemist:
-                return ResourceLoader.Load(ChemistSprite) as Texture;
+                return ResourceLoader.Load(ChemistSprite) as Texture2D;
             case PawnClass.Cleric:
-                return ResourceLoader.Load(ClericSprite) as Texture;
-            case PawnClass.Skeleton:
-                return ResourceLoader.Load(SkeletonSprite) as Texture;
+                return ResourceLoader.Load(ClericSprite) as Texture2D;
+            case PawnClass.Skeleton3D:
+                return ResourceLoader.Load(SkeletonSprite) as Texture2D;
             case PawnClass.SkeletonArcher:
-                return ResourceLoader.Load(SkeletonArcherSprite) as Texture;
+                return ResourceLoader.Load(SkeletonArcherSprite) as Texture2D;
             case PawnClass.SkeletonCPT:
-                return ResourceLoader.Load(SkeletonCptSprite) as Texture;
+                return ResourceLoader.Load(SkeletonCptSprite) as Texture2D;
             case PawnClass.SkeletonMage:
-                return ResourceLoader.Load(SkeletonMageSprite) as Texture;
+                return ResourceLoader.Load(SkeletonMageSprite) as Texture2D;
             default:
-                return ResourceLoader.Load(KnightSprite) as Texture;
+                return ResourceLoader.Load(KnightSprite) as Texture2D;
         }
     }
 
@@ -107,7 +112,7 @@ public static class Utils
                 return 4;
             case PawnClass.Cleric:
                 return 4;
-            case PawnClass.Skeleton:
+            case PawnClass.Skeleton3D:
                 return 12;
             case PawnClass.SkeletonArcher:
                 return 8;
@@ -132,7 +137,7 @@ public static class Utils
                 return 1f;
             case PawnClass.Cleric:
                 return 1f;
-            case PawnClass.Skeleton:
+            case PawnClass.Skeleton3D:
                 return 20f;
             case PawnClass.SkeletonArcher:
                 return 4f;
@@ -157,7 +162,7 @@ public static class Utils
                 return 3;
             case PawnClass.Cleric:
                 return 3;
-            case PawnClass.Skeleton:
+            case PawnClass.Skeleton3D:
                 return 1;
             case PawnClass.SkeletonArcher:
                 return 4;
@@ -182,7 +187,7 @@ public static class Utils
                 return 1;
             case PawnClass.Cleric:
                 return 1;
-            case PawnClass.Skeleton:
+            case PawnClass.Skeleton3D:
                 return 1;
             case PawnClass.SkeletonArcher:
                 return 1;
@@ -207,7 +212,7 @@ public static class Utils
                 return 3;
             case PawnClass.Cleric:
                 return 3;
-            case PawnClass.Skeleton:
+            case PawnClass.Skeleton3D:
                 return 4;
             case PawnClass.SkeletonArcher:
                 return 1;
@@ -222,7 +227,7 @@ public static class Utils
 
     public static Vector3 VectorRemoveY(Vector3 vector)
     {
-        vector.y = 0;
+        vector.Y = 0;
         return vector;
     }
 

@@ -3,7 +3,7 @@ using Godot;
 using System;
 using Godot.Collections;
 
-public class PlayerController : Spatial, IObserver
+public partial class PlayerController : Node3D, IObserver
 {
     private PlayerPawn _currentPawn = null;
 
@@ -54,10 +54,10 @@ public class PlayerController : Spatial, IObserver
         Button CancelButton = UIControl.GetAct("Cancel");
         Button AttackButton = UIControl.GetAct("Attack");
 
-        MoveButton.Connect("pressed", this, "PlayerWantsToMove");
-        WaitButton.Connect("pressed", this, "PlayerWantsToWait");
-        CancelButton.Connect("pressed", this, "PlayerWantsToCancel");
-        AttackButton.Connect("pressed", this, "PlayerWantsToAttack");
+        MoveButton.Connect("pressed", new Callable(this, "PlayerWantsToMove"));
+        WaitButton.Connect("pressed", new Callable(this, "PlayerWantsToWait"));
+        CancelButton.Connect("pressed", new Callable(this, "PlayerWantsToCancel"));
+        AttackButton.Connect("pressed", new Callable(this, "PlayerWantsToAttack"));
     }
 
     public object GetMouseOverObject(uint lmask)
@@ -66,14 +66,25 @@ public class PlayerController : Spatial, IObserver
         {
             return null;
         }
-        Camera camera = GetViewport().GetCamera();
-        Vector2 origin = !IsJoyStick
-            ? GetViewport().GetMousePosition()
-            : GetViewport().Size / 2;
+        Camera3D camera = GetViewport().GetCamera3D();
+        // Vector2 origin = !IsJoyStick
+        //     ? GetViewport().GetMousePosition()
+        //     : GetViewport().Size / 2;
+        Vector2 origin = GetViewport().GetMousePosition();
+
         Vector3 from = camera.ProjectRayOrigin(origin);
         Vector3 to = from + camera.ProjectRayNormal(origin) * 1000;
-        Godot.Collections.Dictionary rayIntersections = GetWorld().DirectSpaceState.IntersectRay(from, to, null, lmask);
-        if (rayIntersections.Contains("collider"))
+        var intersectingRay = new PhysicsRayQueryParameters3D
+        {
+            From=from,
+            To = to,
+            CollisionMask = lmask
+
+        };
+        Godot.Collections.Dictionary rayIntersections = GetWorld3D().DirectSpaceState.IntersectRay(intersectingRay);
+        // Godot.Collections.Dictionary rayIntersections = GetWorld3D().DirectSpaceState.IntersectRay(from, to, null, lmask);
+        // if (rayIntersections.Contains("collider"))
+        if (rayIntersections.ContainsKey("collider"))
         {
             return rayIntersections["collider"];
         }
@@ -280,7 +291,7 @@ public class PlayerController : Spatial, IObserver
             
     }
 
-    public void AttackPawn(float delta)
+    public void AttackPawn(double delta)
     {
         if (AttackablePawn is null)
         {
@@ -288,7 +299,7 @@ public class PlayerController : Spatial, IObserver
         }
         else
         {
-            CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits, delta);
+            CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits);
             AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = CurrentPawn;
         }
@@ -305,7 +316,7 @@ public class PlayerController : Spatial, IObserver
     }
     #endregion
 
-    public void Act(float delta)
+    public void Act(double delta)
     {
         ListenShortcuts();
         UIControl.SetVisibilityOfActionsMenu(VisibilityBasedOnStage(), CurrentPawn);

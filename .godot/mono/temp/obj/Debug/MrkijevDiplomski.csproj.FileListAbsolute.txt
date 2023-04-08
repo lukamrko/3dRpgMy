@@ -1,0 +1,17 @@
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\bin\Debug\MrkijevDiplomski.deps.json
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\bin\Debug\MrkijevDiplomski.runtimeconfig.json
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\bin\Debug\MrkijevDiplomski.dll
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\bin\Debug\MrkijevDiplomski.pdb
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\bin\Debug\GodotSharp.dll
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\bin\Debug\GodotSharpEditor.dll
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.csproj.AssemblyReference.cache
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.AssemblyInfoInputs.cache
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.AssemblyInfo.cs
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.csproj.CoreCompileInputs.cache
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.csproj.CopyComplete
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.dll
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\refint\MrkijevDiplomski.dll
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.pdb
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.genruntimeconfig.cache
+C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\ref\MrkijevDiplomski.dll

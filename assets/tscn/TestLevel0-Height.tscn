@@ -9,7 +9,7 @@
 [ext_resource path="res://src/EnemyPawn.cs" type="Script" id=7]
 [ext_resource path="res://assets/tscn/Pawn.tscn" type="PackedScene" id=8]
 
-[node name="Level" type="Spatial"]
+[node name="Level" type="Node3D"]
 script = ExtResource( 3 )
 
 [node name="PlayerControllerUI" parent="." instance=ExtResource( 4 )]
@@ -18,19 +18,19 @@ script = ExtResource( 3 )
 
 [node name="Arena" parent="." instance=ExtResource( 1 )]
 
-[node name="Player" type="Spatial" parent="."]
+[node name="Player" type="Node3D" parent="."]
 script = ExtResource( 5 )
 
 [node name="Pawn" parent="Player" instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2, -0.5 )
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2, -0.5 )
 PawnClass = 2
 PawnName = "Chemist"
 
-[node name="Enemy" type="Spatial" parent="."]
+[node name="Enemy" type="Node3D" parent="."]
 script = ExtResource( 6 )
 
 [node name="Pawn4" parent="Enemy" instance=ExtResource( 8 )]
-transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 1, -3.5 )
+transform = Transform3D( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 1, -3.5 )
 script = ExtResource( 7 )
 PawnClass = 4
 PawnName = "Joe"

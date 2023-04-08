@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "zM4Jgh0uUtCcFJpWp7GPayjq1/pq0wZ6Cn8n6JikpZhwe3slTQrUu77UGx2NkipdnBTaNAuhIhEZRtLG24L2RQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\lukamrko\\Desktop\\godotProjecti\\3dRpgMy\\MrkijevDiplomski.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lukamrko\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder\\godot.sourcegenerators\\4.0.2\\godot.sourcegenerators.4.0.2.nupkg.sha512",
+    "C:\\Users\\lukamrko\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder\\godotsharp\\4.0.2\\godotsharp.4.0.2.nupkg.sha512",
+    "C:\\Users\\lukamrko\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder\\godotsharpeditor\\4.0.2\\godotsharpeditor.4.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

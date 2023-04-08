@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using Godot;
 using System;
 
-public class TileRaycasting : Spatial
+public partial class TileRaycasting : Node3D
 {
-    private Spatial _neighbors;
-    private RayCast _above;
-    private Godot.Collections.Array<RayCast> _neighborRayCasts;
+    private Node3D _neighbors;
+    private RayCast3D _above;
+    private Godot.Collections.Array<RayCast3D> _neighborRayCasts;
     private readonly Dictionary<WorldSide, string> worldSideToString;
 
     public TileRaycasting()
@@ -23,16 +23,16 @@ public class TileRaycasting : Spatial
 
     public override void _Ready()
     {
-        _neighbors = GetNode<Spatial>("Neighbors");
-        _above = GetNode<RayCast>("Above");
-        _neighborRayCasts = new Godot.Collections.Array<RayCast>();
+        _neighbors = GetNode<Node3D>("Neighbors");
+        _above = GetNode<RayCast3D>("Above");
+        _neighborRayCasts = new Godot.Collections.Array<RayCast3D>();
     }
 
     public Godot.Collections.Array<Tile> GetAllNeighbors(float height)
     {
         FetchNeighborRayCastsIfEmpty();
         Godot.Collections.Array<Tile> tileNeighbors = new Godot.Collections.Array<Tile>();
-        foreach (RayCast rayCast in _neighborRayCasts)
+        foreach (RayCast3D rayCast in _neighborRayCasts)
         {
             Tile obj = rayCast.GetCollider() as Tile;
             Tile parent = GetParent() as Tile;
@@ -40,7 +40,7 @@ public class TileRaycasting : Spatial
             {
                 continue;
             }
-            bool objectFulfillsYAxis = Math.Abs(obj.Translation.y - parent.Translation.y) <= height;
+            bool objectFulfillsYAxis = Math.Abs(obj.Position.Y - parent.Position.Y) <= height;
             if (objectFulfillsYAxis)
             {
                 tileNeighbors.Add(obj);
@@ -58,15 +58,15 @@ public class TileRaycasting : Spatial
         {
             return;
         }
-        _neighborRayCasts = _neighbors.GetChildren().As<RayCast>();
+        _neighborRayCasts = _neighbors.GetChildren().As<RayCast3D>();
     }
 
     public Tile GetSpecificNeighbor(WorldSide worldSide)
     {
         FetchNeighborRayCastsIfEmpty();
         var rayCastName = worldSideToString[worldSide];
-        var rayCast = new RayCast();
-        foreach(RayCast ray in _neighborRayCasts)
+        var rayCast = new RayCast3D();
+        foreach(RayCast3D ray in _neighborRayCasts)
         {
             if(ray.Name.Equals(rayCastName))
             {

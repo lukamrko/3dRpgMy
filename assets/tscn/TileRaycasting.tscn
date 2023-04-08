@@ -2,34 +2,34 @@
 
 [ext_resource path="res://src/TileRaycasting.cs" type="Script" id=1]
 
-[node name="RayCasting" type="Spatial"]
+[node name="RayCasting" type="Node3D"]
 script = ExtResource( 1 )
 
-[node name="Neighbors" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
+[node name="Neighbors" type="Node3D" parent="."]
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0 )
 
-[node name="E" type="RayCast" parent="Neighbors"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0 )
+[node name="E" type="RayCast3D" parent="Neighbors"]
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0 )
 enabled = true
-cast_to = Vector3( 0, -10, 0 )
+target_position = Vector3( 0, -10, 0 )
 
-[node name="W" type="RayCast" parent="Neighbors"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0 )
+[node name="W" type="RayCast3D" parent="Neighbors"]
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0 )
 enabled = true
-cast_to = Vector3( 0, -10, 0 )
+target_position = Vector3( 0, -10, 0 )
 
-[node name="S" type="RayCast" parent="Neighbors"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+[node name="S" type="RayCast3D" parent="Neighbors"]
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
 enabled = true
-cast_to = Vector3( 0, -10, 0 )
+target_position = Vector3( 0, -10, 0 )
 
-[node name="N" type="RayCast" parent="Neighbors"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 )
+[node name="N" type="RayCast3D" parent="Neighbors"]
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 )
 enabled = true
-cast_to = Vector3( 0, -10, 0 )
+target_position = Vector3( 0, -10, 0 )
 
-[node name="Above" type="RayCast" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
+[node name="Above" type="RayCast3D" parent="."]
+transform = Transform3D( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0 )
 enabled = true
-cast_to = Vector3( 0, 2, 0 )
+target_position = Vector3( 0, 2, 0 )
 collision_mask = 2
