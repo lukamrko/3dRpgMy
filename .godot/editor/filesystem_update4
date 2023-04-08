@@ -1,6 +1,3 @@
 res://assets/tres/default_env.tres
 res://assets/tscn/EnemyPawn.tscn
-res://assets/tscn/LevelForTesting.tscn
 res://assets/tscn/Pawn.tscn
-res://assets/tscn/TacticsCamera.tscn
-res://src/TacticsCamera.cs
