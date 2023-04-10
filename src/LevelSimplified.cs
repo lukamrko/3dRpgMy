@@ -13,6 +13,7 @@ public partial class LevelSimplified : Node3D
 
 	public override void _Ready()
 	{
+		GD.Print("I have entered lvl simplifed");
 		Player = GetNode<PlayerController>("Player");
 		Enemy = GetNode<EnemyController>("Enemy");
 
@@ -78,6 +79,7 @@ public partial class LevelSimplified : Node3D
 	public override void _PhysicsProcess(double delta)
 	{
 		TurnHandler(delta);
+		GD.Print("Turn handling");
 	}
 
 }

@@ -1,14 +1,17 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=3 uid="uid://bslemieycl6t1"]
 
-[ext_resource path="res://assets/sprites/labels/controls-ui-xbox.png" type="Texture2D" id=1]
-[ext_resource path="res://src/PlayerControllerUI.cs" type="Script" id=2]
+[ext_resource type="Texture2D" uid="uid://c2r68v3kihqbk" path="res://assets/sprites/labels/controls-ui-xbox.png" id="1"]
+[ext_resource type="Script" path="res://src/PlayerControllerUI.cs" id="2"]
 
 [node name="PlayerControllerUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="HBox" type="HBoxContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
@@ -17,65 +20,51 @@ offset_right = -40.0
 offset_bottom = -40.0
 
 [node name="VBox" type="VBoxContainer" parent="HBox"]
-offset_right = 256.0
-offset_bottom = 520.0
-custom_minimum_size = Vector2( 128, 0 )
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
 size_flags_vertical = 3
 
 [node name="ControllerHints" type="TextureRect" parent="HBox/VBox"]
-offset_right = 256.0
-offset_bottom = 128.0
-custom_minimum_size = Vector2( 256, 128 )
-texture = ExtResource( 1 )
-expand = true
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 2
+texture = ExtResource("1")
+expand_mode = 1
 stretch_mode = 5
 
 [node name="Panel" type="Panel" parent="HBox"]
-modulate = Color( 1, 1, 1, 0 )
-offset_left = 260.0
-offset_right = 790.0
-offset_bottom = 520.0
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Actions" type="VBoxContainer" parent="HBox"]
-offset_left = 794.0
-offset_right = 944.0
-offset_bottom = 520.0
-custom_minimum_size = Vector2( 128, 0 )
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
 alignment = 2
 
 [node name="Move" type="Button" parent="HBox/Actions"]
-offset_top = 380.0
-offset_right = 150.0
-offset_bottom = 412.0
-custom_minimum_size = Vector2( 150, 32 )
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 text = "Move"
 
 [node name="Attack" type="Button" parent="HBox/Actions"]
-offset_top = 416.0
-offset_right = 150.0
-offset_bottom = 448.0
-custom_minimum_size = Vector2( 150, 32 )
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 text = "Attack"
 
 [node name="Wait" type="Button" parent="HBox/Actions"]
-offset_top = 452.0
-offset_right = 150.0
-offset_bottom = 484.0
-custom_minimum_size = Vector2( 150, 32 )
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 text = "Wait"
 
 [node name="Cancel" type="Button" parent="HBox/Actions"]
-offset_top = 488.0
-offset_right = 150.0
-offset_bottom = 520.0
-custom_minimum_size = Vector2( 150, 32 )
+custom_minimum_size = Vector2(150, 32)
+layout_mode = 2
 mouse_filter = 1
 mouse_default_cursor_shape = 2
 text = "Cancel"

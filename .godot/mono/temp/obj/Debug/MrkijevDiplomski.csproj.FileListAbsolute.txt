@@ -15,3 +15,5 @@ C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\refin
 C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.pdb
 C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\MrkijevDiplomski.genruntimeconfig.cache
 C:\Users\lukamrko\Desktop\godotProjecti\3dRpgMy\.godot\mono\temp\obj\Debug\ref\MrkijevDiplomski.dll
+C:\USERS\LUKAMRKO\DESKTOP\GODOTPROJECTI\3DRPGMY\.godot\mono\temp\obj\Debug\MrkijevDiplomski.Properties.Resources.resources
+C:\USERS\LUKAMRKO\DESKTOP\GODOTPROJECTI\3DRPGMY\.godot\mono\temp\obj\Debug\MrkijevDiplomski.csproj.GenerateResource.cache
