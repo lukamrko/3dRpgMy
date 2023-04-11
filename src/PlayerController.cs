@@ -54,10 +54,15 @@ public partial class PlayerController : Node3D, IObserver
         Button CancelButton = UIControl.GetAct("Cancel");
         Button AttackButton = UIControl.GetAct("Attack");
 
-        MoveButton.Connect("pressed", new Callable(this, "PlayerWantsToMove"));
-        WaitButton.Connect("pressed", new Callable(this, "PlayerWantsToWait"));
-        CancelButton.Connect("pressed", new Callable(this, "PlayerWantsToCancel"));
-        AttackButton.Connect("pressed", new Callable(this, "PlayerWantsToAttack"));
+        // MoveButton.Connect("pressed", new Callable(this, "PlayerWantsToMove"));
+        // WaitButton.Connect("pressed", new Callable(this, "PlayerWantsToWait"));
+        // CancelButton.Connect("pressed", new Callable(this, "PlayerWantsToCancel"));
+        // AttackButton.Connect("pressed", new Callable(this, "PlayerWantsToAttack"));
+
+        MoveButton.Pressed += PlayerWantsToMove;
+        WaitButton.Pressed += PlayerWantsToWait;
+        CancelButton.Pressed += PlayerWantsToCancel;
+        AttackButton.Pressed += PlayerWantsToAttack;
     }
 
     public object GetMouseOverObject(uint lmask)
@@ -78,15 +83,16 @@ public partial class PlayerController : Node3D, IObserver
         {
             From=from,
             To = to,
+            Exclude = null,
             CollisionMask = lmask
-
         };
         Godot.Collections.Dictionary rayIntersections = GetWorld3D().DirectSpaceState.IntersectRay(intersectingRay);
         // Godot.Collections.Dictionary rayIntersections = GetWorld3D().DirectSpaceState.IntersectRay(from, to, null, lmask);
         // if (rayIntersections.Contains("collider"))
         if (rayIntersections.ContainsKey("collider"))
         {
-            return rayIntersections["collider"];
+            var result = rayIntersections["collider"].Obj; 
+            return result;
         }
         return null;
     }
@@ -319,7 +325,8 @@ public partial class PlayerController : Node3D, IObserver
     public void Act(double delta)
     {
         ListenShortcuts();
-        UIControl.SetVisibilityOfActionsMenu(VisibilityBasedOnStage(), CurrentPawn);
+        var visibilityBasedOnStage = VisibilityBasedOnStage();
+        UIControl.SetVisibilityOfActionsMenu(visibilityBasedOnStage, CurrentPawn);
         switch (Stage)
         {
             case PlayerStage.SelectPawn:
@@ -380,7 +387,7 @@ public partial class PlayerController : Node3D, IObserver
 
     private void PlayerShortcuts()
     {
-        if (Input.IsActionJustPressed("ui_focus_next"))
+        if (Input.IsActionJustPressed("ui_get_next_pawn"))
         {
             FastGetCurrentPawn();
             if (CurrentPawn is null)

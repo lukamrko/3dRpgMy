@@ -3,3 +3,5 @@ res://assets/tscn/TestArena0-v2.tscn
 res://assets/tscn/TestArena.tscn
 res://assets/tscn/TestLevel0-Height.tscn
 res://assets/tscn/TacticsCamera.tscn
+res://assets/tscn/Pawn.tscn
+res://assets/tscn/ui/PlayerControllerUI.tscn

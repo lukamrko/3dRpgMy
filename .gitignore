@@ -13,9 +13,3 @@ export_presets.cfg
 .mono/
 data_*/
 mono_crash.*.json
-.vscode/
-.DS_Store
-
-docs/img/*.import
-docs/img/tutorials/how-to-create-maps/img/*.import
-
