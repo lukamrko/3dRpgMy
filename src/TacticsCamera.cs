@@ -51,7 +51,7 @@ public partial class TacticsCamera : CharacterBody3D
 		Vector3 from = GlobalTransform.Origin;
 		Vector3 to = Target.GlobalTransform.Origin;
 		//TODO velocity work
-		Vector3 velocity = ((to - from) * MoveSpeed / 4) * Vector3.Up;
+		Vector3 velocity = ((to - from) * MoveSpeed / 4); //* Vector3.Up;
 		MoveAndSlide();
 		if (from.DistanceTo(to) <= 0.25)
 		{
