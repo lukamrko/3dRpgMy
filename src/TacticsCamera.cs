@@ -12,18 +12,24 @@ public partial class TacticsCamera : CharacterBody3D
 
 	public void MoveCamera(float h, float v, bool joystick)
 	{
+		if(h!=0)
+		{
+			GD.Print("H is different");
+		}
 		if (!joystick
 			&& h == 0
 			&& v == 0
 			|| Target != null)
-			return;
+		{
+            return;
+        }
 		float angle = (Godot.Mathf.Atan2(-h, v)) + Pivot.Rotation.Y;
 		Vector3 direction = Vector3.Forward.Rotated(Vector3.Up, angle);
 		Vector3 velocity = direction * MoveSpeed;
 		if (joystick)
 		{
 			velocity = velocity * Godot.Mathf.Sqrt(h * h + v * v);
-			velocity = velocity * Vector3.Up;
+			//velocity = velocity * Vector3.Up;
 		}
 		this.Velocity=velocity;
 		MoveAndSlide();
@@ -52,9 +58,8 @@ public partial class TacticsCamera : CharacterBody3D
 		Vector3 from = GlobalTransform.Origin;
 		Vector3 to = Target.GlobalTransform.Origin;
 		//TODO velocity work
-		Vector3 velocity = ((to - from) * MoveSpeed / 4); //* Vector3.Up;
+		this.Velocity = ((to - from) * MoveSpeed / 4); //* Vector3.Up;
 		MoveAndSlide();
-		if (from.DistanceTo(to) <= 0.25)
 		{
 			Target = null;
 		}

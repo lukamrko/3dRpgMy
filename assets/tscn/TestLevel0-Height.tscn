@@ -13,8 +13,6 @@
 script = ExtResource("3")
 
 [node name="PlayerControllerUI" parent="." instance=ExtResource("4")]
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="TacticsCamera" parent="." instance=ExtResource("2")]
 
