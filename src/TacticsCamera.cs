@@ -12,10 +12,6 @@ public partial class TacticsCamera : CharacterBody3D
 
 	public void MoveCamera(float h, float v, bool joystick)
 	{
-		if(h!=0)
-		{
-			GD.Print("H is different");
-		}
 		if (!joystick
 			&& h == 0
 			&& v == 0
