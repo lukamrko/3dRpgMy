@@ -1,0 +1,11 @@
+[gd_resource type="Environment" load_steps=2 format=3 uid="uid://eutxigr6t7pa"]
+
+[sub_resource type="Sky" id="1"]
+
+[resource]
+background_mode = 2
+sky = SubResource("1")
+sky_custom_fov = 180.0
+adjustment_enabled = true
+adjustment_brightness = 0.95
+adjustment_contrast = 1.1

@@ -1,0 +1,164 @@
+[gd_scene load_steps=20 format=3 uid="uid://b474b5rkvpy3m"]
+
+[ext_resource type="Script" path="res://src/EnemyPawn.cs" id="1_jbvwa"]
+[ext_resource type="Texture2D" uid="uid://b4e7lxufwdwrk" path="res://assets/sprites/characters/chr_pawn_placeholder.png" id="2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_aoqdo"]
+radius = 0.26352
+height = 1.18923
+
+[sub_resource type="Animation" id="17"]
+resource_name = "DAMAGE"
+
+[sub_resource type="Animation" id="4"]
+resource_name = "IDLE"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0.602, 0), Vector3(0, 0.602, 0)]
+}
+
+[sub_resource type="Animation" id="6"]
+resource_name = "JUMP"
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.602, 0), Vector3(0, 2.2, 0), Vector3(0, 0.602, 0)]
+}
+
+[sub_resource type="Animation" id="5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.602, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qkadh"]
+_data = {
+"DAMAGE": SubResource("17"),
+"IDLE": SubResource("4"),
+"JUMP": SubResource("6"),
+"RESET": SubResource("5")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="18"]
+animation = &"DAMAGE"
+
+[sub_resource type="AnimationNodeAnimation" id="9"]
+animation = &"IDLE"
+
+[sub_resource type="AnimationNodeAnimation" id="10"]
+animation = &"JUMP"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="11"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="12"]
+switch_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="19"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="20"]
+switch_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="7"]
+states/DAMAGE/node = SubResource("18")
+states/DAMAGE/position = Vector2(298.375, 51.5)
+states/IDLE/node = SubResource("9")
+states/IDLE/position = Vector2(299, 133)
+states/JUMP/node = SubResource("10")
+states/JUMP/position = Vector2(512, 133.312)
+transitions = ["IDLE", "JUMP", SubResource("11"), "JUMP", "IDLE", SubResource("12"), "IDLE", "DAMAGE", SubResource("19"), "DAMAGE", "IDLE", SubResource("20")]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="8"]
+
+[sub_resource type="ViewportTexture" id="14"]
+viewport_path = NodePath("CharacterStats/Health/SubViewport")
+
+[sub_resource type="ViewportTexture" id="15"]
+viewport_path = NodePath("CharacterStats/Name/SubViewport")
+
+[node name="Pawn" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_jbvwa")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.577979, 0)
+shape = SubResource("CapsuleShape3D_aoqdo")
+
+[node name="Tile" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+
+[node name="Character" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.602, 0)
+billboard = 1
+alpha_cut = 2
+texture = ExtResource("2")
+vframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Character"]
+reset_on_save = false
+libraries = {
+"": SubResource("AnimationLibrary_qkadh")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="Character"]
+tree_root = SubResource("7")
+anim_player = NodePath("../AnimationPlayer")
+parameters/playback = SubResource("8")
+
+[node name="CharacterStats" type="Node3D" parent="."]
+
+[node name="Health" type="Sprite3D" parent="CharacterStats"]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1.4, 0)
+billboard = 1
+texture = SubResource("14")
+
+[node name="SubViewport" type="SubViewport" parent="CharacterStats/Health"]
+transparent_bg = true
+size = Vector2i(128, 30)
+
+[node name="Label" type="Label" parent="CharacterStats/Health/SubViewport"]
+custom_minimum_size = Vector2(128, 30)
+offset_right = 53.0
+offset_bottom = 14.0
+text = "100/100"
+
+[node name="Name" type="Sprite3D" parent="CharacterStats"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+billboard = 1
+texture = SubResource("15")
+
+[node name="SubViewport" type="SubViewport" parent="CharacterStats/Name"]
+transparent_bg = true
+size = Vector2i(150, 30)
+
+[node name="Label" type="Label" parent="CharacterStats/Name/SubViewport"]
+custom_minimum_size = Vector2(128, 30)
+offset_right = 53.0
+offset_bottom = 14.0
+text = "Name"

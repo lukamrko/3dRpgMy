@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "MrkijevDiplomski": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Executable",
+      "executablePath": "C:\\ProgramData\\chocolatey\\bin\\Godot_v4.0.2-stable_mono_win64.exe",
+      "commandLineArgs": "-e --path . --verbose",
+      "workingDirectory": "C:\\Users\\lukamrko\\Desktop\\godotProjecti\\3dRpgMy",
+      "nativeDebugging": true
+    }
+  }
+}
