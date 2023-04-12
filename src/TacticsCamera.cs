@@ -25,6 +25,7 @@ public partial class TacticsCamera : CharacterBody3D
 			velocity = velocity * Godot.Mathf.Sqrt(h * h + v * v);
 			velocity = velocity * Vector3.Up;
 		}
+		this.Velocity=velocity;
 		MoveAndSlide();
 	}
 
