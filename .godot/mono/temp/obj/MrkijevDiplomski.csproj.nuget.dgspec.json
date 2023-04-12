@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\lukamrko\\Desktop\\godotProjecti\\3dRpgMy\\MrkijevDiplomski.csproj": {}
+    "C:\\USERS\\LUKAMRKO\\DESKTOP\\GODOTPROJECTI\\3DRPGMY\\MrkijevDiplomski.csproj": {}
   },
   "projects": {
-    "C:\\Users\\lukamrko\\Desktop\\godotProjecti\\3dRpgMy\\MrkijevDiplomski.csproj": {
+    "C:\\USERS\\LUKAMRKO\\DESKTOP\\GODOTPROJECTI\\3DRPGMY\\MrkijevDiplomski.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\lukamrko\\Desktop\\godotProjecti\\3dRpgMy\\MrkijevDiplomski.csproj",
+        "projectUniqueName": "C:\\USERS\\LUKAMRKO\\DESKTOP\\GODOTPROJECTI\\3DRPGMY\\MrkijevDiplomski.csproj",
         "projectName": "MrkijevDiplomski",
-        "projectPath": "C:\\Users\\lukamrko\\Desktop\\godotProjecti\\3dRpgMy\\MrkijevDiplomski.csproj",
+        "projectPath": "C:\\USERS\\LUKAMRKO\\DESKTOP\\GODOTPROJECTI\\3DRPGMY\\MrkijevDiplomski.csproj",
         "packagesPath": "C:\\Users\\lukamrko\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\lukamrko\\Desktop\\godotProjecti\\3dRpgMy\\.godot\\mono\\temp\\obj\\",
+        "outputPath": "C:\\USERS\\LUKAMRKO\\DESKTOP\\GODOTPROJECTI\\3DRPGMY\\.godot\\mono\\temp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Users\\lukamrko\\AppData\\Roaming\\Godot\\mono\\GodotNuGetFallbackFolder"
