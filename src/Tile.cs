@@ -3,12 +3,18 @@ using System;
 
 public partial class Tile : StaticBody3D
 {
-	public Material HoverMat = Utils.CreateMaterial(new Color("33ffffff"));
-	public Material ReachableMat = Utils.CreateMaterial(new Color("e6143464"));
-	public Material HoverReachableMat = Utils.CreateMaterial(new Color("d92d548f"));
-	public Material AttackableMat = Utils.CreateMaterial(new Color("e6b4202a"));
-	public Material HoverAttackableMat = Utils.CreateMaterial(new Color("d9df3e23"));
-	MeshInstance3D CurrTiles;
+    // public Material HoverMat = Utils.CreateMaterial(new Color("33ffffff"));
+    // public Material ReachableMat = Utils.CreateMaterial(new Color("e6143464"));
+    // public Material HoverReachableMat = Utils.CreateMaterial(new Color("d92d548f"));
+    // public Material AttackableMat = Utils.CreateMaterial(new Color("e6b4202a"));
+    // public Material HoverAttackableMat = Utils.CreateMaterial(new Color("d9df3e23"));
+    public Material HoverMat = ResourceLoader.Load("res://assets/textures/tileHoverMat.tres") as Material;
+    public Material ReachableMat = ResourceLoader.Load("res://assets/textures/tileReachableMat.tres") as Material;
+	public Material HoverReachableMat = ResourceLoader.Load("res://assets/textures/tileHoverReachableMat.tres") as Material;
+    public Material AttackableMat = ResourceLoader.Load("res://assets/textures/tileAttackableMat.tres") as Material;
+    public Material HoverAttackableMat = ResourceLoader.Load("res://assets/textures/tileHoverAttackableMat.tres") as Material;
+
+    MeshInstance3D CurrTiles;
 
 	public Tile Root;
 	public int Distance;

@@ -1,0 +1,36 @@
+[gd_scene load_steps=9 format=3 uid="uid://cxedfvjorngs3"]
+
+[ext_resource type="Script" path="res://src/LevelSimplified.cs" id="1_3piki"]
+[ext_resource type="PackedScene" uid="uid://bslemieycl6t1" path="res://assets/tscn/ui/PlayerControllerUI.tscn" id="2_hb7b6"]
+[ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="3_rf7gw"]
+[ext_resource type="PackedScene" uid="uid://b23ufge4r2s0t" path="res://assets/tscn/maps/TestArena0-v3.tscn" id="4_gvm8o"]
+[ext_resource type="Script" path="res://src/PlayerController.cs" id="5_3hpgc"]
+[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="6_n04lo"]
+[ext_resource type="Script" path="res://src/EnemyController.cs" id="7_1r8jm"]
+[ext_resource type="Script" path="res://src/EnemyPawn.cs" id="8_vjt8w"]
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_3piki")
+
+[node name="PlayerControllerUI" parent="." instance=ExtResource("2_hb7b6")]
+
+[node name="TacticsCamera" parent="." instance=ExtResource("3_rf7gw")]
+
+[node name="Arena" parent="." instance=ExtResource("4_gvm8o")]
+
+[node name="Player" type="Node3D" parent="."]
+script = ExtResource("5_3hpgc")
+
+[node name="Pawn" parent="Player" instance=ExtResource("6_n04lo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2, -0.5)
+PawnClass = 2
+PawnName = "Chemist"
+
+[node name="Enemy" type="Node3D" parent="."]
+script = ExtResource("7_1r8jm")
+
+[node name="Pawn4" parent="Enemy" instance=ExtResource("6_n04lo")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 1, -3.5)
+script = ExtResource("8_vjt8w")
+PawnClass = 4
+PawnName = "Joe"

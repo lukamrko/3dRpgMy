@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="MrkijevDiplomski"
-run/main_scene="res://assets/tscn/TestLevel.tscn"
+run/main_scene="res://assets/tscn/levels/TestLevel0-v2-Height.tscn"
 config/features=PackedStringArray("4.0", "C#")
 config/icon="res://icons/icon.png"
 
