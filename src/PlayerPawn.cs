@@ -12,8 +12,8 @@ public partial class PlayerPawn : APawn
 		Character = GetNode<Sprite3D>("Character");
 		AnimationTree = GetNode<AnimationTree>("Character/AnimationTree");
 		CharacterStats = GetNode<Node3D>("CharacterStats");
-		HealthLabel = GetNode<Label>("CharacterStats/Health/SubViewport/Label");
-		NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
+        HealthLabel = GetNode<Label>("CharacterStats/Health/SubViewport/Label");
+        NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
 		CurrTiles = GetNode<RayCast3D>("Tile");
 		LoadStats();
 		LoadAnimatorSprite();

@@ -320,6 +320,14 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         var sideWherePawnIsGettingPushed = GetSideOfWorldBasedOnVector(distanceBetweenBehindAndTowardDirection);
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
+
+        // this should be out of the map state
+        if(tileWherePawnIsGettingPushed is null)
+        {
+            targetPawn.shouldBeForciblyMoved = true;
+            targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
+        }
+        
         if (tileWherePawnIsGettingPushed.Position.Y - this.Position.Y >= WallHeightToGetDamaged)
         {
             DealDamageAndRemoveIfDead(targetPawn, PushDamage);
@@ -334,15 +342,12 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         if (potentialPawn is null)
         {
             //TODO should probably check if is out of bounds or similar stuff
-            // Vector3 supposedLocation = (targetPawn.Translation + distanceBetweenBehindAndTowardDirection);
-            // Vector3 supposedLocationRounded =supposedLocation.Rounded(); 
-            // targetPawn.TranslateObjectLocal(supposedLocationRounded);
-            var actualPlaceWherePawnShouldBeMoved = tileWherePawnIsGettingPushed.Position - targetPawnTile.Position;
-            var actualPlaceWherePawnShouldBeMovedRounded = actualPlaceWherePawnShouldBeMoved.Round();
+            // var actualPlaceWherePawnShouldBeMoved = tileWherePawnIsGettingPushed.Position - targetPawnTile.Position;
+            // var actualPlaceWherePawnShouldBeMovedRounded = actualPlaceWherePawnShouldBeMoved.Round();
             GD.Print("Nobody behind pawn boss!");
             targetPawn.shouldBeForciblyMoved = true;
             // targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
-            targetPawn.directionOfForcedMovement = actualPlaceWherePawnShouldBeMovedRounded;
+            targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
 
             // var tile = Arena.GetTileAtLocation(supposedLocation);
             // targetPawn.PathStack = Arena.GeneratePathStack(tile);

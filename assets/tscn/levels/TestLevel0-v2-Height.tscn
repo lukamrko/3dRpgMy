@@ -22,7 +22,7 @@ script = ExtResource("1_3piki")
 script = ExtResource("5_3hpgc")
 
 [node name="Pawn" parent="Player" instance=ExtResource("6_n04lo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2, -0.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -2.5)
 PawnClass = 2
 PawnName = "Chemist"
 

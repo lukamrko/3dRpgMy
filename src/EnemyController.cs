@@ -90,7 +90,7 @@ public partial class EnemyController : Node3D, IObserver
 		Tile currentPawnTile = CurrentPawn.GetTile();
 		if(currentPawnTile is null)
 		{
-			GD.Print("we are null", CurrentPawn.PawnName);
+			GD.Print("we are null: ", CurrentPawn.PawnName);
 			currentPawnTile = CurrentPawn.GetTile();
 		}
 		Arena.LinkTiles(currentPawnTile, CurrentPawn.JumpHeight, EnemyPawns);
@@ -297,8 +297,16 @@ public partial class EnemyController : Node3D, IObserver
 	{
 		var location = (CurrentPawn.GlobalPosition + CurrentPawn.directionOfForcedMovement).Rounded();
 		Tile to = Arena.GetTileAtLocation(location);
-		CurrentPawn.PathStack = Arena.GeneratePathStack(to);
-		TacticsCamera.Target = to;
+		if(to is null)
+		{
+			CurrentPawn.Velocity = CurrentPawn.directionOfForcedMovement;
+			CurrentPawn.MoveAndSlide(); 
+		}
+		else
+		{
+            CurrentPawn.PathStack = Arena.GeneratePathStack(to);
+            TacticsCamera.Target = to;
+		}
 		Stage = EnemyStage.ForceBeingApplied;
 	}
 
