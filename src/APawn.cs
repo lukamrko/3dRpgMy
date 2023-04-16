@@ -77,7 +77,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     protected Node3D CharacterStats;
     protected AnimationTree AnimationTree;
     protected Label NameLabel;
-    protected RayCast3D CurrTiles;
+    protected RayCast3D CurrTile;
     #endregion
 
     private const int distanceBetweenTiles = 1;
@@ -87,11 +87,13 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     public Tile GetTile()
     {
-        var tile = CurrTiles.GetCollider() as Tile;
+        var tile = CurrTile.GetCollider() as Tile;
         if (tile is null)
         {
-            var isColliding = CurrTiles.IsColliding();
+            var isColliding = CurrTile.IsColliding();
+            var space = GetWorld3D().DirectSpaceState;
             GD.Print("Current tiles colliding: " + isColliding);
+
         }
         return tile;
     }
@@ -327,7 +329,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             targetPawn.shouldBeForciblyMoved = true;
             targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
         }
-        
+
         if (tileWherePawnIsGettingPushed.Position.Y - this.Position.Y >= WallHeightToGetDamaged)
         {
             DealDamageAndRemoveIfDead(targetPawn, PushDamage);

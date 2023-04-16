@@ -1,7 +1,6 @@
-using System.Numerics;
+using System.Linq;
 using Godot;
-using System;
-using System.Collections.Generic;
+using Vector3 = Godot.Vector3;
 
 public partial class Spawner : Node3D
 {
@@ -31,20 +30,37 @@ public partial class Spawner : Node3D
 			EnemyPawn enemyPawn = GetEnemyNode() as EnemyPawn;
             // enemyPawn.GlobalTranslate(Points[i].GlobalPosition);
 
-            var pointTranslation = new Godot.Vector3
-            (
-                Points[i].GlobalPosition.X,
-                0.5f,
-                Points[i].GlobalPosition.Z
-            );
+            // var pointTranslation = new Godot.Vector3
+            // (
+            //     Points[i].GlobalPosition.X,
+            //     0.5f,
+            //     Points[i].GlobalPosition.Z
+            // );
+            // enemyPawn.GlobalPosition = pointTranslation;
+
+        	var pointTranslation = new Godot.Vector3
+			(
+               Points[i].GlobalPosition.X,
+               Points[i].GlobalPosition.Y,
+               Points[i].GlobalPosition.Z
+			);
+            var spaceState = GetWorld3D().DirectSpaceState;
+            var query = PhysicsRayQueryParameters3D.Create(pointTranslation + Vector3.Up * 100, pointTranslation);
+            var result = spaceState.IntersectRay(query);
+			var tilePosY = result["position"].AsVector3().Y;
+            pointTranslation.Y = tilePosY;
+			// var firstTileY = result.Values.First();
             enemyPawn.GlobalPosition = pointTranslation;
 
+			
+
+
             // if(!enemyPawn.IsOnFloor())
-			// {
+            // {
             //     enemyPawn.ApplyFloorSnap();q
-			// 	enemyPawn.MoveAndSlide();
+            // 	enemyPawn.MoveAndSlide();
             // }
-			// enemyPawn.GlobalPosition = Points[i].GlobalPosition;
+            // enemyPawn.GlobalPosition = Points[i].GlobalPosition;
             GD.Print("Enemy name:" + enemyPawn.PawnName);
             GD.Print("Enemy pos:" + enemyPawn.GlobalPosition);
             enemyPawn.Visible = true;
