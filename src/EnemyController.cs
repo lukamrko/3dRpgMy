@@ -304,7 +304,9 @@ public partial class EnemyController : Node3D, IObserver
 		}
 		else
 		{
-            CurrentPawn.PathStack = Arena.GeneratePathStack(to);
+			var currentPawnTile = CurrentPawn.GetTile();
+			CurrentPawn.PathStack = Arena.GenerateSimplePathStack(currentPawnTile, to);
+            // CurrentPawn.PathStack = Arena.GeneratePathStack(to);
             TacticsCamera.Target = to;
 		}
 		Stage = EnemyStage.ForceBeingApplied;

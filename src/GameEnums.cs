@@ -25,8 +25,8 @@ public enum PlayerStage
     SelectNewLocation = 3,
     MovePawn = 4,
     DisplayAttackableTargets = 5,
-    SelectPawnToAttack = 6,
-    AttackPawn = 7
+    SelectTileToAttack = 6,
+    AttackTile = 7
 }
 
 public enum EnemyPhase

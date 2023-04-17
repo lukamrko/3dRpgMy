@@ -42,6 +42,7 @@ public partial class PlayerController : Node3D, IObserver
     PlayerControllerUI UIControl;
     Godot.Collections.Array<PlayerPawn> PlayerPawns;
     Godot.Collections.Array<APawn> AllActiveUnits;
+    private Tile _AttackableTile;
 
     public void Configure(Arena myArena, TacticsCamera myCamera, PlayerControllerUI myControl)
     {
@@ -231,7 +232,7 @@ public partial class PlayerController : Node3D, IObserver
         Godot.Collections.Array<PlayerPawn> emptyArray = null;
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
-        Stage = PlayerStage.SelectPawnToAttack;
+        Stage = PlayerStage.SelectTileToAttack;
     }
 
     public void SelectNewLocation()
@@ -248,22 +249,24 @@ public partial class PlayerController : Node3D, IObserver
         }
     }
 
-    public void SelectPawnToAttack()
+    public void SelectTileToAttack()
     {
         CurrentPawn.DisplayPawnStats(true);
         if (AttackablePawn is object)
         {
-            AttackablePawn.DisplayPawnStats(false);
+            AttackablePawn.DisplayPawnStats(true);
         }
 
         Tile tile = AuxSelectTile();
         if (tile is object)
         {
             AttackablePawn = tile.GetObjectAbove() as APawn;
+            _AttackableTile = tile;
         }
         else
         {
             AttackablePawn = null;
+            _AttackableTile = null;
         }
 
         if (AttackablePawn is object)
@@ -275,8 +278,8 @@ public partial class PlayerController : Node3D, IObserver
             && tile is object 
             && tile.Attackable)
         {
-            TacticsCamera.Target = AttackablePawn;
-            Stage = PlayerStage.AttackPawn;
+            TacticsCamera.Target = _AttackableTile;
+            Stage = PlayerStage.AttackTile;
         }
     }
 
@@ -297,16 +300,17 @@ public partial class PlayerController : Node3D, IObserver
             
     }
 
-    public void AttackPawn(double delta)
+    public void AttackTile(double delta)
     {
-        if (AttackablePawn is null)
+        if (_AttackableTile is null)
         {
             CurrentPawn.CanAttack = false;
         }
         else
         {
+            CurrentPawn.DoAttackOnTile(AllActiveUnits, _AttackableTile);
             CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits);
-            AttackablePawn.DisplayPawnStats(true);
+            // AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = CurrentPawn;
         }
 
@@ -347,11 +351,11 @@ public partial class PlayerController : Node3D, IObserver
             case PlayerStage.DisplayAttackableTargets:
                 DisplayAttackableTargets();
                 break;
-            case PlayerStage.SelectPawnToAttack:
-                SelectPawnToAttack();
+            case PlayerStage.SelectTileToAttack:
+                SelectTileToAttack();
                 break;
-            case PlayerStage.AttackPawn:
-                AttackPawn(delta);
+            case PlayerStage.AttackTile:
+                AttackTile(delta);
                 break;
         }
 
@@ -443,7 +447,7 @@ public partial class PlayerController : Node3D, IObserver
             PlayerStage.DisplayAvailableMovements,
             PlayerStage.SelectNewLocation,
             PlayerStage.DisplayAttackableTargets,
-            PlayerStage.SelectPawnToAttack
+            PlayerStage.SelectTileToAttack
         };
 
     private bool VisibilityBasedOnStage()

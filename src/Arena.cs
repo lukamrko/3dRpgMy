@@ -92,6 +92,20 @@ public partial class Arena : Node3D
 		return pathStack;
 	}
 
+    public Godot.Collections.Array<Vector3> GenerateSimplePathStack(Tile from, Tile to)
+    {
+        Godot.Collections.Array<Vector3> pathStack = new Godot.Collections.Array<Vector3>();
+		pathStack.Add(from.GlobalTransform.Origin);
+        pathStack.Add(to.GlobalTransform.Origin);
+
+        // while (to is object)
+        // {
+        //     pathStack.Insert(0, to.GlobalTransform.Origin);
+        //     to = to.Root;
+        // }
+        return pathStack;
+    }
+
 	public void Reset()
 	{
 		foreach (var tile in TilesChildren)

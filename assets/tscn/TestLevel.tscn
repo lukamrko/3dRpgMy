@@ -26,18 +26,14 @@ script = ExtResource("5")
 
 [node name="Pawn" parent="Player" instance=ExtResource("8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 2.5, -6.5)
-PawnClass = 1
-PawnName = "Strijleac"
 
 [node name="Pawn2" parent="Player" instance=ExtResource("8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 2.5, -6.5)
 PawnClass = 2
-PawnName = "Kemist"
 
 [node name="Pawn3" parent="Player" instance=ExtResource("8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 2.5, -6.5)
-PawnClass = 3
-PawnName = "Cleric"
+PawnClass = 1
 
 [node name="Enemy" type="Node3D" parent="."]
 script = ExtResource("6")
@@ -52,7 +48,7 @@ PawnName = "Joe"
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.5, 0.5, 5.5)
 script = ExtResource("7")
 PawnClass = 4
-PawnName = "Adam"
+PawnName = "Andy"
 
 [node name="Pawn6" parent="Enemy" instance=ExtResource("8")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -4, 2.5, 5.5)

@@ -40,7 +40,7 @@ public partial class EnemyPawn : APawn
 		StartAnimator();
 		TintWhenNotAbleToAct();
 		HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
-        DebugHelper();
+        // DebugHelper();
     }
 
     private void DebugHelper()
