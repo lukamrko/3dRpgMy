@@ -82,6 +82,14 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     private const int distanceBetweenTiles = 1;
 
+    internal readonly Godot.Collections.Array<WorldSide> allWorldSides = new Godot.Collections.Array<WorldSide> 
+    {
+        WorldSide.North, 
+        WorldSide.West, 
+        WorldSide.South, 
+        WorldSide.East 
+    };
+
     public bool shouldBeForciblyMoved = false;
     public Vector3 directionOfForcedMovement = Vector3.Zero;
 
@@ -164,14 +172,14 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             //fall or move to the edge before failing
             else if (MoveDirection.Y < -MinHeightToJump)
             {
+                Gravity += Vector3.Down * (float)delta * GravityStrength;
                 if (Utils.VectorDistanceWithoutY(PathStack.FirstOrDefault(), GlobalTransform.Origin) <= 0.2)
                 {
-                    Gravity += Vector3.Down * (float)delta * GravityStrength;
                     velocity = (PathStack.FirstOrDefault() - GlobalTransform.Origin).Normalized() + Gravity;
                 }
                 else
                 {
-                    velocity = Utils.VectorRemoveY(MoveDirection).Normalized();
+                    velocity = Utils.VectorRemoveY(MoveDirection).Normalized() + Gravity;
                 }
             }
             //TODO this is most probable MoveAndSlide refactor
@@ -210,7 +218,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         {
             tilePoint = tile.GlobalTransform.Origin;
         }
-        MoveDirection = tilePoint - GlobalTransform.Origin;
+        MoveDirection = tilePoint - GlobalTransform.Origin + Gravity;
 
         this.Velocity = MoveDirection * Speed * 4; //*Vector3.Up;
         MoveAndSlide();
@@ -258,14 +266,14 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             // else 
             if (MoveDirection.Y < -MinHeightToJump)
             {
+                Gravity += Vector3.Down * (float)delta * GravityStrength;
                 if (Utils.VectorDistanceWithoutY(PathStack.FirstOrDefault(), GlobalTransform.Origin) <= 0.2)
                 {
-                    Gravity += Vector3.Down * (float)delta * GravityStrength;
                     velocity = (PathStack.FirstOrDefault() - GlobalTransform.Origin).Normalized() + Gravity;
                 }
                 else
                 {
-                    velocity = Utils.VectorRemoveY(MoveDirection).Normalized();
+                    velocity = Utils.VectorRemoveY(MoveDirection).Normalized() + Gravity;
                 }
             }
             this.Velocity = velocity * currentSpeed; //* Vector3.Up;
@@ -297,14 +305,72 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         LookAtDirection(targetPawn.GlobalTransform.Origin - GlobalTransform.Origin);
         if (CanAttack)
         {
-            AnybodyBehindTarget(targetPawn, AllActiveUnits);
-            DealDamageAndRemoveIfDead(targetPawn, AttackPower);
+            DoIndirectAttacks(targetPawn, AllActiveUnits);
+            DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
             CanAttack = false;
         }
         GD.Print("Pretend I do attack!");
     }
 
-    private void AnybodyBehindTarget(APawn targetPawn, Array<APawn> allActiveUnits)
+    internal void DoAttackOnTile(Array<APawn> allActiveUnits, Tile attackableTile)
+    {
+        LookAtDirection(attackableTile.GlobalTransform.Origin);
+        switch (PawnClass)
+        {
+            case PawnClass.Chemist:
+                ChemistAttack(allActiveUnits, attackableTile);
+                break;
+            default:
+                NormalPlayerUnitAttack(allActiveUnits, attackableTile);
+                break;
+        }
+    }
+
+    private void NormalPlayerUnitAttack(Array<APawn> allActiveUnits, Tile attackableTile)
+    {
+        var targetPawn = attackableTile.GetObjectAbove() as APawn;
+        if (targetPawn is object && CanAttack)
+        {
+            DoIndirectAttacks(targetPawn, allActiveUnits);
+            DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
+            CanAttack = false;
+        }
+        GD.Print("Pretend I do attack!");
+    }
+
+    private void ChemistAttack(Array<APawn> allActiveUnits, Tile attackableTile)
+    {
+        if (CanAttack)
+        {
+            DoIndirectCrossAttack(allActiveUnits, attackableTile);
+            
+            if(attackableTile.GetObjectAbove() is APawn targetPawn)
+            {
+                DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
+            }
+            CanAttack = false;
+        }
+        GD.Print("I have become death, destroyer of skeletons!");
+    }
+
+    private void DoIndirectCrossAttack(Array<APawn> allActiveUnits, Tile attackableTile)
+    {
+        foreach(var worldSide in allWorldSides)
+        {
+            var worldSideTile = attackableTile.GetNeighborAtWorldSide(worldSide);
+            if(worldSideTile is null)
+            {
+                continue;
+            }
+
+            if (worldSideTile.GetObjectAbove() is APawn worldSidePawn)
+            {
+                DoTheRepeatingCongaLineAttack(worldSidePawn, worldSide);
+            }
+        }
+    }
+
+    private void DoIndirectAttacks(APawn targetPawn, Array<APawn> allActiveUnits)
     {
         var directionTowardsPawn = targetPawn.Position.Rounded() - this.Position.Rounded();
         var distanceBetweenBehindAndTowardDirection = new Vector3
@@ -317,50 +383,46 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                 : 0,
             Y = 0
         };
-        var locationBehindDirection = directionTowardsPawn + distanceBetweenBehindAndTowardDirection;
 
         var sideWherePawnIsGettingPushed = GetSideOfWorldBasedOnVector(distanceBetweenBehindAndTowardDirection);
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
+        DoTheRepeatingCongaLineAttack(targetPawn, sideWherePawnIsGettingPushed);
+    }
+
+    private void DoTheRepeatingCongaLineAttack(APawn targetPawn, WorldSide sideWherePawnIsGettingPushed)
+    {
+        var targetPawnTile = targetPawn.GetTile();
+        var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
+        var forcedMovementDirection = (tileWherePawnIsGettingPushed.Position - targetPawn.Position).Rounded();
 
         // this should be out of the map state
-        if(tileWherePawnIsGettingPushed is null)
+        if (tileWherePawnIsGettingPushed is null)
         {
             targetPawn.shouldBeForciblyMoved = true;
-            targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
+            targetPawn.directionOfForcedMovement = forcedMovementDirection;
         }
 
         if (tileWherePawnIsGettingPushed.Position.Y - this.Position.Y >= WallHeightToGetDamaged)
         {
-            DealDamageAndRemoveIfDead(targetPawn, PushDamage);
+            DealDirectDamageAndRemoveIfDead(targetPawn, PushDamage);
             GD.Print("The wall is too big!");
             return;
         }
 
         var potentialPawn = tileWherePawnIsGettingPushed.GetObjectAbove() as APawn;
 
-        // var neighboringTile = GetNeighboringTile(targetPawnTile, sideWherePawnIsGettingPushed);
-        // APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, locationBehindDirection);
         if (potentialPawn is null)
         {
-            //TODO should probably check if is out of bounds or similar stuff
-            // var actualPlaceWherePawnShouldBeMoved = tileWherePawnIsGettingPushed.Position - targetPawnTile.Position;
-            // var actualPlaceWherePawnShouldBeMovedRounded = actualPlaceWherePawnShouldBeMoved.Round();
             GD.Print("Nobody behind pawn boss!");
             targetPawn.shouldBeForciblyMoved = true;
-            // targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
-            targetPawn.directionOfForcedMovement = distanceBetweenBehindAndTowardDirection;
-
-            // var tile = Arena.GetTileAtLocation(supposedLocation);
-            // targetPawn.PathStack = Arena.GeneratePathStack(tile);
-
-            //TODO this line pulls enemy towards you. Might be fun
-            // targetPawn.TranslateObjectLocal(tileBehindDirection);
+            targetPawn.directionOfForcedMovement = forcedMovementDirection;
         }
         else
         {
-            DealDamageAndRemoveIfDead(potentialPawn, PushDamage);
-            DealDamageAndRemoveIfDead(targetPawn, PushDamage);
+            DoTheRepeatingCongaLineAttack(potentialPawn, sideWherePawnIsGettingPushed);
+            DealDirectDamageAndRemoveIfDead(potentialPawn, PushDamage);
+            DealDirectDamageAndRemoveIfDead(targetPawn, PushDamage);
             GD.Print("BOSS WE GOT EM! There is somebody behind him");
         }
     }
@@ -396,7 +458,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         return WorldSide.North;
     }
 
-    private void DealDamageAndRemoveIfDead(APawn pawn, int damage)
+    private void DealDirectDamageAndRemoveIfDead(APawn pawn, int damage)
     {
         pawn.CurrHealth -= damage;
         if (pawn.CurrHealth <= 0)
@@ -406,6 +468,12 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         }
     }
 
+    //TODO This method is similar to DoAttackOnTile. Might merge them
+    /// <summary>
+    /// Attack used by enemy pawns for now
+    /// </summary>
+    /// <param name="allActiveUnits">All active units on terrain</param>
+    /// <param name="positionOfAttack">Vector3 position of attack</param>
     public void DoAttackOnLocation(Godot.Collections.Array<APawn> allActiveUnits, Vector3 positionOfAttack)
     {
         LookAtDirection(positionOfAttack);
@@ -414,7 +482,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             APawn pawnAtLocation = GetPawnAtAttackLocation(allActiveUnits, positionOfAttack);
             if (pawnAtLocation is object)
             {
-                DealDamageAndRemoveIfDead(pawnAtLocation, AttackPower);
+                DealDirectDamageAndRemoveIfDead(pawnAtLocation, AttackPower);
             }
             CanAttack = false;
         }
