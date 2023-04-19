@@ -45,6 +45,10 @@ public partial class Level : Node3D
 		{
 			Enemy.DoForcedMovement(delta);
 		}
+		else if (Player.ShouldApplyForce())
+		{
+			Player.DoForcedMovement(delta);
+		}
 		else if (Enemy.CanFirstAct())
 		{
 			Enemy.FirstAct(delta);

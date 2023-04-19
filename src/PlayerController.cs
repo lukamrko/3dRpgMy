@@ -309,7 +309,7 @@ public partial class PlayerController : Node3D, IObserver
         else
         {
             CurrentPawn.DoAttackOnTile(AllActiveUnits, _AttackableTile);
-            CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits);
+            // CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits);
             // AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = CurrentPawn;
         }
@@ -489,5 +489,70 @@ public partial class PlayerController : Node3D, IObserver
             AllActiveUnits.Add(enemyPawn);
         }
     }
+
+#region  OutsideForces
+    private ForceCalculation _forceCalculation;
+    public bool ShouldApplyForce()
+    {
+        if (_forceCalculation == ForceCalculation.ForceBeingApplied)
+        {
+            ApplyForce();
+            return true;
+        }
+        foreach (var pawn in PlayerPawns)
+        {
+            if (pawn.shouldBeForciblyMoved
+                && _forceCalculation != ForceCalculation.ForceBeingApplied)
+            {
+                _forceCalculation = ForceCalculation.ForceBeingCalculated;
+                CurrentPawn = pawn;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void DoForcedMovement(double delta)
+    {
+        if (_forceCalculation == ForceCalculation.ForceBeingCalculated)
+        {
+            CalculateForce();
+            ApplyForce();
+        }
+        else
+        {
+            ApplyForce();
+        }
+    }
+
+    private void CalculateForce()
+    {
+        var location = (CurrentPawn.GlobalPosition + CurrentPawn.directionOfForcedMovement).Rounded();
+        Tile to = Arena.GetTileAtLocation(location);
+        if (to is null)
+        {
+            CurrentPawn.Velocity = CurrentPawn.directionOfForcedMovement;
+            CurrentPawn.MoveAndSlide();
+        }
+        else
+        {
+            var currentPawnTile = CurrentPawn.GetTile();
+            CurrentPawn.PathStack = Arena.GenerateSimplePathStack(currentPawnTile, to);
+            // CurrentPawn.PathStack = Arena.GeneratePathStack(to);
+            TacticsCamera.Target = to;
+        }
+        _forceCalculation = ForceCalculation.ForceBeingApplied;
+    }
+
+    private void ApplyForce()
+    {
+        GD.Print("I entered apply force method");
+        if (CurrentPawn.PathStack.Count == 0)
+        {
+            _forceCalculation = ForceCalculation.ForceFree;
+            CurrentPawn.shouldBeForciblyMoved = false;
+        }
+    }
+    #endregion
 }
 

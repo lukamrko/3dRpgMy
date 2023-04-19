@@ -36,6 +36,13 @@ public enum EnemyPhase
     NotAnEnemyPhase
 }
 
+public enum ForceCalculation
+{
+    ForceFree,
+    ForceBeingCalculated,
+    ForceBeingApplied
+}
+
 public enum EnemyStage
 {
     ChoosePawn = 0,

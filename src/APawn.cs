@@ -82,12 +82,12 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     private const int distanceBetweenTiles = 1;
 
-    internal readonly Godot.Collections.Array<WorldSide> allWorldSides = new Godot.Collections.Array<WorldSide> 
+    internal readonly Godot.Collections.Array<WorldSide> allWorldSides = new Godot.Collections.Array<WorldSide>
     {
-        WorldSide.North, 
-        WorldSide.West, 
-        WorldSide.South, 
-        WorldSide.East 
+        WorldSide.North,
+        WorldSide.West,
+        WorldSide.South,
+        WorldSide.East
     };
 
     public bool shouldBeForciblyMoved = false;
@@ -127,6 +127,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             ? dir * new Vector3(1, 0, 0)
             : dir * new Vector3(0, 0, 1);
         float angle = Vector3.Forward.SignedAngleTo(fixedDir.Normalized(), Vector3.Up) + PI;
+        GD.Print("rotation: " + Rotation);
         Rotation = Vector3.Up * angle;
     }
 
@@ -312,9 +313,9 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         GD.Print("Pretend I do attack!");
     }
 
-    internal void DoAttackOnTile(Array<APawn> allActiveUnits, Tile attackableTile)
+    public void DoAttackOnTile(Array<APawn> allActiveUnits, Tile attackableTile)
     {
-        LookAtDirection(attackableTile.GlobalTransform.Origin);
+        LookAtDirection(attackableTile.GlobalTransform.Origin - GlobalTransform.Origin);
         switch (PawnClass)
         {
             case PawnClass.Chemist:
@@ -324,6 +325,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                 NormalPlayerUnitAttack(allActiveUnits, attackableTile);
                 break;
         }
+        this.CanAttack = false;
     }
 
     private void NormalPlayerUnitAttack(Array<APawn> allActiveUnits, Tile attackableTile)
@@ -333,8 +335,8 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         {
             DoIndirectAttacks(targetPawn, allActiveUnits);
             DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
-            CanAttack = false;
         }
+        CanAttack = false;
         GD.Print("Pretend I do attack!");
     }
 
@@ -343,22 +345,21 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         if (CanAttack)
         {
             DoIndirectCrossAttack(allActiveUnits, attackableTile);
-            
-            if(attackableTile.GetObjectAbove() is APawn targetPawn)
+
+            if (attackableTile.GetObjectAbove() is APawn targetPawn)
             {
                 DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
             }
-            CanAttack = false;
         }
         GD.Print("I have become death, destroyer of skeletons!");
     }
 
     private void DoIndirectCrossAttack(Array<APawn> allActiveUnits, Tile attackableTile)
     {
-        foreach(var worldSide in allWorldSides)
+        foreach (var worldSide in allWorldSides)
         {
             var worldSideTile = attackableTile.GetNeighborAtWorldSide(worldSide);
-            if(worldSideTile is null)
+            if (worldSideTile is null)
             {
                 continue;
             }
