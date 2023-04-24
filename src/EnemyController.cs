@@ -60,6 +60,8 @@ public partial class EnemyController : Node3D, IObserver
         }
     }
 
+	private ForcedMovement forcedMovement;
+
     public void Configure(Arena arena, TacticsCamera camera)
     {
         TacticsCamera = camera;
@@ -68,6 +70,8 @@ public partial class EnemyController : Node3D, IObserver
         {
             CurrentPawn = EnemyPawns[0];
         }
+
+		forcedMovement = new ForcedMovement(CurrentPawn as APawn, arena, TacticsCamera);
     }
 
     public void ChoosePawn()
@@ -265,7 +269,7 @@ public partial class EnemyController : Node3D, IObserver
     public bool ShouldApplyForce()
     {
         if (_forceCalculation == ForceCalculation.ForceBeingApplied 
-			&& CurrentPawn is object)
+        	&& CurrentPawn is object)
         {
             ApplyForce();
             return true;
@@ -281,6 +285,8 @@ public partial class EnemyController : Node3D, IObserver
             }
         }
         return false;
+        // return forcedMovement.ShouldApplyForce(EnemyPawns.AsEnumerable<APawn>());
+
     }
 
     public void DoForcedMovement(double delta)
@@ -294,6 +300,8 @@ public partial class EnemyController : Node3D, IObserver
         {
             ApplyForce();
         }
+
+        // forcedMovement.DoForcedMovement(delta);
     }
 
     private void CalculateForce()
