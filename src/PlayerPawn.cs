@@ -16,6 +16,8 @@ public partial class PlayerPawn : APawn
         HealthLabel = GetNode<Label>("CharacterStats/Health/SubViewport/Label");
         NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
 		CurrTile = GetNode<RayCast3D>("Tile");
+
+
 		LoadStats();
 		LoadAnimatorSprite();
 		DisplayPawnStats(true);

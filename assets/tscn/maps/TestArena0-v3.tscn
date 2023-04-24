@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://b23ufge4r2s0t"]
+[gd_scene load_steps=17 format=3 uid="uid://b23ufge4r2s0t"]
 
 [ext_resource type="Script" path="res://src/Arena.cs" id="1_ds0cu"]
 [ext_resource type="Material" uid="uid://46ieewete04d" path="res://assets/textures/mapDirt.tres" id="2_lpe30"]
 [ext_resource type="Material" uid="uid://db6mv8snbw02a" path="res://assets/textures/mapGrass.tres" id="3_5ae3g"]
+[ext_resource type="Script" path="res://src/Movement/DeathZone.cs" id="4_35vhi"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_jxrwe"]
 
@@ -117,6 +118,8 @@ _surfaces = [{
 }]
 shadow_mesh = SubResource("ArrayMesh_p8qp3")
 
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_wa764"]
+
 [node name="Arena" type="Node3D"]
 script = ExtResource("1_ds0cu")
 
@@ -128,6 +131,7 @@ transform = Transform3D(-0.730391, 0.478702, -0.48721, -0.124951, 0.607626, 0.78
 
 [node name="ArenaLimits" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
+visible = false
 collision_layer = 8
 collision_mask = 8
 
@@ -170,3 +174,12 @@ mesh = SubResource("ArrayMesh_ccaeh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.846, -1.769)
 mesh = SubResource("ArrayMesh_slm1c")
 skeleton = NodePath("")
+
+[node name="DeadZone" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
+collision_layer = 255
+collision_mask = 255
+script = ExtResource("4_35vhi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeadZone"]
+shape = SubResource("WorldBoundaryShape3D_wa764")

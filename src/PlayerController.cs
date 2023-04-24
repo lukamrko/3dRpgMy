@@ -490,11 +490,12 @@ public partial class PlayerController : Node3D, IObserver
         }
     }
 
-#region  OutsideForces
-    private ForceCalculation _forceCalculation;
+    #region OutsideForces
+    private ForceCalculation _forceCalculation = ForceCalculation.ForceFree;
     public bool ShouldApplyForce()
     {
-        if (_forceCalculation == ForceCalculation.ForceBeingApplied)
+        if (_forceCalculation == ForceCalculation.ForceBeingApplied
+            && CurrentPawn is object)
         {
             ApplyForce();
             return true;
@@ -531,16 +532,15 @@ public partial class PlayerController : Node3D, IObserver
         Tile to = Arena.GetTileAtLocation(location);
         if (to is null)
         {
-            CurrentPawn.Velocity = CurrentPawn.directionOfForcedMovement;
-            CurrentPawn.MoveAndSlide();
+            CurrentPawn.PathStack.Add(location);
         }
         else
         {
             var currentPawnTile = CurrentPawn.GetTile();
             CurrentPawn.PathStack = Arena.GenerateSimplePathStack(currentPawnTile, to);
-            // CurrentPawn.PathStack = Arena.GeneratePathStack(to);
             TacticsCamera.Target = to;
         }
+        CurrentPawn.MoveDirection = Vector3.Zero;
         _forceCalculation = ForceCalculation.ForceBeingApplied;
     }
 

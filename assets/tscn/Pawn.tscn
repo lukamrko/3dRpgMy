@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bor37mlyf67uy"]
+[gd_scene load_steps=21 format=3 uid="uid://bor37mlyf67uy"]
 
 [ext_resource type="Script" path="res://src/PlayerPawn.cs" id="1"]
 [ext_resource type="Texture2D" uid="uid://b4e7lxufwdwrk" path="res://assets/sprites/characters/chr_pawn_placeholder.png" id="2"]
@@ -101,6 +101,8 @@ viewport_path = NodePath("CharacterStats/Health/SubViewport")
 [sub_resource type="ViewportTexture" id="15"]
 viewport_path = NodePath("CharacterStats/Name/SubViewport")
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ys2mq"]
+
 [node name="Pawn" type="CharacterBody3D"]
 collision_layer = 2
 collision_mask = 0
@@ -162,3 +164,11 @@ custom_minimum_size = Vector2(128, 30)
 offset_right = 53.0
 offset_bottom = 14.0
 text = "Name"
+
+[node name="DeadZoneDetector" type="Area3D" parent="."]
+collision_layer = 255
+collision_mask = 255
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeadZoneDetector"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ys2mq")

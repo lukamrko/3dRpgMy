@@ -15,6 +15,8 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     protected const int MinHeightToJump = 1;
     protected const int GravityStrength = 7;
     protected const int MinTimeForAttack = 1;
+    public const int DistanceBetweenTiles = 1;
+
 
     #region class infoE
     [Export]
@@ -62,7 +64,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     #region Pathfinding
     public Godot.Collections.Array<Vector3> PathStack = new Godot.Collections.Array<Vector3>();
-    protected Vector3 MoveDirection = Vector3.Zero;
+    public Vector3 MoveDirection = Vector3.Zero;
     protected bool IsJumping = false;
     protected Vector3 Gravity = Vector3.Zero;
     protected float WaitDelay = 0;
@@ -80,7 +82,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     protected RayCast3D CurrTile;
     #endregion
 
-    private const int distanceBetweenTiles = 1;
+    protected Area3D deadZone; 
 
     internal readonly Godot.Collections.Array<WorldSide> allWorldSides = new Godot.Collections.Array<WorldSide>
     {
@@ -377,10 +379,10 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         var distanceBetweenBehindAndTowardDirection = new Vector3
         {
             X = directionTowardsPawn.X != 0
-                ? distanceBetweenTiles * Math.Sign(directionTowardsPawn.X)
+                ? DistanceBetweenTiles * Math.Sign(directionTowardsPawn.X)
                 : 0,
             Z = directionTowardsPawn.Z != 0
-                ? distanceBetweenTiles * Math.Sign(directionTowardsPawn.Z)
+                ? DistanceBetweenTiles * Math.Sign(directionTowardsPawn.Z)
                 : 0,
             Y = 0
         };
@@ -395,14 +397,19 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     {
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
-        var forcedMovementDirection = (tileWherePawnIsGettingPushed.Position - targetPawn.Position).Rounded();
-
+        
         // this should be out of the map state
         if (tileWherePawnIsGettingPushed is null)
         {
+            var positionOfOutOfBounds = targetPawnTile.GetNeighborPositionAtWorldSide(sideWherePawnIsGettingPushed);
+            var forcedFallDirection = (positionOfOutOfBounds - targetPawn.Position).Rounded();
+
             targetPawn.shouldBeForciblyMoved = true;
-            targetPawn.directionOfForcedMovement = forcedMovementDirection;
+            targetPawn.directionOfForcedMovement = forcedFallDirection;
+            return;
         }
+
+        var forcedMovementDirection = (tileWherePawnIsGettingPushed.Position - targetPawn.Position).Rounded();
 
         if (tileWherePawnIsGettingPushed.Position.Y - this.Position.Y >= WallHeightToGetDamaged)
         {
@@ -459,7 +466,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         return WorldSide.North;
     }
 
-    private void DealDirectDamageAndRemoveIfDead(APawn pawn, int damage)
+    public void DealDirectDamageAndRemoveIfDead(APawn pawn, int damage)
     {
         pawn.CurrHealth -= damage;
         if (pawn.CurrHealth <= 0)

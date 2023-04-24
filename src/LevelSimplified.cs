@@ -79,7 +79,6 @@ public partial class LevelSimplified : Node3D
 	public override void _PhysicsProcess(double delta)
 	{
 		TurnHandler(delta);
-		GD.Print("Turn handling");
 	}
 
 }

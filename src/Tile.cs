@@ -36,6 +36,27 @@ public partial class Tile : StaticBody3D
 		return tile;
 	}
 
+	public Vector3 GetNeighborPositionAtWorldSide(WorldSide side)
+	{
+		var position = new Vector3(Position.X, -99, Position.Z);
+		switch(side)
+		{
+			case WorldSide.North:
+                position.Z -= APawn.DistanceBetweenTiles; 
+				break;
+			case WorldSide.West:
+                position.X -= APawn.DistanceBetweenTiles;
+                break;
+			case WorldSide.South:
+                position.Z += APawn.DistanceBetweenTiles;
+                break;
+			case WorldSide.East:
+                position.X += APawn.DistanceBetweenTiles;
+                break;
+		}
+		return position;
+	}
+
 	public Godot.Collections.Array<Tile> GetNeighbors(float height)
 	{
 		return TileRaycasting.GetAllNeighbors(height);
