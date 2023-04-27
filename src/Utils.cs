@@ -138,7 +138,7 @@ public static class Utils
             case PawnClass.Cleric:
                 return 1f;
             case PawnClass.Skeleton3D:
-                return 20f;
+                return 1.5f;
             case PawnClass.SkeletonArcher:
                 return 4f;
             case PawnClass.SkeletonCPT:
