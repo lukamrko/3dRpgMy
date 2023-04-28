@@ -4361,9 +4361,9 @@ mesh = SubResource("ArrayMesh_sc0n5")
 skeleton = NodePath("")
 
 [node name="DeadZone" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, -2, -8)
-collision_layer = 255
-collision_mask = 255
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, -4, -8)
+collision_layer = 8
+collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeadZone"]
 transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 1, 0, -2)

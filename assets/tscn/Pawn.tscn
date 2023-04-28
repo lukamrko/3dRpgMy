@@ -166,8 +166,8 @@ offset_bottom = 14.0
 text = "Name"
 
 [node name="DeadZoneDetector" type="Area3D" parent="."]
-collision_layer = 255
-collision_mask = 255
+collision_layer = 0
+collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeadZoneDetector"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)

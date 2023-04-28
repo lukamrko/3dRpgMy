@@ -363,8 +363,8 @@ public partial class PlayerController : Node3D, IObserver
 
     private void ListenShortcuts()
     {
-        MoveCamera();
-        CameraRotation();
+        // MoveCamera();
+        // CameraRotation();
         PlayerShortcuts();
     }
 

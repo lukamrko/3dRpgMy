@@ -61,7 +61,7 @@ PawnClass = 4
 PawnName = "Andy"
 
 [node name="Pawn7" parent="Enemy" instance=ExtResource("6_q7l32")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 8.5, 1, -0.5)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.5, 1, -0.5)
 script = ExtResource("8_cjrhf")
 PawnClass = 4
 PawnName = "Rock"

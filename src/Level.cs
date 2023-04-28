@@ -11,6 +11,7 @@ public partial class Level : Node3D
 	PlayerController Player;
 	EnemyController Enemy;
 	Spawner Spawner;
+    TacticsCamera TacticsCamera;
 
 	public override void _Ready()
 	{
@@ -18,11 +19,11 @@ public partial class Level : Node3D
 		Enemy = GetNode<EnemyController>("Enemy");
 
 		Arena arena = GetNode<Arena>("Arena");
-		TacticsCamera tacticsCamera = GetNode<TacticsCamera>("TacticsCamera");
+		TacticsCamera = GetNode<TacticsCamera>("TacticsCamera");
 		PlayerControllerUI playerControllerUI = GetNode<PlayerControllerUI>("PlayerControllerUI");
 
-		Player.Configure(arena, tacticsCamera, playerControllerUI);
-		Enemy.Configure(arena, tacticsCamera);
+		Player.Configure(arena, TacticsCamera, playerControllerUI);
+		Enemy.Configure(arena, TacticsCamera);
 
 		Spawner = GetNode<Spawner>("EnemySpawner");
 
@@ -85,7 +86,34 @@ public partial class Level : Node3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+        MoveCamera();
+        CameraRotation();
 		TurnHandler(delta);
 	}
+
+    #region Camera
+    public void MoveCamera()
+    {
+        if (Input.GetActionStrength("camera_left") != 0)
+        {
+            GD.Print("AAA");
+        }
+        float h = -Input.GetActionStrength("camera_left") + Input.GetActionStrength("camera_right");
+        float v = Input.GetActionStrength("camera_forward") - Input.GetActionStrength("camera_backwards");
+        TacticsCamera.MoveCamera(h, v, false);
+    }
+
+    public void CameraRotation()
+    {
+        if (Input.IsActionJustPressed("camera_rotate_left"))
+        {
+            TacticsCamera.YRot -= 90;
+        }
+        if (Input.IsActionJustPressed("camera_rotate_right"))
+        {
+            TacticsCamera.YRot += 90;
+        }
+    }
+    #endregion 
 
 }
