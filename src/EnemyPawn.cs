@@ -25,9 +25,9 @@ public partial class EnemyPawn : APawn
         deadZoneDetector = GetNode<Area3D>("DeadZoneDetector");
 
         // deadZone.AreaEntered += (deadZoneDetector) => AreaDetection(deadZoneDetector);
-        deadZone.AreaEntered += AreaDetection;
+        // deadZone.AreaEntered += AreaDetection;
 
-        // deadZoneDetector.AreaEntered+= (deadZone) => AreaDetection(deadZone);
+        deadZoneDetector.AreaEntered+= (deadZone) => AreaDetection(deadZone);
 
         // myDetector.AreaEntered += (x) => AreaDetection(arena);
         // myDetector.AreaEntered += AreaDetection;
