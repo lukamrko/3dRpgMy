@@ -88,7 +88,7 @@ public partial class EnemyController : Node3D, IObserver
         Stage = EnemyStage.ChoseNearestEnemy;
     }
 
-    public void ChoseNearestEnemy()
+    public void ChoseEnemy()
     {
         Arena.Reset();
         Tile currentPawnTile = CurrentPawn.GetTile();
@@ -99,7 +99,8 @@ public partial class EnemyController : Node3D, IObserver
         }
         Arena.LinkTiles(currentPawnTile, CurrentPawn.JumpHeight, EnemyPawns);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
-        Tile to = Arena.GetNearestNeighborToPawn(CurrentPawn, PlayerPawns);
+        var distance = 1;
+        Tile to = Arena.GetNearestNeighborTileToPawn(distance, CurrentPawn, PlayerPawns);
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);
         TacticsCamera.Target = to;
         Stage = EnemyStage.MovePawn;
@@ -187,7 +188,7 @@ public partial class EnemyController : Node3D, IObserver
                 ChoosePawn();
                 break;
             case EnemyStage.ChoseNearestEnemy:
-                ChoseNearestEnemy();
+                ChoseEnemy();
                 break;
             case EnemyStage.MovePawn:
                 MovePawn();

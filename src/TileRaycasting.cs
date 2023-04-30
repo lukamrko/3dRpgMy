@@ -9,6 +9,8 @@ public partial class TileRaycasting : Node3D
     private Godot.Collections.Array<RayCast3D> _neighborRayCasts;
     private readonly Dictionary<WorldSide, string> worldSideToString;
 
+    private readonly Dictionary<string, WorldSide> stringToWorldSide;
+
     public TileRaycasting()
     {
         _Ready();
@@ -19,6 +21,13 @@ public partial class TileRaycasting : Node3D
             { WorldSide.West, "W"},
             { WorldSide.South, "S"},
         };
+        stringToWorldSide = new Dictionary<string, WorldSide>
+        {
+            { "N", WorldSide.North },
+            { "E", WorldSide.East },
+            { "W", WorldSide.West },
+            { "S", WorldSide.South },
+        };
     }
 
     public override void _Ready()
@@ -28,10 +37,10 @@ public partial class TileRaycasting : Node3D
         _neighborRayCasts = new Godot.Collections.Array<RayCast3D>();
     }
 
-    public Godot.Collections.Array<Tile> GetAllNeighbors(float height)
+    public Dictionary<WorldSide, Tile> GetAllNeighbors(float height)
     {
         FetchNeighborRayCastsIfEmpty();
-        Godot.Collections.Array<Tile> tileNeighbors = new Godot.Collections.Array<Tile>();
+        var tileNeighbors = new Dictionary<WorldSide, Tile>();
         foreach (RayCast3D rayCast in _neighborRayCasts)
         {
             Tile obj = rayCast.GetCollider() as Tile;
@@ -43,7 +52,8 @@ public partial class TileRaycasting : Node3D
             bool objectFulfillsYAxis = Math.Abs(obj.Position.Y - parent.Position.Y) <= height;
             if (objectFulfillsYAxis)
             {
-                tileNeighbors.Add(obj);
+                var worldSide = stringToWorldSide[rayCast.Name];
+                tileNeighbors.Add(worldSide, obj);
             }
         }
         return tileNeighbors;

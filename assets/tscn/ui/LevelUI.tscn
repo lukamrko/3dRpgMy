@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://6vlwluhiblu7"]
+
+[ext_resource type="Script" path="res://src/PlayerControllerUI.cs" id="1_426ov"]
+
+[node name="Statistics" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_426ov")
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRectangle" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -149.0
+offset_bottom = 62.0
+grow_horizontal = 0
+color = Color(0, 0, 1, 0.2)
+
+[node name="txtCurrentRound" type="Label" parent="ColorRectangle"]
+layout_mode = 0
+offset_left = 4.0
+offset_right = 121.0
+offset_bottom = 30.0
+text = "Current round:"
+
+[node name="valueCurrentRound" type="Label" parent="ColorRectangle"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 1.0
+offset_right = 151.0
+offset_bottom = 27.0
+text = "0"
+
+[node name="valueVictouryRound" type="Label" parent="ColorRectangle"]
+layout_mode = 0
+offset_left = 121.0
+offset_top = 31.0
+offset_right = 147.0
+offset_bottom = 57.0
+text = "10"
+
+[node name="txtVictoryRound" type="Label" parent="ColorRectangle"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 31.0
+offset_right = 121.0
+offset_bottom = 61.0
+text = "Victory round:"

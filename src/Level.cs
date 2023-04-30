@@ -94,10 +94,6 @@ public partial class Level : Node3D
     #region Camera
     public void MoveCamera()
     {
-        if (Input.GetActionStrength("camera_left") != 0)
-        {
-            GD.Print("AAA");
-        }
         float h = -Input.GetActionStrength("camera_left") + Input.GetActionStrength("camera_right");
         float v = Input.GetActionStrength("camera_forward") - Input.GetActionStrength("camera_backwards");
         TacticsCamera.MoveCamera(h, v, false);

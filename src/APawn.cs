@@ -129,7 +129,6 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             ? dir * new Vector3(1, 0, 0)
             : dir * new Vector3(0, 0, 1);
         float angle = Vector3.Forward.SignedAngleTo(fixedDir.Normalized(), Vector3.Up) + PI;
-        GD.Print("rotation: " + Rotation);
         Rotation = Vector3.Up * angle;
     }
 
@@ -409,9 +408,9 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             return;
         }
 
-        var forcedMovementDirection = (tileWherePawnIsGettingPushed.Position - targetPawn.Position).Rounded();
+        var forcedMovementDirection = (tileWherePawnIsGettingPushed.Position - targetPawnTile.Position).Rounded();
 
-        if (tileWherePawnIsGettingPushed.Position.Y - this.Position.Y >= WallHeightToGetDamaged)
+        if (Math.Abs(tileWherePawnIsGettingPushed.Position.Y - targetPawnTile.Position.Y) >= WallHeightToGetDamaged)
         {
             DealDirectDamageAndRemoveIfDead(targetPawn, PushDamage);
             GD.Print("The wall is too big!");
@@ -504,6 +503,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         {
             GD.Print(String.Format("Pawn {0}, position: {1}", pawn.PawnName, pawn.Position.Rounded()));
             Vector3 directionTowardsPawn = pawn.Position.Rounded();
+            //Y gets weird with setup and I would need to ignore it
             if (directionTowardsPawn.Equals(positionOfAttack))
             {
                 return pawn;

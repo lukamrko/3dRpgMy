@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using System;
 
@@ -57,7 +58,7 @@ public partial class Tile : StaticBody3D
 		return position;
 	}
 
-	public Godot.Collections.Array<Tile> GetNeighbors(float height)
+	public Dictionary<WorldSide, Tile> GetNeighbors(float height)
 	{
 		return TileRaycasting.GetAllNeighbors(height);
 	}
@@ -72,6 +73,17 @@ public partial class Tile : StaticBody3D
 	{
 		return GetObjectAbove() is object;
 	}
+
+	//Is taken excluding given pawn
+    public bool IsTaken(APawn pawn)
+    {
+		var objectAbove = GetObjectAbove();
+		if(objectAbove is APawn possiblePawn)
+		{
+			return (!possiblePawn.Equals(pawn));
+		}
+        return false;
+    }
 
 	public void Reset()
 	{
