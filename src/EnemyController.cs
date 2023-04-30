@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using System;
@@ -60,7 +61,7 @@ public partial class EnemyController : Node3D, IObserver
         }
     }
 
-	private ForcedMovement forcedMovement;
+    private ForcedMovement forcedMovement;
 
     public void Configure(Arena arena, TacticsCamera camera)
     {
@@ -71,7 +72,7 @@ public partial class EnemyController : Node3D, IObserver
             CurrentPawn = EnemyPawns[0];
         }
 
-		forcedMovement = new ForcedMovement(CurrentPawn as APawn, arena, TacticsCamera);
+        forcedMovement = new ForcedMovement(CurrentPawn as APawn, arena, TacticsCamera);
     }
 
     public void ChoosePawn()
@@ -134,28 +135,49 @@ public partial class EnemyController : Node3D, IObserver
         Stage = EnemyStage.AttackPawn;
     }
 
-    private Vector3? GetDirectionToWhichShouldAttack()
+    private KeyValuePair<int, WorldSide> GetDirectionToWhichShouldAttack()
     {
         if (AttackablePawn is null)
         {
             GD.Print(String.Format("I, the great rattle bones skeleton {0} am unable to attack", CurrentPawn.PawnName));
-            return null;
+            return new KeyValuePair<int, WorldSide>(0, WorldSide.North);
         }
         Vector3 attackDirectionRounded = AttackablePawn.Position.Rounded() - CurrentPawn.Position.Rounded();
-        GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
-           CurrentPawn.PawnName, attackDirectionRounded, AttackablePawn.PawnName));
-        return attackDirectionRounded;
+
+        int distance = 0;
+        var worldSide = CurrentPawn.GetSideOfWorldBasedOnVector(attackDirectionRounded);
+        if (worldSide.EqualsAnyOf(WorldSide.North, WorldSide.South))
+        {
+            distance = (int)Math.Round(Math.Abs(AttackablePawn.Position.Z - CurrentPawn.Position.Z));
+        }
+        else
+        {
+            distance = (int)Math.Round(Math.Abs(AttackablePawn.Position.X - CurrentPawn.Position.X));
+        }
+        // GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
+        //    CurrentPawn.PawnName, attackDirectionRounded, AttackablePawn.PawnName));
+
+        var attackingTowards = new KeyValuePair<int, WorldSide>(distance, worldSide);
+
+        return attackingTowards;
     }
 
     public void Attack(double delta)
     {
-        if (CurrentPawn.AttackingTowards is null)
+        if (CurrentPawn.AttackingTowards.Key == 0)
         {
             CurrentPawn.CanAttack = false;
             return;
         }
-        Vector3 attackingTowards = CurrentPawn.AttackingTowards.Value + CurrentPawn.Position.Rounded();
-        CurrentPawn.DoAttackOnLocation(AllActiveUnits, attackingTowards);
+        var distance = CurrentPawn.AttackingTowards.Key;
+        var side = CurrentPawn.AttackingTowards.Value;
+        var attackingTile = CurrentPawn.GetTile();
+        for(int i=0; i<distance; i++)
+        {
+            attackingTile = attackingTile.GetNeighborAtWorldSide(side);
+        }
+
+        CurrentPawn.DoAttackOnTile(AllActiveUnits, attackingTile);
         Stage = EnemyStage.ChoosePawn;
     }
 
@@ -269,8 +291,8 @@ public partial class EnemyController : Node3D, IObserver
     private ForceCalculation _forceCalculation = ForceCalculation.ForceFree;
     public bool ShouldApplyForce()
     {
-        if (_forceCalculation == ForceCalculation.ForceBeingApplied 
-        	&& CurrentPawn is object)
+        if (_forceCalculation == ForceCalculation.ForceBeingApplied
+            && CurrentPawn is object)
         {
             ApplyForce();
             return true;
@@ -320,7 +342,7 @@ public partial class EnemyController : Node3D, IObserver
             TacticsCamera.Target = to;
         }
         CurrentPawn.MoveDirection = Vector3.Zero;
-		_forceCalculation = ForceCalculation.ForceBeingApplied;
+        _forceCalculation = ForceCalculation.ForceBeingApplied;
     }
 
     private void ApplyForce()
