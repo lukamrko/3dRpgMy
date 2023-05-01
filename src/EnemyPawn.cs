@@ -6,7 +6,8 @@ using Godot.Collections;
 
 public partial class EnemyPawn : APawn
 {
-    public Vector3? AttackingTowards;
+    //side which attacks, plus distance
+    public KeyValuePair<int, WorldSide> AttackingTowards;
     public EnemyPhase CurrentPhase = EnemyPhase.NotAnEnemyPhase;
 
     public Vector3 _oldPosition;

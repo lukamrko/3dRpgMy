@@ -440,7 +440,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         return null;
     }
 
-    private WorldSide GetSideOfWorldBasedOnVector(Vector3 distanceBetweenBehindAndTowardDirection)
+    public WorldSide GetSideOfWorldBasedOnVector(Vector3 distanceBetweenBehindAndTowardDirection)
     {
         var x = distanceBetweenBehindAndTowardDirection.X;
         if (x < 0)
@@ -536,6 +536,10 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         Animator.Start("IDLE");
         AnimationTree.Active = true;
         Character.Texture = Utils.GetPawnSprite(PawnClass);
+        if(PawnClass == PawnClass.Totem)
+        {
+            Character.Offset = new Vector2(0, 30);
+        }
         NameLabel.Text = PawnName + ", The " + PawnClass.ToString();
     }
 

@@ -4,16 +4,23 @@ public enum PawnClass
     Archer,
     Chemist,
     Cleric,
+    Totem,
     Skeleton3D,
     SkeletonArcher,
     SkeletonCPT,
     SkeletonMage
 }
 
+public enum PlayerTypeClass
+{
+    Totem,
+    Character
+}
+
 public enum PawnStrategy
 {
-    Tank,
-    Flank,
+    Brute,
+    ObjectiveSniper,
     Support
 }
 

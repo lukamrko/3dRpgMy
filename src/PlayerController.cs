@@ -102,7 +102,8 @@ public partial class PlayerController : Node3D, IObserver
     {
         foreach (PlayerPawn pawn in PlayerPawns)
         {
-            if (pawn.CanAct())
+            if (pawn.CanAct() 
+                && !pawn.IsTotem)
             {
                 return true;
             }
@@ -115,7 +116,10 @@ public partial class PlayerController : Node3D, IObserver
     {
         foreach (PlayerPawn pawn in PlayerPawns)
         {
-            pawn.Reset();
+            if(!pawn.IsTotem)
+            {
+                pawn.Reset();
+            }
         }
     }
 

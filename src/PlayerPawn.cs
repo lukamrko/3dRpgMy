@@ -7,6 +7,7 @@ using Godot.Collections;
 public partial class PlayerPawn : APawn
 {
 	public bool Skipped = false;
+	public bool IsTotem = false;	
 
 	public override void _Ready()
 	{
@@ -17,16 +18,21 @@ public partial class PlayerPawn : APawn
         NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
 		CurrTile = GetNode<RayCast3D>("Tile");
 
-
 		LoadStats();
 		LoadAnimatorSprite();
 		DisplayPawnStats(true);
+		
+		if(PawnClass == PawnClass.Totem)
+		{
+			IsTotem = true;
+		}
 	}
 
 	public bool CanAct()
 	{
-		return (CanMove || CanAttack)
-			&& CurrHealth > 0;
+		return (CanMove || CanAttack )
+			&& CurrHealth > 0
+            && !IsTotem;
 	}
 
 	public override void TintWhenNotAbleToAct()

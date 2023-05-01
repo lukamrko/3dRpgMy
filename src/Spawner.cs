@@ -11,6 +11,13 @@ public partial class Spawner : Node3D
 		PawnClass.Skeleton3D,
 		PawnClass.SkeletonArcher
 	};
+
+    Godot.Collections.Array<PawnStrategy> possibleStrategies = new Godot.Collections.Array<PawnStrategy>
+    {
+        PawnStrategy.Brute,
+        PawnStrategy.ObjectiveSniper
+    };
+
 	Godot.Collections.Array<StaticBody3D> Points;
 	PackedScene Scene = new PackedScene();
 
@@ -51,10 +58,6 @@ public partial class Spawner : Node3D
             pointTranslation.Y = tilePosY;
 			// var firstTileY = result.Values.First();
             enemyPawn.GlobalPosition = pointTranslation;
-
-			
-
-
             // if(!enemyPawn.IsOnFloor())
             // {
             //     enemyPawn.ApplyFloorSnap();q
@@ -75,7 +78,7 @@ public partial class Spawner : Node3D
 		var node = Scene.Instantiate();
 		var enemyPawn = node as EnemyPawn;
 		enemyPawn.PawnClass = possibleClasses.GetRandom();
-		enemyPawn.PawnStrategy = PawnStrategy.Flank;
+		enemyPawn.PawnStrategy = possibleStrategies.GetRandom();
 		enemyPawn.PawnName = possibleNames.GetRandom();
 		return node;
 	}

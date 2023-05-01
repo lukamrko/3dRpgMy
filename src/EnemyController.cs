@@ -100,7 +100,7 @@ public partial class EnemyController : Node3D, IObserver
         }
         Arena.LinkTiles(currentPawnTile, CurrentPawn.JumpHeight, EnemyPawns);
         Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
-        var distance = 1;
+        var distance = Math.Clamp(CurrentPawn.AttackRadius - 1, 1, CurrentPawn.AttackRadius);
         Tile to = Arena.GetNearestNeighborTileToPawn(distance, CurrentPawn, PlayerPawns);
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);
         TacticsCamera.Target = to;
@@ -172,7 +172,7 @@ public partial class EnemyController : Node3D, IObserver
         var distance = CurrentPawn.AttackingTowards.Key;
         var side = CurrentPawn.AttackingTowards.Value;
         var attackingTile = CurrentPawn.GetTile();
-        for(int i=0; i<distance; i++)
+        for (int i = 0; i < distance; i++)
         {
             attackingTile = attackingTile.GetNeighborAtWorldSide(side);
         }
