@@ -536,7 +536,7 @@ public partial class PlayerController : Node3D, IObserver
         }
         else
         {
-            
+            ApplyForce();
         }
     }
 
