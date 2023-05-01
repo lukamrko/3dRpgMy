@@ -62,6 +62,11 @@ public partial class PlayerControllerUI : Control
 
 	public void SetVisibilityOfActionsMenu(bool visible, PlayerPawn pawn)
 	{
+		if(pawn is null)
+		{
+			_Actions.Visible = false;
+			return;
+		}
 		if (!_Actions.Visible)
 		{
 			_BtnMove.GrabFocus();

@@ -38,22 +38,26 @@ public partial class LevelSimplified : Node3D
 
 	public void TurnHandler(double delta)
 	{
-		if(Enemy.ShouldApplyForce())
-		{
-			Enemy.DoForcedMovement(delta);
-		}
-		else if (Enemy.CanFirstAct())
-		{
-			Enemy.FirstAct(delta);
-		}
-		else if (Player.CanAct())
-		{
-			Player.Act(delta);
-		}
-		else if (Enemy.CanSecondAct())
-		{
-			Enemy.SecondAct(delta);
-		}
+        if (Enemy.ShouldApplyForce())
+        {
+            Enemy.DoForcedMovement(delta);
+        }
+        else if (Player.ShouldApplyForce())
+        {
+            Player.DoForcedMovement(delta);
+        }
+        else if (Enemy.CanFirstAct())
+        {
+            Enemy.FirstAct(delta);
+        }
+        else if (Player.CanAct())
+        {
+            Player.Act(delta);
+        }
+        else if (Enemy.CanSecondAct())
+        {
+            Enemy.SecondAct(delta);
+        }
 		else
 		{
 			currentRound++;

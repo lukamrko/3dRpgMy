@@ -26,7 +26,17 @@ public partial class PlayerPawn : APawn
 		{
 			IsTotem = true;
 		}
+
+        deadZone = GetParent().GetParent().GetNode<Area3D>("Arena/DeadZone");
+        deadZoneDetector = GetNode<Area3D>("DeadZoneDetector");
+        deadZoneDetector.AreaEntered += (deadZone) => AreaDetection(deadZone);
 	}
+
+    public void AreaDetection(Area3D area)
+    {
+        GD.Print("Big fall");
+        DealDirectDamageAndRemoveIfDead(this, 999);
+    }
 
 	public bool CanAct()
 	{

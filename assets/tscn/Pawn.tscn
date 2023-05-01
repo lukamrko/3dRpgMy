@@ -101,7 +101,7 @@ viewport_path = NodePath("CharacterStats/Health/SubViewport")
 [sub_resource type="ViewportTexture" id="15"]
 viewport_path = NodePath("CharacterStats/Name/SubViewport")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ys2mq"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_h5k0y"]
 
 [node name="Pawn" type="CharacterBody3D"]
 collision_layer = 2
@@ -171,4 +171,4 @@ collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeadZoneDetector"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_ys2mq")
+shape = SubResource("BoxShape3D_h5k0y")

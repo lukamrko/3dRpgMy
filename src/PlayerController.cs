@@ -333,6 +333,10 @@ public partial class PlayerController : Node3D, IObserver
     public void Act(double delta)
     {
         ListenShortcuts();
+        if(CurrentPawn is null)
+        {
+            Stage = PlayerStage.SelectPawn;
+        }
         var visibilityBasedOnStage = VisibilityBasedOnStage();
         UIControl.SetVisibilityOfActionsMenu(visibilityBasedOnStage, CurrentPawn);
         switch (Stage)
@@ -478,10 +482,15 @@ public partial class PlayerController : Node3D, IObserver
         var abstractPawn = subject as APawn;
         AllActiveUnits.Remove(abstractPawn);
 
-        if (subject is PlayerPawn)
+        if (subject is PlayerPawn playerPawn)
         {
-            var playerPawn = subject as PlayerPawn;
             PlayerPawns.Remove(playerPawn);
+
+            if (CurrentPawn != null
+                && CurrentPawn.Equals(playerPawn))
+            {
+                CurrentPawn = null;
+            }
         }
     }
 
@@ -507,7 +516,8 @@ public partial class PlayerController : Node3D, IObserver
         foreach (var pawn in PlayerPawns)
         {
             if (pawn.shouldBeForciblyMoved
-                && _forceCalculation != ForceCalculation.ForceBeingApplied)
+                && _forceCalculation != ForceCalculation.ForceBeingApplied
+                && pawn.PawnClass != PawnClass.Totem)
             {
                 _forceCalculation = ForceCalculation.ForceBeingCalculated;
                 CurrentPawn = pawn;
@@ -526,7 +536,7 @@ public partial class PlayerController : Node3D, IObserver
         }
         else
         {
-            ApplyForce();
+            
         }
     }
 

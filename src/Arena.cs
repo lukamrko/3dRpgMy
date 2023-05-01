@@ -134,6 +134,10 @@ public partial class Arena : Node3D
     public Tile GetNearestNeighborTileToPawn(int distance, APawn pawn, Godot.Collections.Array<PlayerPawn> pawns, int currentIteration = 1)
     {
         Tile nearestTile = null;
+        if (pawn.PawnStrategy == PawnStrategy.ObjectiveSniper)
+        {
+            pawns = GetOnlyTotems(pawns);
+        }
 
         //Try to get free tiles directly close to the pawn
         foreach (PlayerPawn _pawn in pawns)
@@ -157,10 +161,10 @@ public partial class Arena : Node3D
 
 
         //If didn't find any tiles try once again but for tiles that are distance+1 tiles away from player
-        if (nearestTile is null 
-			&& ++currentIteration<=maxIterationOfGetNearestNeighborTileToPawn)
+        if (nearestTile is null
+            && ++currentIteration <= maxIterationOfGetNearestNeighborTileToPawn)
         {
-            return GetNearestNeighborTileToPawn(++distance, pawn, pawns, currentIteration);
+            return GetNearestNeighborTileToPawn(++distance, pawn, pawns, currentIteration: currentIteration);
             // foreach (PlayerPawn _pawn in pawns)
             // {
             //     var currentPawnTile = _pawn.GetTile();
@@ -181,6 +185,19 @@ public partial class Arena : Node3D
         }
 
         return pawn.GetTile();
+    }
+
+    private Godot.Collections.Array<PlayerPawn> GetOnlyTotems(Godot.Collections.Array<PlayerPawn> pawns)
+    {
+        var totems = new Godot.Collections.Array<PlayerPawn>();
+        for(int i=0; i<pawns.Count; i++)
+        {
+            if(pawns[i].IsTotem)
+            {
+                totems.Add(pawns[i]);
+            }
+        }
+        return totems;
     }
 
     private Tile OneTileAwayTiles(Tile nearestTile, Dictionary<WorldSide, Tile> targetTileNeighbors, APawn pawn)

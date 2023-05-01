@@ -12,8 +12,6 @@ public partial class EnemyPawn : APawn
 
     public Vector3 _oldPosition;
 
-	Area3D deadZoneDetector;
-    Area3D deadZone;
     public override void _Ready()
     {
         Character = GetNode<Sprite3D>("Character");
@@ -26,10 +24,10 @@ public partial class EnemyPawn : APawn
         deadZone = GetParent().GetParent().GetNode<Area3D>("Arena/DeadZone");
         deadZoneDetector = GetNode<Area3D>("DeadZoneDetector");
 
+        deadZoneDetector.AreaEntered+= (deadZone) => AreaDetection(deadZone);
         // deadZone.AreaEntered += (deadZoneDetector) => AreaDetection(deadZoneDetector);
         // deadZone.AreaEntered += AreaDetection;
 
-        deadZoneDetector.AreaEntered+= (deadZone) => AreaDetection(deadZone);
 
         // myDetector.AreaEntered += (x) => AreaDetection(arena);
         // myDetector.AreaEntered += AreaDetection;

@@ -1,0 +1,46 @@
+[gd_scene load_steps=9 format=3 uid="uid://c1rfnt6fr4q6l"]
+
+[ext_resource type="Script" path="res://src/LevelSimplified.cs" id="1_tganh"]
+[ext_resource type="PackedScene" uid="uid://bslemieycl6t1" path="res://assets/tscn/ui/PlayerControllerUI.tscn" id="2_x244t"]
+[ext_resource type="PackedScene" uid="uid://dvdy6hbvyvxm5" path="res://assets/tscn/maps/TestSlope.tscn" id="3_vnjo5"]
+[ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="4_h6fht"]
+[ext_resource type="Script" path="res://src/PlayerController.cs" id="5_73jqv"]
+[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="6_be325"]
+[ext_resource type="Script" path="res://src/EnemyController.cs" id="7_04quy"]
+[ext_resource type="Script" path="res://src/EnemyPawn.cs" id="8_w6w2d"]
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_tganh")
+
+[node name="PlayerControllerUI" parent="." instance=ExtResource("2_x244t")]
+
+[node name="Arena" parent="." instance=ExtResource("3_vnjo5")]
+
+[node name="TacticsCamera" parent="." instance=ExtResource("4_h6fht")]
+
+[node name="Player" type="Node3D" parent="."]
+script = ExtResource("5_73jqv")
+
+[node name="Pawn2" parent="Player" instance=ExtResource("6_be325")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.2, -2.5)
+
+[node name="Pawn" parent="Player" instance=ExtResource("6_be325")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -3.5)
+PawnClass = 4
+
+[node name="Enemy" type="Node3D" parent="."]
+script = ExtResource("7_04quy")
+
+[node name="Pawn5" parent="Enemy" instance=ExtResource("6_be325")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 1.7, -1.5)
+script = ExtResource("8_w6w2d")
+PawnClass = 5
+PawnStrategy = 1
+PawnName = "Joe"
+
+[node name="Pawn6" parent="Enemy" instance=ExtResource("6_be325")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 2, -0.5)
+script = ExtResource("8_w6w2d")
+PawnClass = 5
+PawnStrategy = 1
+PawnName = "Joe"

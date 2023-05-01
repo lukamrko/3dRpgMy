@@ -82,7 +82,9 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     protected RayCast3D CurrTile;
     #endregion
 
-    protected Area3D deadZone; 
+    protected Area3D deadZone;
+    protected Area3D deadZoneDetector;
+
 
     internal readonly Godot.Collections.Array<WorldSide> allWorldSides = new Godot.Collections.Array<WorldSide>
     {
@@ -394,6 +396,11 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     private void DoTheRepeatingCongaLineAttack(APawn targetPawn, WorldSide sideWherePawnIsGettingPushed)
     {
+        if(targetPawn.PawnClass == PawnClass.Totem)
+        {
+            // DealDirectDamageAndRemoveIfDead(targetPawn, PushDamage);
+            // return;
+        }
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
         
