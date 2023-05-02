@@ -11,6 +11,8 @@ public static class Utils
     private static string SkeletonSprite = "res://assets/sprites/characters/chr_pawn_skeleton.png";
     private static string SkeletonArcherSprite = "res://assets/sprites/characters/chr_pawn_skeleton_archer.png";
     private static string SkeletonMageSprite = "res://assets/sprites/characters/chr_pawn_skeleton_mage.png";
+    private static string SkeletonBomberSprite = "res://assets/sprites/characters/chr_pawn_skeleton_bomber.png";
+
     private static string TotemSprite = "res://assets/sprites/characters/totem.png";
 
 
@@ -90,10 +92,12 @@ public static class Utils
                 return ResourceLoader.Load(ClericSprite) as Texture2D;
             case PawnClass.Totem:
                 return ResourceLoader.Load(TotemSprite) as Texture2D;
-            case PawnClass.Skeleton3D:
+            case PawnClass.SkeletonWarrior:
                 return ResourceLoader.Load(SkeletonSprite) as Texture2D;
             case PawnClass.SkeletonArcher:
                 return ResourceLoader.Load(SkeletonArcherSprite) as Texture2D;
+            case PawnClass.SkeletonBomber:
+                return ResourceLoader.Load(SkeletonBomberSprite) as Texture2D;
             case PawnClass.SkeletonCPT:
                 return ResourceLoader.Load(SkeletonCptSprite) as Texture2D;
             case PawnClass.SkeletonMage:
@@ -117,10 +121,12 @@ public static class Utils
                 return 4;
             case PawnClass.Totem:
                 return 0;
-            case PawnClass.Skeleton3D:
+            case PawnClass.SkeletonWarrior:
                 return 12;
             case PawnClass.SkeletonArcher:
                 return 8;
+            case PawnClass.SkeletonBomber:
+                return 99;
             case PawnClass.SkeletonCPT:
                 return 6;
             case PawnClass.SkeletonMage:
@@ -144,10 +150,12 @@ public static class Utils
                 return 1f;
             case PawnClass.Totem:
                 return 0;
-            case PawnClass.Skeleton3D:
+            case PawnClass.SkeletonWarrior:
                 return 1.5f;
             case PawnClass.SkeletonArcher:
                 return 4f;
+            case PawnClass.SkeletonBomber:
+                return 10f;
             case PawnClass.SkeletonCPT:
                 return 0.5f;
             case PawnClass.SkeletonMage:
@@ -171,10 +179,12 @@ public static class Utils
                 return 3;
             case PawnClass.Totem:
                 return 0;
-            case PawnClass.Skeleton3D:
+            case PawnClass.SkeletonWarrior:
                 return 1;
             case PawnClass.SkeletonArcher:
                 return 4;
+            case PawnClass.SkeletonBomber:
+                return 1;
             case PawnClass.SkeletonCPT:
                 return 1;
             case PawnClass.SkeletonMage:
@@ -198,7 +208,7 @@ public static class Utils
                 return 1;
             case PawnClass.Totem:
                 return 0;
-            case PawnClass.Skeleton3D:
+            case PawnClass.SkeletonWarrior:
                 return 1;
             case PawnClass.SkeletonArcher:
                 return 1;
@@ -225,10 +235,12 @@ public static class Utils
                 return 3;
             case PawnClass.Totem:
                 return 2;
-            case PawnClass.Skeleton3D:
+            case PawnClass.SkeletonWarrior:
                 return 4;
             case PawnClass.SkeletonArcher:
                 return 1;
+            case PawnClass.SkeletonBomber:
+                return 2;
             case PawnClass.SkeletonCPT:
                 return 4;
             case PawnClass.SkeletonMage:

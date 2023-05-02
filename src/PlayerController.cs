@@ -312,7 +312,7 @@ public partial class PlayerController : Node3D, IObserver
         }
         else
         {
-            CurrentPawn.DoAttackOnTile(AllActiveUnits, _AttackableTile);
+            CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, _AttackableTile);
             // CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits);
             // AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = CurrentPawn;

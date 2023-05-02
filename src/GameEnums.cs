@@ -5,8 +5,9 @@ public enum PawnClass
     Chemist,
     Cleric,
     Totem,
-    Skeleton3D,
+    SkeletonWarrior,
     SkeletonArcher,
+    SkeletonBomber,
     SkeletonCPT,
     SkeletonMage
 }

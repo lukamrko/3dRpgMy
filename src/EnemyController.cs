@@ -177,7 +177,7 @@ public partial class EnemyController : Node3D, IObserver
             attackingTile = attackingTile.GetNeighborAtWorldSide(side);
         }
 
-        CurrentPawn.DoAttackOnTile(AllActiveUnits, attackingTile);
+        CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, attackingTile);
         Stage = EnemyStage.ChoosePawn;
     }
 

@@ -316,19 +316,47 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         GD.Print("Pretend I do attack!");
     }
 
-    public void DoAttackOnTile(Array<APawn> allActiveUnits, Tile attackableTile)
+    public void DoCharacterActionOnTile(Array<APawn> allActiveUnits, Tile attackableTile)
     {
         LookAtDirection(attackableTile.GlobalTransform.Origin - GlobalTransform.Origin);
         switch (PawnClass)
         {
+            case PawnClass.Knight:
+            case PawnClass.Archer:
+            case PawnClass.Cleric:
+                NormalPlayerUnitAttack(allActiveUnits, attackableTile);
+                break;
             case PawnClass.Chemist:
                 ChemistAttack(allActiveUnits, attackableTile);
+                break;
+            case PawnClass.SkeletonWarrior:
+            case PawnClass.SkeletonArcher:
+                NormalNPCAttack(allActiveUnits, attackableTile);
+                break;
+            case PawnClass.SkeletonBomber:
+                BomberAttack(allActiveUnits);
                 break;
             default:
                 NormalPlayerUnitAttack(allActiveUnits, attackableTile);
                 break;
         }
         this.CanAttack = false;
+    }
+
+    private void BomberAttack(Array<APawn> allActiveUnits)
+    {
+        DealDirectDamageAndRemoveIfDead(this, 999);
+    }
+
+    private void NormalNPCAttack(Array<APawn> allActiveUnits, Tile attackableTile)
+    {
+        var targetPawn = attackableTile.GetObjectAbove() as APawn;
+        if (targetPawn is object && CanAttack)
+        {
+            DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
+        }
+        CanAttack = false;
+        GD.Print("Pretend I do attack!");
     }
 
     private void NormalPlayerUnitAttack(Array<APawn> allActiveUnits, Tile attackableTile)
@@ -347,7 +375,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     {
         if (CanAttack)
         {
-            DoIndirectCrossAttack(allActiveUnits, attackableTile);
+            DoIndirectCrossAttack(attackableTile);
 
             if (attackableTile.GetObjectAbove() is APawn targetPawn)
             {
@@ -357,7 +385,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         GD.Print("I have become death, destroyer of skeletons!");
     }
 
-    private void DoIndirectCrossAttack(Array<APawn> allActiveUnits, Tile attackableTile)
+    private void DoIndirectCrossAttack(Tile attackableTile, int damage = 0)
     {
         foreach (var worldSide in allWorldSides)
         {
@@ -366,12 +394,25 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             {
                 continue;
             }
-
             if (worldSideTile.GetObjectAbove() is APawn worldSidePawn)
             {
-                DoTheRepeatingCongaLineAttack(worldSidePawn, worldSide);
+                switch (PawnClass)
+                {
+                    case PawnClass.SkeletonBomber:
+                        DealDirectDamageAndRemoveIfDead(worldSidePawn, damage);
+                        break;
+                    case PawnClass.Chemist:
+                        DoTheRepeatingCongaLineAttack(worldSidePawn, worldSide);
+                        break;
+                }
             }
         }
+    }
+
+    private void BomberDeathAftermath(APawn bomberPawn)
+    {
+        var explosionTile = bomberPawn.GetTile();
+        DoIndirectCrossAttack(explosionTile, damage:999);
     }
 
     private void DoIndirectAttacks(APawn targetPawn, Array<APawn> allActiveUnits)
@@ -396,14 +437,14 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     private void DoTheRepeatingCongaLineAttack(APawn targetPawn, WorldSide sideWherePawnIsGettingPushed)
     {
-        if(targetPawn.PawnClass == PawnClass.Totem)
+        if (targetPawn.PawnClass == PawnClass.Totem)
         {
             // DealDirectDamageAndRemoveIfDead(targetPawn, PushDamage);
             // return;
         }
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
-        
+
         // this should be out of the map state
         if (tileWherePawnIsGettingPushed is null)
         {
@@ -475,12 +516,18 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     public void DealDirectDamageAndRemoveIfDead(APawn pawn, int damage)
     {
         pawn.CurrHealth -= damage;
+        if (pawn.PawnClass == PawnClass.SkeletonBomber)
+        {
+            BomberDeathAftermath(pawn);
+        }
         if (pawn.CurrHealth <= 0)
         {
             pawn.Notify();
             pawn.QueueFree();
         }
     }
+
+
 
     //TODO This method is similar to DoAttackOnTile. Might merge them
     /// <summary>
@@ -543,7 +590,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         Animator.Start("IDLE");
         AnimationTree.Active = true;
         Character.Texture = Utils.GetPawnSprite(PawnClass);
-        if(PawnClass == PawnClass.Totem)
+        if (PawnClass == PawnClass.Totem)
         {
             Character.Offset = new Vector2(0, 30);
         }

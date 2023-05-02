@@ -3744,7 +3744,13 @@ script = ExtResource("1_jt5yj")
 environment = SubResource("Environment_2iv8t")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.730391, 0.478702, -0.48721, -0.124951, 0.607626, 0.784333, 0.671503, 0.633747, -0.38399, -1.89401, 8, -2.15562)
+transform = Transform3D(-0.556789, 0.77347, 0.302869, 0.488947, 0.0104242, 0.872251, 0.671503, 0.633747, -0.38399, 11.5615, 16.9843, -14.393)
+light_color = Color(1, 0.694118, 0.254902, 1)
+light_energy = 3.0
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.706231, 0.390481, -0.590562, -0.224326, 0.66775, 0.70978, 0.671503, 0.633747, -0.38399, -4.43855, 3.98428, -14.393)
+light_color = Color(1, 0.694118, 0.254902, 1)
 
 [node name="Tiles" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
