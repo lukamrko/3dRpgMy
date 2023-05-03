@@ -560,7 +560,6 @@ public partial class PlayerController : Node3D, IObserver
 
     private void ApplyForce()
     {
-        GD.Print("I entered apply force method");
         if (CurrentPawn.PathStack.Count == 0)
         {
             _forceCalculation = ForceCalculation.ForceFree;

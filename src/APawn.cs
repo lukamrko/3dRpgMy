@@ -46,11 +46,11 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         set
         {
             currHealth = value;
-            if (currHealth <= 0)
-            {
-                GD.Print("I have died, but my time will come!");
-                this.QueueFree();
-            }
+            // if (currHealth <= 0)
+            // {
+            //     GD.Print("I have died, but my time will come!");
+            //     this.QueueFree();
+            // }
         }
     }
     #endregion

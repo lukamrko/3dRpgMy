@@ -29,13 +29,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, -8.5)
 PawnClass = 2
 PawnName = "Heisenberg"
 
+[node name="Pawn4" parent="Player" instance=ExtResource("6_c0e3a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, -7.5)
+PawnClass = 4
+PawnName = "Heisenberg"
+
 [node name="Pawn2" parent="Player" instance=ExtResource("6_c0e3a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, -6.5)
 PawnClass = 1
 PawnName = "Xena"
 
+[node name="Pawn5" parent="Player" instance=ExtResource("6_c0e3a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, -6.5)
+PawnClass = 4
+PawnName = "Xena"
+
 [node name="Pawn3" parent="Player" instance=ExtResource("6_c0e3a")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, -9.5)
+PawnName = "Gvardian"
+
+[node name="Pawn6" parent="Player" instance=ExtResource("6_c0e3a")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, -8.5)
+PawnClass = 4
 PawnName = "Gvardian"
 
 [node name="Enemy" type="Node3D" parent="."]
@@ -44,25 +59,25 @@ script = ExtResource("7_sa7mb")
 [node name="Pawn4" parent="Enemy" instance=ExtResource("6_c0e3a")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.5, 0.8, -9.5)
 script = ExtResource("8_8fra2")
-PawnClass = 4
+PawnClass = 5
 PawnName = "Joe"
 
 [node name="Pawn5" parent="Enemy" instance=ExtResource("6_c0e3a")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 6.5, 0.7, -0.5)
 script = ExtResource("8_8fra2")
-PawnClass = 4
+PawnClass = 5
 PawnName = "Terry"
 
 [node name="Pawn6" parent="Enemy" instance=ExtResource("6_c0e3a")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 15.5, 0.8, -6.5)
 script = ExtResource("8_8fra2")
-PawnClass = 4
+PawnClass = 5
 PawnName = "Andy"
 
 [node name="Pawn7" parent="Enemy" instance=ExtResource("6_c0e3a")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.5, 0.8, -15.5)
 script = ExtResource("8_8fra2")
-PawnClass = 4
+PawnClass = 7
 PawnName = "Rock"
 
 [node name="EnemySpawner" type="Node3D" parent="."]

@@ -91,7 +91,6 @@ public partial class TileRaycasting : Node3D
         }
 
         Tile obj = rayCast.GetCollider() as Tile;
-        GD.Print(string.Format(@"One tile that we searched for had value: {0}", obj is object));
         return obj;
     }
 

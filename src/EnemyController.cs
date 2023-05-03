@@ -154,8 +154,8 @@ public partial class EnemyController : Node3D, IObserver
         {
             distance = (int)Math.Round(Math.Abs(AttackablePawn.Position.X - CurrentPawn.Position.X));
         }
-        // GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
-        //    CurrentPawn.PawnName, attackDirectionRounded, AttackablePawn.PawnName));
+        GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
+           CurrentPawn.PawnName, attackDirectionRounded, AttackablePawn.PawnName));
 
         var attackingTowards = new KeyValuePair<int, WorldSide>(distance, worldSide);
 
@@ -347,7 +347,6 @@ public partial class EnemyController : Node3D, IObserver
 
     private void ApplyForce()
     {
-        GD.Print("I entered apply force method");
         if (CurrentPawn.PathStack.Count == 0)
         {
             _forceCalculation = ForceCalculation.ForceFree;

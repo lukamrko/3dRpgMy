@@ -69,7 +69,6 @@ public class ForcedMovement
 
     private void ApplyForce()
     {
-        GD.Print("I entered apply force method");
         if (CurrentPawn.PathStack.Count == 0)
         {
             _forceCalculation = ForceCalculation.ForceFree;
