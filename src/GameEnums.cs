@@ -8,8 +8,8 @@ public enum PawnClass
     SkeletonWarrior,
     SkeletonArcher,
     SkeletonBomber,
-    SkeletonCPT,
-    SkeletonMage
+    SkeletonMedic,
+    SkeletonHero
 }
 
 public enum PlayerTypeClass

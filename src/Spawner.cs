@@ -10,7 +10,8 @@ public partial class Spawner : Node3D
 	{
 		// PawnClass.SkeletonWarrior,
 		// PawnClass.SkeletonArcher,
-		PawnClass.SkeletonBomber
+		// PawnClass.SkeletonBomber
+		PawnClass.SkeletonMedic
 	};
 
     Godot.Collections.Array<PawnStrategy> possibleStrategies = new Godot.Collections.Array<PawnStrategy>

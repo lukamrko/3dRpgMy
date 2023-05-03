@@ -331,16 +331,33 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                 break;
             case PawnClass.SkeletonWarrior:
             case PawnClass.SkeletonArcher:
+            case PawnClass.SkeletonHero:
                 NormalNPCAttack(allActiveUnits, attackableTile);
                 break;
             case PawnClass.SkeletonBomber:
                 BomberAttack(allActiveUnits);
+                break;
+            case PawnClass.SkeletonMedic:
+                MedicAction(allActiveUnits);
                 break;
             default:
                 NormalPlayerUnitAttack(allActiveUnits, attackableTile);
                 break;
         }
         this.CanAttack = false;
+    }
+
+    private void MedicAction(Array<APawn> allActiveUnits)
+    {
+        foreach (var pawn in allActiveUnits)
+        {
+            if (pawn is EnemyPawn allyPawn)
+            {
+                allyPawn.MaxHealth++;
+                allyPawn.CurrHealth++;
+                GD.Print("Healing poor bones: " + allyPawn.PawnName);
+            }
+        }
     }
 
     private void BomberAttack(Array<APawn> allActiveUnits)
@@ -350,6 +367,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     private void NormalNPCAttack(Array<APawn> allActiveUnits, Tile attackableTile)
     {
+        var additionalDamage = GetSkeletonDmgBuffs();
         var targetPawn = attackableTile.GetObjectAbove() as APawn;
         if (targetPawn is object && CanAttack)
         {
@@ -357,6 +375,27 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         }
         CanAttack = false;
         GD.Print("Pretend I do attack!");
+    }
+
+    private int GetSkeletonDmgBuffs()
+    {
+        var additionalDamage = 0;
+        foreach (var worldSide in allWorldSides)
+        {
+            var worldSideTile = GetTile().GetNeighborAtWorldSide(worldSide);
+            if (worldSideTile is null)
+            {
+                continue;
+            }
+            if (worldSideTile.GetObjectAbove() is EnemyPawn skeletonAlly)
+            {
+                if (skeletonAlly.PawnClass == PawnClass.SkeletonHero)
+                {
+                    additionalDamage++;
+                }
+            }
+        }
+        return additionalDamage;
     }
 
     private void NormalPlayerUnitAttack(Array<APawn> allActiveUnits, Tile attackableTile)
@@ -412,7 +451,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     private void BomberDeathAftermath(APawn bomberPawn)
     {
         var explosionTile = bomberPawn.GetTile();
-        DoIndirectCrossAttack(explosionTile, damage:999);
+        DoIndirectCrossAttack(explosionTile, damage: 999);
     }
 
     private void DoIndirectAttacks(APawn targetPawn, Array<APawn> allActiveUnits)

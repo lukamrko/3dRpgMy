@@ -7,7 +7,7 @@ public static class Utils
     private static string ArcherSprite = "res://assets/sprites/characters/chr_pawn_archer.png";
     private static string ChemistSprite = "res://assets/sprites/characters/chr_pawn_chemist.png";
     private static string ClericSprite = "res://assets/sprites/characters/chr_pawn_mage.png";
-    private static string SkeletonCptSprite = "res://assets/sprites/characters/chr_pawn_skeleton_cpt.png";
+    private static string SkeletonHeroSprite = "res://assets/sprites/characters/chr_pawn_skeleton_cpt.png";
     private static string SkeletonSprite = "res://assets/sprites/characters/chr_pawn_skeleton.png";
     private static string SkeletonArcherSprite = "res://assets/sprites/characters/chr_pawn_skeleton_archer.png";
     private static string SkeletonMedicSprite = "res://assets/sprites/characters/chr_pawn_skeleton_medic.png";
@@ -100,8 +100,8 @@ public static class Utils
                 return ResourceLoader.Load(SkeletonArcherSprite) as Texture2D;
             case PawnClass.SkeletonBomber:
                 return ResourceLoader.Load(SkeletonBomberSprite) as Texture2D;
-            case PawnClass.SkeletonCPT:
-                return ResourceLoader.Load(SkeletonCptSprite) as Texture2D;
+            case PawnClass.SkeletonHero:
+                return ResourceLoader.Load(SkeletonHeroSprite) as Texture2D;
             case PawnClass.SkeletonMedic:
                 return ResourceLoader.Load(SkeletonMedicSprite) as Texture2D;
             default:
@@ -129,7 +129,7 @@ public static class Utils
                 return 8;
             case PawnClass.SkeletonBomber:
                 return 99;
-            case PawnClass.SkeletonCPT:
+            case PawnClass.SkeletonHero:
                 return 6;
             case PawnClass.SkeletonMedic:
                 return 7;
@@ -158,7 +158,7 @@ public static class Utils
                 return 4f;
             case PawnClass.SkeletonBomber:
                 return 10f;
-            case PawnClass.SkeletonCPT:
+            case PawnClass.SkeletonHero:
                 return 0.5f;
             case PawnClass.SkeletonMedic:
                 return 1f;
@@ -187,7 +187,7 @@ public static class Utils
                 return 4;
             case PawnClass.SkeletonBomber:
                 return 1;
-            case PawnClass.SkeletonCPT:
+            case PawnClass.SkeletonHero:
                 return 1;
             case PawnClass.SkeletonMedic:
                 return 3;
@@ -214,8 +214,8 @@ public static class Utils
                 return 1;
             case PawnClass.SkeletonArcher:
                 return 1;
-            case PawnClass.SkeletonCPT:
-                return 2;
+            case PawnClass.SkeletonHero:
+                return 3;
             case PawnClass.SkeletonMedic:
                 return 0;
             default:
@@ -243,8 +243,8 @@ public static class Utils
                 return 1;
             case PawnClass.SkeletonBomber:
                 return 2;
-            case PawnClass.SkeletonCPT:
-                return 4;
+            case PawnClass.SkeletonHero:
+                return 9;
             case PawnClass.SkeletonMedic:
                 return 3;
             default:
