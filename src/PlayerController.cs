@@ -40,7 +40,7 @@ public partial class PlayerController : Node3D, IObserver
     PlayerStage Stage = PlayerStage.SelectPawn;
 
     PlayerControllerUI UIControl;
-    Godot.Collections.Array<PlayerPawn> PlayerPawns;
+    public Godot.Collections.Array<PlayerPawn> PlayerPawns;
     Godot.Collections.Array<APawn> AllActiveUnits;
     private Tile _AttackableTile;
 
