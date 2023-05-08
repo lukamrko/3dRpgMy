@@ -66,9 +66,19 @@ public static class LevelManager
         return allowedEnemies;
     }
 
+    /// <summary>
+    /// Creates default config if one doesn't exist
+    /// </summary>
     public static void CreateDefaultConfig()
     {
         var config = new ConfigFile();
+        Error err = config.Load(levelConfigPath);
+
+        if (err == Error.Ok)
+        {
+            return;
+        }
+
         var lvl1RoundsToWin = 5;
         var lvl2RoundsToWin = 4;
         var lvl3RoundsToWin = 6;

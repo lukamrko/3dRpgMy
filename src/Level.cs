@@ -4,8 +4,6 @@ using System.Linq;
 
 public partial class Level : Node3D
 {
-    [Export]
-    public int RoundWhenPlayerWins = 5;
     private const int minNumberOfTotems = 1;
     int currentRound = 0;
 
@@ -36,10 +34,10 @@ public partial class Level : Node3D
 
         Spawner = GetNode<Spawner>("EnemySpawner");
 
-        LevelManagerOperations();
+        LevelManagerInitialOperations();
     }
 
-    private void LevelManagerOperations()
+    private void LevelManagerInitialOperations()
     {
         LevelInfo = LevelManager.GetCurrentLevelInformation();
         nextLevelExists = LevelManager.NextLevelExists();
@@ -136,7 +134,6 @@ public partial class Level : Node3D
     {
         if (nextLevelExists)
         {
-            // LevelManager.CurrentLevel++;
             EndInfoWindow.SetLevelWon();
         }
         else
@@ -174,32 +171,5 @@ public partial class Level : Node3D
         }
     }
     #endregion
-
-    private void CreateDefaultConfig()
-    {
-        var config = new ConfigFile();
-        var lvl1RoundsToWin = 5;
-        var lvl2RoundsToWin = 4;
-        var lvl3RoundsToWin = 6;
-        var lvl4RoundsToWin = 7;
-
-        var lvl1AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher };
-        var lvl2AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher, (int)PawnClass.SkeletonBomber };
-        var lvl3AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher, (int)PawnClass.SkeletonBomber, (int)PawnClass.SkeletonMedic };
-        var lvl4AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher, (int)PawnClass.SkeletonBomber, (int)PawnClass.SkeletonMedic, (int)PawnClass.SkeletonHero };
-
-
-
-        config.SetValue("level1", "RoundsToWin", lvl1RoundsToWin);
-        config.SetValue("level1", "AllowedEnemies", lvl1AllowedEnemies);
-        config.SetValue("level2", "RoundsToWin", lvl2RoundsToWin);
-        config.SetValue("level2", "AllowedEnemies", lvl2AllowedEnemies);
-        config.SetValue("level3", "RoundsToWin", lvl3RoundsToWin);
-        config.SetValue("level3", "AllowedEnemies", lvl3AllowedEnemies);
-        config.SetValue("level4", "RoundsToWin", lvl4RoundsToWin);
-        config.SetValue("level4", "AllowedEnemies", lvl4AllowedEnemies);
-
-        config.Save("config/defaultConfig.cfg");
-    }
 
 }

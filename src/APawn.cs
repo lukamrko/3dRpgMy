@@ -353,9 +353,11 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         {
             if (pawn is EnemyPawn allyPawn)
             {
-                allyPawn.MaxHealth++;
-                allyPawn.CurrHealth++;
-                GD.Print("Healing poor bones: " + allyPawn.PawnName);
+                if (allyPawn.CurrHealth < allyPawn.MaxHealth)
+                {
+                    allyPawn.CurrHealth++;
+                    GD.Print("Healing poor bones: " + allyPawn.PawnName);
+                }
             }
         }
     }
