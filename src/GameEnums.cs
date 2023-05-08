@@ -1,15 +1,15 @@
 public enum PawnClass
 {
-    Knight,
-    Archer,
-    Chemist,
-    Cleric,
-    Totem,
-    SkeletonWarrior,
-    SkeletonArcher,
-    SkeletonBomber,
-    SkeletonMedic,
-    SkeletonHero
+    Knight = 1,
+    Archer = 2,
+    Chemist = 3,
+    Cleric = 4,
+    Totem = 5,
+    SkeletonWarrior = 6,
+    SkeletonArcher = 7,
+    SkeletonBomber = 8,
+    SkeletonMedic = 9,
+    SkeletonHero = 10
 }
 
 public enum PlayerTypeClass

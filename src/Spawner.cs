@@ -5,14 +5,14 @@ using Vector3 = Godot.Vector3;
 public partial class Spawner : Node3D
 {
 
-	Godot.Collections.Array<string> possibleNames = new Godot.Collections.Array<string> { "K'", "Maxima", "Ryo", "Robert", "Heidern" };
-	Godot.Collections.Array<PawnClass> possibleClasses = new Godot.Collections.Array<PawnClass> 
-	{
-		// PawnClass.SkeletonWarrior,
-		// PawnClass.SkeletonArcher,
-		// PawnClass.SkeletonBomber
-		PawnClass.SkeletonMedic
-	};
+	Godot.Collections.Array<string> possibleNames = new Godot.Collections.Array<string> { "K'", "Maxima", "Ryo", "Robert", "Heidern", "Clark", "Ralf" };
+	// Godot.Collections.Array<PawnClass> possibleClasses = new Godot.Collections.Array<PawnClass> 
+	// {
+	// 	// PawnClass.SkeletonWarrior,
+	// 	// PawnClass.SkeletonArcher,
+	// 	// PawnClass.SkeletonBomber
+	// 	PawnClass.SkeletonMedic
+	// };
 
     Godot.Collections.Array<PawnStrategy> possibleStrategies = new Godot.Collections.Array<PawnStrategy>
     {
@@ -32,11 +32,12 @@ public partial class Spawner : Node3D
 	public Godot.Collections.Array<EnemyPawn> SpawnEnemies()
 	{
         Godot.Collections.Array<EnemyPawn> enemyPawns = new Godot.Collections.Array<EnemyPawn>();
+		var allowedEnemies = LevelManager.GetCurrentLevelInformation().AllowedEnemies;
 		Points.Shuffle();
 		int numberToSpawn = Points.Count;
 		for (int i = 0; i < numberToSpawn; i++)
 		{
-			EnemyPawn enemyPawn = GetEnemyNode() as EnemyPawn;
+			EnemyPawn enemyPawn = GetEnemyNode(allowedEnemies) as EnemyPawn;
             // enemyPawn.GlobalTranslate(Points[i].GlobalPosition);
 
             // var pointTranslation = new Godot.Vector3
@@ -75,11 +76,11 @@ public partial class Spawner : Node3D
 		return enemyPawns;
 	}
 
-	private Node GetEnemyNode()
+	private Node GetEnemyNode(Godot.Collections.Array<PawnClass> allowedEnemies)
 	{
 		var node = Scene.Instantiate();
 		var enemyPawn = node as EnemyPawn;
-		enemyPawn.PawnClass = possibleClasses.GetRandom();
+		enemyPawn.PawnClass = allowedEnemies.GetRandom();
 		enemyPawn.PawnStrategy = possibleStrategies.GetRandom();
 		enemyPawn.PawnName = possibleNames.GetRandom();
 		return node;

@@ -27,7 +27,7 @@ script = ExtResource("5_kj054")
 
 [node name="Pawn" parent="Player" instance=ExtResource("6_q7l32")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 4, -18.5)
-PawnClass = 2
+PawnClass = 3
 PawnName = "Heisenberg"
 
 [node name="Pawn2" parent="Player" instance=ExtResource("6_q7l32")]
@@ -37,21 +37,22 @@ PawnName = "Xena"
 
 [node name="Pawn3" parent="Player" instance=ExtResource("6_q7l32")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 4, -19.5)
+PawnClass = 2
 PawnName = "Gvardian"
 
 [node name="Pawn4" parent="Player" instance=ExtResource("6_q7l32")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 4, -19.5)
-PawnClass = 4
+PawnClass = 5
 PawnName = "Totem1"
 
 [node name="Pawn5" parent="Player" instance=ExtResource("6_q7l32")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 4, -15.5)
-PawnClass = 4
+PawnClass = 5
 PawnName = "Totem2"
 
 [node name="Pawn6" parent="Player" instance=ExtResource("6_q7l32")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 4, -17.5)
-PawnClass = 4
+PawnClass = 5
 PawnName = "Totem3"
 
 [node name="Enemy" type="Node3D" parent="."]
@@ -72,13 +73,13 @@ PawnName = "Terry"
 [node name="Pawn6" parent="Enemy" instance=ExtResource("6_q7l32")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 7.5, 1, -0.5)
 script = ExtResource("8_cjrhf")
-PawnClass = 5
+PawnClass = 7
 PawnName = "Andy"
 
 [node name="Pawn7" parent="Enemy" instance=ExtResource("6_q7l32")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.5, 1, -0.5)
 script = ExtResource("8_cjrhf")
-PawnClass = 5
+PawnClass = 7
 PawnName = "Rock"
 
 [node name="EnemySpawner" type="Node3D" parent="."]

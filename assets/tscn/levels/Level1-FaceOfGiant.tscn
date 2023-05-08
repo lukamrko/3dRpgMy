@@ -29,6 +29,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3, -13.5)
 PawnClass = 2
 PawnName = "Heisenberg"
 
+[node name="Pawn4" parent="Player" instance=ExtResource("6_8t5w6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2, -13.5)
+PawnClass = 5
+PawnName = "Totem1"
+
+[node name="Pawn5" parent="Player" instance=ExtResource("6_8t5w6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3, -11.5)
+PawnClass = 5
+PawnName = "Totem2"
+
+[node name="Pawn6" parent="Player" instance=ExtResource("6_8t5w6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 2, -13.5)
+PawnClass = 5
+PawnName = "Totem3"
+
 [node name="Pawn2" parent="Player" instance=ExtResource("6_8t5w6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 3, -13.5)
 PawnClass = 1
@@ -36,6 +51,7 @@ PawnName = "Xena"
 
 [node name="Pawn3" parent="Player" instance=ExtResource("6_8t5w6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 3, -9.5)
+PawnClass = 3
 PawnName = "Gvardian"
 
 [node name="Enemy" type="Node3D" parent="."]
@@ -44,25 +60,25 @@ script = ExtResource("7_qk87i")
 [node name="Pawn4" parent="Enemy" instance=ExtResource("6_8t5w6")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.5, 1, -0.5)
 script = ExtResource("8_dpqx6")
-PawnClass = 4
+PawnClass = 6
 PawnName = "Joe"
 
 [node name="Pawn5" parent="Enemy" instance=ExtResource("6_8t5w6")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 3.5, 1, -0.5)
 script = ExtResource("8_dpqx6")
-PawnClass = 4
+PawnClass = 7
 PawnName = "Joe"
 
 [node name="Pawn6" parent="Enemy" instance=ExtResource("6_8t5w6")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 10.5, 1, -0.5)
 script = ExtResource("8_dpqx6")
-PawnClass = 4
+PawnClass = 6
 PawnName = "Joe"
 
 [node name="Pawn7" parent="Enemy" instance=ExtResource("6_8t5w6")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 11.5, 1, -0.5)
 script = ExtResource("8_dpqx6")
-PawnClass = 4
+PawnClass = 7
 PawnName = "Joe"
 
 [node name="EnemySpawner" type="Node3D" parent="."]

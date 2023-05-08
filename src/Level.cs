@@ -14,6 +14,11 @@ public partial class Level : Node3D
     Spawner Spawner;
     TacticsCamera TacticsCamera;
 
+    LevelInfo LevelInfo;
+    private bool nextLevelExists;
+    LevelInfo NextLevelInfo;
+    PackedScene NextLevel;
+
     public override void _Ready()
     {
         Player = GetNode<PlayerController>("Player");
@@ -28,9 +33,19 @@ public partial class Level : Node3D
 
         Spawner = GetNode<Spawner>("EnemySpawner");
 
-        GD.Print("Test physics: " + this.IsPhysicsProcessing());
+        LevelManagerOperations();
     }
 
+    private void LevelManagerOperations()
+    {
+        LevelInfo = LevelManager.GetCurrentLevelInformation();
+        nextLevelExists = LevelManager.NextLevelExists();
+        if (nextLevelExists)
+        {
+            NextLevelInfo = LevelManager.GetNextLevel();
+            NextLevel = ResourceLoader.Load<PackedScene>(NextLevelInfo.LevelPath);
+        }
+    }
 
     private void FirstObserverAttachments()
     {
@@ -72,17 +87,27 @@ public partial class Level : Node3D
     private void TurnOverOperation()
     {
         var isGameLost = CheckIfGameIsLost();
+        if (isGameLost)
+        {
+            GameLost();
+        }
         currentRound++;
+        if (currentRound == LevelInfo.RoundsToWin)
+        {
+            LevelWonOperation();
+        }
+        
         var enemies = Enemy.SpawnEnemies();
         Player.NotifyAboutNewEnemies(enemies);
         var print = string.Format("Round {0} finished. New round is: {1}", currentRound - 1, currentRound);
         GD.Print(print);
-        if (currentRound == RoundWhenPlayerWins)
-        {
-            LevelWonOperation();
-        }
         Player.Reset();
         Enemy.Reset();
+    }
+
+    private void GameLost()
+    {
+        GD.Print("TODO game lost. Do a popup window");
     }
 
     private bool CheckIfGameIsLost()
@@ -106,6 +131,16 @@ public partial class Level : Node3D
 
     private void LevelWonOperation()
     {
+        if (nextLevelExists)
+        {
+            LevelManager.CurrentLevel++;
+            GD.Print("TODO Popup for next level");
+            
+        }
+        else
+        {
+
+        }
         var print = string.Format("Battle was hard, but we won");
         GD.Print(print);
     }
@@ -136,6 +171,33 @@ public partial class Level : Node3D
             TacticsCamera.YRot += 90;
         }
     }
-    #endregion 
+    #endregion
+
+    private void CreateDefaultConfig()
+    {
+        var config = new ConfigFile();
+        var lvl1RoundsToWin = 5;
+        var lvl2RoundsToWin = 4;
+        var lvl3RoundsToWin = 6;
+        var lvl4RoundsToWin = 7;
+
+        var lvl1AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher };
+        var lvl2AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher, (int)PawnClass.SkeletonBomber };
+        var lvl3AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher, (int)PawnClass.SkeletonBomber, (int)PawnClass.SkeletonMedic };
+        var lvl4AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher, (int)PawnClass.SkeletonBomber, (int)PawnClass.SkeletonMedic, (int)PawnClass.SkeletonHero };
+
+
+
+        config.SetValue("level1", "RoundsToWin", lvl1RoundsToWin);
+        config.SetValue("level1", "AllowedEnemies", lvl1AllowedEnemies);
+        config.SetValue("level2", "RoundsToWin", lvl2RoundsToWin);
+        config.SetValue("level2", "AllowedEnemies", lvl2AllowedEnemies);
+        config.SetValue("level3", "RoundsToWin", lvl3RoundsToWin);
+        config.SetValue("level3", "AllowedEnemies", lvl3AllowedEnemies);
+        config.SetValue("level4", "RoundsToWin", lvl4RoundsToWin);
+        config.SetValue("level4", "AllowedEnemies", lvl4AllowedEnemies);
+
+        config.Save("config/defaultConfig.cfg");
+    }
 
 }

@@ -32,5 +32,3 @@ text = "Start the game"
 layout_mode = 2
 focus_neighbor_bottom = NodePath("../Start")
 text = "Quit"
-
-[connection signal="pressed" from="VBoxContainer/Start" to="." method="BtnStartPressed"]
