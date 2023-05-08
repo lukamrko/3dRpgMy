@@ -8,7 +8,7 @@ public static class LevelManager
     private static Dictionary<int, LevelInfo> levelInformations = new Dictionary<int, LevelInfo>();
     public static int CurrentLevel = -1;
 
-    public static LevelInfo GetNextLevel()
+    public static LevelInfo GetNextLevelInfo()
     {
         return levelInformations[CurrentLevel + 1];
     }
@@ -25,7 +25,6 @@ public static class LevelManager
 
     public static void LoadConfig()
     {
-        var score_data = new Godot.Collections.Dictionary();
         var config = new ConfigFile();
 
         // Load data from a file.
@@ -101,7 +100,7 @@ public static class LevelManager
         config.SetValue("level4", "AllowedEnemies", lvl4AllowedEnemies);
         config.SetValue("level4", "LevelPath", lvl4Path);
 
-        config.Save("config/defaultConfig.cfg");
+        config.Save(levelConfigPath);
     }
 
 }

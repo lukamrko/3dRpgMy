@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://bnck5te67fihg"]
+[gd_scene load_steps=12 format=3 uid="uid://bnck5te67fihg"]
 
 [ext_resource type="Script" path="res://src/Level.cs" id="1_n2knm"]
 [ext_resource type="PackedScene" uid="uid://bslemieycl6t1" path="res://assets/tscn/ui/PlayerControllerUI.tscn" id="2_rks4c"]
+[ext_resource type="PackedScene" uid="uid://ch6r35xoxyrud" path="res://assets/tscn/ui/EndInfoWindow.tscn" id="3_8baub"]
 [ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="3_qdfwm"]
 [ext_resource type="PackedScene" uid="uid://msd6w87186lb" path="res://assets/tscn/maps/02-v1-Crossroads.tscn" id="4_7ul8c"]
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="5_5egqc"]
@@ -16,6 +17,9 @@
 script = ExtResource("1_n2knm")
 
 [node name="PlayerControllerUI" parent="." instance=ExtResource("2_rks4c")]
+
+[node name="EndInfoWindow" parent="." instance=ExtResource("3_8baub")]
+visible = false
 
 [node name="TacticsCamera" parent="." instance=ExtResource("3_qdfwm")]
 

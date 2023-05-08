@@ -26,7 +26,7 @@ public partial class MainMenu : Control
         _BtnStart.Pressed += BtnStartPressed;
         _BtnQuit.Pressed += BtnQuitPressed;
 
-        // LevelManager.CreateDefaultConfig();
+        LevelManager.CreateDefaultConfig();
         LevelManager.LoadConfig();
         LevelManager.CurrentLevel = 1;
 		var levelPath = LevelManager.GetCurrentLevelInformation().LevelPath;
@@ -37,7 +37,7 @@ public partial class MainMenu : Control
     public void BtnStartPressed()
     {
         // GD.Print("pressed");
-        GetTree().Paused = false;
+        // GetTree().Paused = false;
         // var x = Scene.ResourceLocalToScene = true;
         // var level = Scene.GetLocalScene() as Level;
         // level.RoundWhenPlayerWins = 2;

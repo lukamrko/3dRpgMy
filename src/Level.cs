@@ -18,6 +18,7 @@ public partial class Level : Node3D
     private bool nextLevelExists;
     LevelInfo NextLevelInfo;
     PackedScene NextLevel;
+    EndInfoWindow EndInfoWindow;
 
     public override void _Ready()
     {
@@ -27,6 +28,8 @@ public partial class Level : Node3D
         Arena arena = GetNode<Arena>("Arena");
         TacticsCamera = GetNode<TacticsCamera>("TacticsCamera");
         PlayerControllerUI playerControllerUI = GetNode<PlayerControllerUI>("PlayerControllerUI");
+        EndInfoWindow = GetNode<EndInfoWindow>("EndInfoWindow");
+        EndInfoWindow.Visible = false;
 
         Player.Configure(arena, TacticsCamera, playerControllerUI);
         Enemy.Configure(arena, TacticsCamera);
@@ -42,7 +45,7 @@ public partial class Level : Node3D
         nextLevelExists = LevelManager.NextLevelExists();
         if (nextLevelExists)
         {
-            NextLevelInfo = LevelManager.GetNextLevel();
+            NextLevelInfo = LevelManager.GetNextLevelInfo();
             NextLevel = ResourceLoader.Load<PackedScene>(NextLevelInfo.LevelPath);
         }
     }
@@ -92,11 +95,11 @@ public partial class Level : Node3D
             GameLost();
         }
         currentRound++;
-        if (currentRound == LevelInfo.RoundsToWin)
+        if (currentRound == LevelInfo.RoundsToWin || true)
         {
             LevelWonOperation();
         }
-        
+
         var enemies = Enemy.SpawnEnemies();
         Player.NotifyAboutNewEnemies(enemies);
         var print = string.Format("Round {0} finished. New round is: {1}", currentRound - 1, currentRound);
@@ -107,7 +110,7 @@ public partial class Level : Node3D
 
     private void GameLost()
     {
-        GD.Print("TODO game lost. Do a popup window");
+        EndInfoWindow.SetGameLostUI();
     }
 
     private bool CheckIfGameIsLost()
@@ -133,13 +136,12 @@ public partial class Level : Node3D
     {
         if (nextLevelExists)
         {
-            LevelManager.CurrentLevel++;
-            GD.Print("TODO Popup for next level");
-            
+            // LevelManager.CurrentLevel++;
+            EndInfoWindow.SetLevelWon();
         }
         else
         {
-
+            EndInfoWindow.SetGameWon();
         }
         var print = string.Format("Battle was hard, but we won");
         GD.Print(print);
