@@ -44,6 +44,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.5, 0, -2.5)
 PawnClass = 3
 PawnName = "Okabe"
 
+[node name="Pawn4" parent="Player" instance=ExtResource("6_utjso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -8.5)
+PawnClass = 5
+PawnName = "Totem1"
+
+[node name="Pawn5" parent="Player" instance=ExtResource("6_utjso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -4.5)
+PawnClass = 5
+PawnName = "Totem2"
+
+[node name="Pawn6" parent="Player" instance=ExtResource("6_utjso")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0, -1.5)
+PawnClass = 5
+PawnName = "Totem3"
+
 [node name="Enemy" type="Node3D" parent="."]
 script = ExtResource("7_lbc7j")
 
