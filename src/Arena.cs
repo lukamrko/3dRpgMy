@@ -8,6 +8,14 @@ public partial class Arena : Node3D
     Godot.Collections.Array<Tile> TilesChildren;
     Dictionary<Vector3, Tile> RoundDownedTilesDictionary = new Dictionary<Vector3, Tile>();
 
+    internal readonly Godot.Collections.Array<WorldSide> allWorldSides = new Godot.Collections.Array<WorldSide>
+    {
+        WorldSide.North,
+        WorldSide.West,
+        WorldSide.South,
+        WorldSide.East
+    };
+
     public void LinkTiles<[MustBeVariant] T>(Tile root, float height, Godot.Collections.Array<T> allies = null) where T : APawn
     {
         Godot.Collections.Array<Tile> tiles = new Godot.Collections.Array<Tile> { root };
@@ -30,6 +38,27 @@ public partial class Arena : Node3D
                     neighbor.Distance = currentTile.Distance + 1;
                     tiles.Add(neighbor);
                 }
+            }
+        }
+    }
+
+    public void LinkTilesForAttack<[MustBeVariant] T>(Tile root, int attackRadius, Godot.Collections.Array<T> allies = null) where T : APawn
+    {
+        Godot.Collections.Array<Tile> tiles = new Godot.Collections.Array<Tile> { root };
+        foreach (var worldSide in allWorldSides)
+        {
+            var helperTile = root;
+            for (int radius = 1; radius <= attackRadius; radius++)
+            {
+                var tile = helperTile.GetNeighborAtWorldSide(worldSide);
+                if (tile is null)
+                {
+                    break;
+                }
+                tile.Root = helperTile;
+                tile.Distance = radius;
+                helperTile = tile;
+                tiles.Add(tile);
             }
         }
     }
@@ -190,9 +219,9 @@ public partial class Arena : Node3D
     private Godot.Collections.Array<PlayerPawn> GetOnlyTotems(Godot.Collections.Array<PlayerPawn> pawns)
     {
         var totems = new Godot.Collections.Array<PlayerPawn>();
-        for(int i=0; i<pawns.Count; i++)
+        for (int i = 0; i < pawns.Count; i++)
         {
-            if(pawns[i].IsTotem)
+            if (pawns[i].IsTotem)
             {
                 totems.Add(pawns[i]);
             }

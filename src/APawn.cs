@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,7 +105,9 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         {
             var isColliding = CurrTile.IsColliding();
             var space = GetWorld3D().DirectSpaceState;
+            StackTrace st = new StackTrace();
             GD.Print("Current tiles colliding: " + isColliding);
+            GD.Print("Stacktrace: " + st);
 
         }
         return tile;

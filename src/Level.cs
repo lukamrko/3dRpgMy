@@ -93,7 +93,7 @@ public partial class Level : Node3D
             GameLost();
         }
         currentRound++;
-        if (currentRound == LevelInfo.RoundsToWin || true)
+        if (currentRound == LevelInfo.RoundsToWin)
         {
             LevelWonOperation();
         }

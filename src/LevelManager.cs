@@ -76,6 +76,7 @@ public static class LevelManager
 
         if (err == Error.Ok)
         {
+            GD.Print("File found");
             return;
         }
 

@@ -116,17 +116,17 @@ public static class Utils
             case PawnClass.Knight:
                 return 3;
             case PawnClass.Archer:
-                return 5;
+                return 6;
             case PawnClass.Chemist:
-                return 7;
+                return 5;
             case PawnClass.Cleric:
                 return 4;
             case PawnClass.Totem:
                 return 0;
             case PawnClass.SkeletonWarrior:
-                return 12;
+                return 10;
             case PawnClass.SkeletonArcher:
-                return 8;
+                return 12;
             case PawnClass.SkeletonBomber:
                 return 99;
             case PawnClass.SkeletonHero:
@@ -143,11 +143,11 @@ public static class Utils
         switch (pawnClass)
         {
             case PawnClass.Knight:
-                return 0.5f;
+                return 1f;
             case PawnClass.Archer:
                 return 3f;
             case PawnClass.Chemist:
-                return 1f;
+                return 2f;
             case PawnClass.Cleric:
                 return 1f;
             case PawnClass.Totem:

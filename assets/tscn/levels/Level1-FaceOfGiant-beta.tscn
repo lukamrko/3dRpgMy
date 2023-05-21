@@ -1,0 +1,118 @@
+[gd_scene load_steps=12 format=3 uid="uid://jkea6gkcy5n6"]
+
+[ext_resource type="Script" path="res://src/Level.cs" id="1_ciky0"]
+[ext_resource type="PackedScene" uid="uid://bslemieycl6t1" path="res://assets/tscn/ui/PlayerControllerUI.tscn" id="2_e6y0k"]
+[ext_resource type="PackedScene" uid="uid://ch6r35xoxyrud" path="res://assets/tscn/ui/EndInfoWindow.tscn" id="3_p2ivv"]
+[ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="4_2142l"]
+[ext_resource type="PackedScene" uid="uid://bypn4j7f6ohus" path="res://assets/tscn/maps/01-v1-FaceOfGiant.tscn" id="5_kvey2"]
+[ext_resource type="Script" path="res://src/PlayerController.cs" id="6_0rmen"]
+[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="7_3f4ck"]
+[ext_resource type="Script" path="res://src/EnemyController.cs" id="8_r4v48"]
+[ext_resource type="Script" path="res://src/EnemyPawn.cs" id="9_atfh3"]
+[ext_resource type="Script" path="res://src/Spawner.cs" id="10_6mfv4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5yiin"]
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_ciky0")
+
+[node name="PlayerControllerUI" parent="." instance=ExtResource("2_e6y0k")]
+
+[node name="EndInfoWindow" parent="." instance=ExtResource("3_p2ivv")]
+visible = false
+
+[node name="TacticsCamera" parent="." instance=ExtResource("4_2142l")]
+
+[node name="Arena" parent="." instance=ExtResource("5_kvey2")]
+
+[node name="Player" type="Node3D" parent="."]
+script = ExtResource("6_0rmen")
+
+[node name="Pawn" parent="Player" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3, -13.5)
+PawnClass = 2
+PawnName = "Heisenberg"
+
+[node name="Pawn4" parent="Player" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 2, -13.5)
+PawnClass = 5
+PawnName = "Totem1"
+
+[node name="Pawn5" parent="Player" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3, -11.5)
+PawnClass = 5
+PawnName = "Totem2"
+
+[node name="Pawn6" parent="Player" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 2, -13.5)
+PawnClass = 5
+PawnName = "Totem3"
+
+[node name="Pawn2" parent="Player" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 3, -13.5)
+PawnClass = 1
+PawnName = "Xena"
+
+[node name="Pawn3" parent="Player" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 3, -9.5)
+PawnClass = 3
+PawnName = "Gvardian"
+
+[node name="Enemy" type="Node3D" parent="."]
+script = ExtResource("8_r4v48")
+
+[node name="Pawn4" parent="Enemy" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.5, 1, -0.5)
+script = ExtResource("9_atfh3")
+PawnClass = 6
+PawnName = "Joe"
+
+[node name="Pawn5" parent="Enemy" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 3.5, 1, -0.5)
+script = ExtResource("9_atfh3")
+PawnClass = 7
+PawnName = "Joe"
+
+[node name="Pawn6" parent="Enemy" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 10.5, 1, -0.5)
+script = ExtResource("9_atfh3")
+PawnClass = 6
+PawnName = "Joe"
+
+[node name="Pawn7" parent="Enemy" instance=ExtResource("7_3f4ck")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 11.5, 1, -0.5)
+script = ExtResource("9_atfh3")
+PawnClass = 7
+PawnName = "Joe"
+
+[node name="EnemySpawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.04029, -1.76458, -2)
+script = ExtResource("10_6mfv4")
+
+[node name="Spawn1" type="StaticBody3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 1.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemySpawner/Spawn1"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_5yiin")
+
+[node name="Spawn2" type="StaticBody3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 1.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemySpawner/Spawn2"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_5yiin")
+
+[node name="Spawn3" type="StaticBody3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 1.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemySpawner/Spawn3"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_5yiin")
+
+[node name="Spawn4" type="StaticBody3D" parent="EnemySpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0, 1.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EnemySpawner/Spawn4"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_5yiin")
