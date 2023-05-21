@@ -234,7 +234,7 @@ public partial class PlayerController : Node3D, IObserver
         }
         TacticsCamera.Target = CurrentPawn;
         Godot.Collections.Array<PlayerPawn> emptyArray = null;
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
+        Arena.LinkTilesForAttack(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         Stage = PlayerStage.SelectTileToAttack;
     }
