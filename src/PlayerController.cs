@@ -186,7 +186,7 @@ public partial class PlayerController : Node3D, IObserver
         Arena.Reset();
         if (CurrentPawn is object)
         {
-            CurrentPawn.DisplayPawnStats(false);
+            CurrentPawn.DisplayPawnStats(true);
         }
 
         CurrentPawn = AuxSelectPawn();
@@ -289,7 +289,7 @@ public partial class PlayerController : Node3D, IObserver
 
     public void MovePawn()
     {
-        CurrentPawn.DisplayPawnStats(false);
+        CurrentPawn.DisplayPawnStats(true);
         if (CurrentPawn.PathStack.Count == 0)
         {
             if (!CurrentPawn.CanAct())

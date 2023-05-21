@@ -154,9 +154,10 @@ public partial class EnemyController : Node3D, IObserver
         {
             distance = (int)Math.Round(Math.Abs(AttackablePawn.Position.X - CurrentPawn.Position.X));
         }
+        var attackableTile = AttackablePawn.GetTile();
         GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
            CurrentPawn.PawnName, attackDirectionRounded, AttackablePawn.PawnName));
-
+        CurrentPawn.LookAtDirection(attackableTile.GlobalTransform.Origin - CurrentPawn.GlobalTransform.Origin);
         var attackingTowards = new KeyValuePair<int, WorldSide>(distance, worldSide);
 
         return attackingTowards;
