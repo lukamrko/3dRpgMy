@@ -5,7 +5,7 @@ using System.Linq;
 public partial class Level : Node3D
 {
     private const int minNumberOfTotems = 1;
-    int currentRound = 0;
+    int currentRound = 1;
 
     PlayerController Player;
     EnemyController Enemy;
@@ -18,6 +18,9 @@ public partial class Level : Node3D
     PackedScene NextLevel;
     EndInfoWindow EndInfoWindow;
 
+    Label valueVictoryRound;
+    Label valueCurrentRound;
+
     public override void _Ready()
     {
         Player = GetNode<PlayerController>("Player");
@@ -26,6 +29,7 @@ public partial class Level : Node3D
         Arena arena = GetNode<Arena>("Arena");
         TacticsCamera = GetNode<TacticsCamera>("TacticsCamera");
         PlayerControllerUI playerControllerUI = GetNode<PlayerControllerUI>("PlayerControllerUI");
+
         EndInfoWindow = GetNode<EndInfoWindow>("EndInfoWindow");
         EndInfoWindow.Visible = false;
 
@@ -35,6 +39,13 @@ public partial class Level : Node3D
         Spawner = GetNode<Spawner>("EnemySpawner");
 
         LevelManagerInitialOperations();
+
+        var levelUI = GetNode("LevelUI");
+        valueVictoryRound = levelUI.GetNode<Label>("ColorRectangle/valueVictoryRound");
+        valueCurrentRound = levelUI.GetNode<Label>("ColorRectangle/valueCurrentRound");
+
+        valueVictoryRound.Text = LevelInfo.RoundsToWin.ToString();
+        valueCurrentRound.Text = currentRound.ToString();
     }
 
     private void LevelManagerInitialOperations()
@@ -92,12 +103,12 @@ public partial class Level : Node3D
         {
             GameLost();
         }
-        currentRound++;
         if (currentRound == LevelInfo.RoundsToWin)
         {
             LevelWonOperation();
         }
-
+        currentRound++;
+        valueCurrentRound.Text = currentRound.ToString();
         var enemies = Enemy.SpawnEnemies();
         Player.NotifyAboutNewEnemies(enemies);
         var print = string.Format("Round {0} finished. New round is: {1}", currentRound - 1, currentRound);
