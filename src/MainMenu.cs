@@ -33,6 +33,8 @@ public partial class MainMenu : Control
         LevelManager.CreateDefaultConfig();
         LevelManager.LoadConfig();
 
+        DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
+
     }
 
 
