@@ -23,12 +23,17 @@ offset_top = -22.0
 offset_right = 83.0
 offset_bottom = 22.0
 
-[node name="Start" type="Button" parent="VBoxContainer"]
+[node name="NewGame" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-focus_neighbor_top = NodePath("../Quit")
-text = "Start the game"
+focus_neighbor_top = NodePath("../Continue")
+text = "New game"
+
+[node name="Continue" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../NewGame")
+text = "Continue"
 
 [node name="Quit" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-focus_neighbor_bottom = NodePath("../Start")
+focus_neighbor_bottom = NodePath("../NewGame")
 text = "Quit"

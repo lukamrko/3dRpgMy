@@ -10,7 +10,9 @@ public partial class MainMenu : Control
         @"res://assets/tscn/levels/Level1-FaceOfGiant.tscn"
     };
 
-    private Button _BtnStart;
+    private Button _BtnNewGame;
+    private Button _BtnContinue;
+
     private Button _BtnQuit;
 
     PackedScene Scene = new PackedScene();
@@ -19,32 +21,37 @@ public partial class MainMenu : Control
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        _BtnStart = GetNode<Button>("VBoxContainer/Start");
+        _BtnNewGame = GetNode<Button>("VBoxContainer/NewGame");
+        _BtnContinue = GetNode<Button>("VBoxContainer/Continue");
         _BtnQuit = GetNode<Button>("VBoxContainer/Quit");
-        _BtnStart.GrabFocus();
+        _BtnNewGame.GrabFocus();
 
-        _BtnStart.Pressed += BtnStartPressed;
+        _BtnNewGame.Pressed += BtnNewGamePressed;
+        _BtnContinue.Pressed += BtnContinuePressed;
         _BtnQuit.Pressed += BtnQuitPressed;
 
         LevelManager.CreateDefaultConfig();
         LevelManager.LoadConfig();
-        LevelManager.CurrentLevel = 1;
-		var levelPath = LevelManager.GetCurrentLevelInformation().LevelPath;
-        Scene = ResourceLoader.Load<PackedScene>(levelPath);
+
     }
 
 
-    public void BtnStartPressed()
+    public void BtnNewGamePressed()
     {
-        // GD.Print("pressed");
-        // GetTree().Paused = false;
-        // var x = Scene.ResourceLocalToScene = true;
-        // var level = Scene.GetLocalScene() as Level;
-        // level.RoundWhenPlayerWins = 2;
-        GetTree().ChangeSceneToPacked(Scene);
-        // GetTree().ChangeSceneTo(Scene);
+        LevelManager.CurrentLevel = 1;
+        var levelPath = LevelManager.GetCurrentLevelInformation().LevelPath;
+        Scene = ResourceLoader.Load<PackedScene>(levelPath);
 
-        // GetTree().ChangeSceneToPacked(Scene);
+        GetTree().ChangeSceneToPacked(Scene);
+    }
+
+    public void BtnContinuePressed()
+    {
+        LevelManager.CurrentLevel = LevelManager.GetCurrentLevelFromConfig();
+        var levelPath = LevelManager.GetCurrentLevelInformation().LevelPath;
+        Scene = ResourceLoader.Load<PackedScene>(levelPath);
+
+        GetTree().ChangeSceneToPacked(Scene);
     }
 
     public void BtnQuitPressed()

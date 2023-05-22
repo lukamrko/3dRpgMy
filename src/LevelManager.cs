@@ -1,3 +1,4 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using Godot;
@@ -5,9 +6,20 @@ using Godot;
 public static class LevelManager
 {
     private static string levelConfigPath = "config/defaultLevelConfig.cfg";
-    private static Dictionary<int, LevelInfo> levelInformations = new Dictionary<int, LevelInfo>();
-    public static int CurrentLevel = -1;
+    private static string currentLevelConfigPath = "config/currentLevelConfig.cfg";
 
+    private static Dictionary<int, LevelInfo> levelInformations = new Dictionary<int, LevelInfo>();
+    private static int currentLevel = -1;
+
+    public static int CurrentLevel 
+    { 
+        get => currentLevel; 
+        set 
+        {
+            currentLevel = value;
+            SetCurrentLevelInConfig(currentLevel);
+        } 
+    }
     public static LevelInfo GetNextLevelInfo()
     {
         return levelInformations[CurrentLevel + 1];
@@ -37,7 +49,6 @@ public static class LevelManager
         }
 
         var firstLevel = 1;
-
         // Iterate over all sections.
         foreach (string level in config.GetSections())
         {
@@ -71,8 +82,62 @@ public static class LevelManager
     /// </summary>
     public static void CreateDefaultConfig()
     {
+        CreateDefaultLevelConfig();
+        CreateCurrentLevelConfig();
+    }
+
+    public static int GetCurrentLevelFromConfig()
+    {
         var config = new ConfigFile();
-        Error err = config.Load(levelConfigPath);
+
+        // Load data from a file.
+        Error err = config.Load(currentLevelConfigPath);
+
+        // If the file didn't load, ignore it.
+        if (err != Error.Ok)
+        {
+            return 1;
+        }
+
+        var currentLevel = config.GetSections().First();
+        var currentLevelNumber = (int)config.GetValue(currentLevel, "currentLevel");
+        return currentLevelNumber;
+    }
+
+    private static void SetCurrentLevelInConfig(int currentLevel)
+    {
+        var currentLevelConfig = new ConfigFile();
+        Error err = currentLevelConfig.Load(currentLevelConfigPath);
+
+        if (err != Error.Ok)
+        {
+            GD.Print("File not found");
+            return;
+        }
+        currentLevelConfig.SetValue("currentLevel", "currentLevel", currentLevel);
+
+        currentLevelConfig.Save(currentLevelConfigPath);
+    }
+
+    private static void CreateCurrentLevelConfig()
+    {
+        var currentLevelConfig = new ConfigFile();
+        Error err = currentLevelConfig.Load(currentLevelConfigPath);
+
+        if (err == Error.Ok)
+        {
+            GD.Print("File found");
+            return;
+        }
+        currentLevelConfig.SetValue("currentLevel", "currentLevel", 1);
+
+        currentLevelConfig.Save(currentLevelConfigPath);
+    }
+
+    private static void CreateDefaultLevelConfig()
+    {
+        var levelConfig = new ConfigFile();
+        Error err = levelConfig.Load(levelConfigPath);
 
         if (err == Error.Ok)
         {
@@ -95,23 +160,22 @@ public static class LevelManager
         var lvl3Path = "res://assets/tscn/levels/Level3-Cliffs.tscn";
         var lvl4Path = "res://assets/tscn/levels/Level4-LastStand.tscn";
 
-        config.SetValue("level1", "RoundsToWin", lvl1RoundsToWin);
-        config.SetValue("level1", "AllowedEnemies", lvl1AllowedEnemies);
-        config.SetValue("level1", "LevelPath", lvl1Path);
+        levelConfig.SetValue("level1", "RoundsToWin", lvl1RoundsToWin);
+        levelConfig.SetValue("level1", "AllowedEnemies", lvl1AllowedEnemies);
+        levelConfig.SetValue("level1", "LevelPath", lvl1Path);
 
-        config.SetValue("level2", "RoundsToWin", lvl2RoundsToWin);
-        config.SetValue("level2", "AllowedEnemies", lvl2AllowedEnemies);
-        config.SetValue("level2", "LevelPath", lvl2Path);
+        levelConfig.SetValue("level2", "RoundsToWin", lvl2RoundsToWin);
+        levelConfig.SetValue("level2", "AllowedEnemies", lvl2AllowedEnemies);
+        levelConfig.SetValue("level2", "LevelPath", lvl2Path);
 
-        config.SetValue("level3", "RoundsToWin", lvl3RoundsToWin);
-        config.SetValue("level3", "AllowedEnemies", lvl3AllowedEnemies);
-        config.SetValue("level3", "LevelPath", lvl3Path);
+        levelConfig.SetValue("level3", "RoundsToWin", lvl3RoundsToWin);
+        levelConfig.SetValue("level3", "AllowedEnemies", lvl3AllowedEnemies);
+        levelConfig.SetValue("level3", "LevelPath", lvl3Path);
 
-        config.SetValue("level4", "RoundsToWin", lvl4RoundsToWin);
-        config.SetValue("level4", "AllowedEnemies", lvl4AllowedEnemies);
-        config.SetValue("level4", "LevelPath", lvl4Path);
+        levelConfig.SetValue("level4", "RoundsToWin", lvl4RoundsToWin);
+        levelConfig.SetValue("level4", "AllowedEnemies", lvl4AllowedEnemies);
+        levelConfig.SetValue("level4", "LevelPath", lvl4Path);
 
-        config.Save(levelConfigPath);
+        levelConfig.Save(levelConfigPath);
     }
-
 }

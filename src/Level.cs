@@ -43,7 +43,6 @@ public partial class Level : Node3D
         var levelUI = GetNode("LevelUI");
         valueVictoryRound = levelUI.GetNode<Label>("ColorRectangle/valueVictoryRound");
         valueCurrentRound = levelUI.GetNode<Label>("ColorRectangle/valueCurrentRound");
-
         valueVictoryRound.Text = LevelInfo.RoundsToWin.ToString();
         valueCurrentRound.Text = currentRound.ToString();
     }
