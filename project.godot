@@ -15,6 +15,10 @@ run/main_scene="res://assets/tscn/MainMenu.tscn"
 config/features=PackedStringArray("4.0", "C#")
 config/icon="res://icons/icon.png"
 
+[autoload]
+
+BackgroundMusic="*res://assets/tscn/music/BackgroundMusic.tscn"
+
 [dotnet]
 
 project/assembly_name="MrkijevDiplomski"

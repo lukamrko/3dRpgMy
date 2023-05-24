@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://b474b5rkvpy3m"]
+[gd_scene load_steps=22 format=3 uid="uid://b474b5rkvpy3m"]
 
 [ext_resource type="Script" path="res://src/EnemyPawn.cs" id="1_jbvwa"]
 [ext_resource type="Texture2D" uid="uid://b4e7lxufwdwrk" path="res://assets/sprites/characters/chr_pawn_placeholder.png" id="2"]
@@ -103,6 +103,8 @@ viewport_path = NodePath("CharacterStats/Name/SubViewport")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x7c26"]
 
+[sub_resource type="AudioStream" id="AudioStream_o3owd"]
+
 [node name="Pawn" type="CharacterBody3D"]
 collision_layer = 2
 collision_mask = 0
@@ -172,3 +174,6 @@ collision_mask = 8
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeadZoneDetector"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("BoxShape3D_x7c26")
+
+[node name="AttackPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStream_o3owd")

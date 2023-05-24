@@ -54,6 +54,8 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             // }
         }
     }
+
+    public AudioStreamPlayer SoundPawnAttack;
     #endregion
 
     #region Animation
@@ -347,6 +349,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                 NormalPlayerUnitAttack(allActiveUnits, attackableTile);
                 break;
         }
+        this.SoundPawnAttack.Play();
         this.CanAttack = false;
     }
 
@@ -625,6 +628,9 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         AttackRadius = Utils.GetPawnAttackRadius(PawnClass);
         AttackPower = Utils.GetPawnAttackPower(PawnClass);
         MaxHealth = Utils.GetPawnHealth(PawnClass);
+        var audioStream = Utils.GetPawnAttackSound(PawnClass);
+        SoundPawnAttack.Stream = audioStream;
+        SoundPawnAttack.VolumeDb = 15f;
         CurrHealth = MaxHealth;
     }
 

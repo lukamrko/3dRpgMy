@@ -18,7 +18,9 @@ public partial class PlayerPawn : APawn
         NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
 		CurrTile = GetNode<RayCast3D>("Tile");
 
-		LoadStats();
+        SoundPawnAttack = GetNode<AudioStreamPlayer>("SoundPawnAttack");
+
+        LoadStats();
 		LoadAnimatorSprite();
 		DisplayPawnStats(true);
 		

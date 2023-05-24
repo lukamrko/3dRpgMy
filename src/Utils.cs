@@ -13,9 +13,9 @@ public static class Utils
     private static string SkeletonMedicSprite = "res://assets/sprites/characters/chr_pawn_skeleton_medic.png";
     private static string SkeletonBomberSprite = "res://assets/sprites/characters/chr_pawn_skeleton_bomber.png";
     // private static string SkeletonMedicSprite = "res://assets/sprites/characters/chr_pawn_skeleton_medic.png";
-
-
     private static string TotemSprite = "res://assets/sprites/characters/totem.png";
+
+    private static string SoundGenericAttack = "res://assets/music/atk_archer.wav";
 
 
     static string TileSrc = "res://src/Tile.cs";
@@ -78,6 +78,35 @@ public static class Utils
         material.AlbedoColor = color;
         material.AlbedoTexture = texture;
         return material;
+    }
+
+    public static AudioStream GetPawnAttackSound(PawnClass pawnClass)
+    {
+        switch (pawnClass)
+        {
+            case PawnClass.Knight:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.Archer:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.Chemist:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.Cleric:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.Totem:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.SkeletonWarrior:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.SkeletonArcher:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.SkeletonBomber:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.SkeletonHero:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            case PawnClass.SkeletonMedic:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+            default:
+                return GD.Load<AudioStream>(SoundGenericAttack);
+        }
     }
 
     public static Texture2D GetPawnSprite(PawnClass pawnClass)

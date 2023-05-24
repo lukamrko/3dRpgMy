@@ -21,8 +21,11 @@ public partial class EnemyPawn : APawn
         NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
         CurrTile = GetNode<RayCast3D>("Tile");
 
+        SoundPawnAttack = GetNode<AudioStreamPlayer>("SoundPawnAttack");
         deadZone = GetParent().GetParent().GetNode<Area3D>("Arena/DeadZone");
         deadZoneDetector = GetNode<Area3D>("DeadZoneDetector");
+
+        SoundPawnAttack = GetNode<AudioStreamPlayer>("SoundPawnAttack");
 
         deadZoneDetector.AreaEntered+= (deadZone) => AreaDetection(deadZone);
         // deadZone.AreaEntered += (deadZoneDetector) => AreaDetection(deadZoneDetector);
