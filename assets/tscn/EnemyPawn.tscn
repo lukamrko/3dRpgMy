@@ -175,5 +175,5 @@ collision_mask = 8
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("BoxShape3D_x7c26")
 
-[node name="AttackPlayer" type="AudioStreamPlayer" parent="."]
+[node name="SoundPawnAttack" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStream_o3owd")

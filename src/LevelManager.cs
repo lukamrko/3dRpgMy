@@ -145,7 +145,7 @@ public static class LevelManager
             return;
         }
 
-        var lvl1RoundsToWin = 5;
+        var lvl1RoundsToWin = 4;
         var lvl2RoundsToWin = 4;
         var lvl3RoundsToWin = 6;
         var lvl4RoundsToWin = 7;

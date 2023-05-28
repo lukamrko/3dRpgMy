@@ -96,8 +96,18 @@ public partial class Tile : StaticBody3D
 	public void ConfigureTile()
 	{
 		this.Hover = false;
-		//TODO check if this is the way to do it
-		AddChild(TileRaycastingTSCN.Instantiate());
+        //TODO check if this is the way to do it
+        if (TileRaycastingTSCN is null)
+        {
+            GD.Print("TileRaycastingTSCN  null");
+        }
+		var newNode = TileRaycastingTSCN.Instantiate();
+		if (newNode is null)
+		{
+			GD.Print("new node null");
+		}
+
+		AddChild(newNode);
 		// AddChild(TileRaycastingTSCN.Instance());
 		Reset();
 		TileRaycasting = GetNode<TileRaycasting>("RayCasting");
@@ -105,7 +115,7 @@ public partial class Tile : StaticBody3D
 
 	public override void _Ready()
 	{
-		TileRaycastingTSCN = ResourceLoader.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
+		TileRaycastingTSCN = GD.Load<PackedScene>("res://assets/tscn/TileRaycasting.tscn");
 		CurrTiles = GetNode<MeshInstance3D>("Tile");
 	}
 

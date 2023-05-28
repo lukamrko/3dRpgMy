@@ -292,6 +292,7 @@ public partial class PlayerController : Node3D, IObserver
         CurrentPawn.DisplayPawnStats(true);
         if (CurrentPawn.PathStack.Count == 0)
         {
+            CurrentPawn.CanMove = false;
             if (!CurrentPawn.CanAct())
             {
                 Stage = PlayerStage.SelectPawn;

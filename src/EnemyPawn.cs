@@ -67,6 +67,10 @@ public partial class EnemyPawn : APawn
         StartAnimator();
         TintWhenNotAbleToAct();
         HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
+        if(!HealthLabel.Visible)
+        {
+            HealthLabel.Visible=true;
+        }
         // DebugHelper();
     }
 

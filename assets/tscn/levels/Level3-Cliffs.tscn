@@ -1,6 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://w0u7r7nr13d5"]
+[gd_scene load_steps=13 format=3 uid="uid://w0u7r7nr13d5"]
 
 [ext_resource type="Script" path="res://src/Level.cs" id="1_nt51v"]
+[ext_resource type="PackedScene" uid="uid://6vlwluhiblu7" path="res://assets/tscn/ui/LevelUI.tscn" id="2_1v6cw"]
 [ext_resource type="PackedScene" uid="uid://bslemieycl6t1" path="res://assets/tscn/ui/PlayerControllerUI.tscn" id="2_qyk7o"]
 [ext_resource type="PackedScene" uid="uid://bodpbrrwtvqk5" path="res://assets/tscn/maps/03-v1-Cliffs.tscn" id="3_7poyh"]
 [ext_resource type="PackedScene" uid="uid://ch6r35xoxyrud" path="res://assets/tscn/ui/EndInfoWindow.tscn" id="3_035cd"]
@@ -15,6 +16,8 @@
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_nt51v")
+
+[node name="LevelUI" parent="." instance=ExtResource("2_1v6cw")]
 
 [node name="PlayerControllerUI" parent="." instance=ExtResource("2_qyk7o")]
 

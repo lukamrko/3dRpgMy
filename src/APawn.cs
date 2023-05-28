@@ -630,7 +630,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         MaxHealth = Utils.GetPawnHealth(PawnClass);
         var audioStream = Utils.GetPawnAttackSound(PawnClass);
         SoundPawnAttack.Stream = audioStream;
-        SoundPawnAttack.VolumeDb = 15f;
+        SoundPawnAttack.VolumeDb = -15f;
         CurrHealth = MaxHealth;
     }
 
@@ -649,7 +649,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
 
     public void DisplayPawnStats(bool characterStatsVisible)
     {
-        CharacterStats.Visible = characterStatsVisible;
+        CharacterStats.Visible = true;
     }
 
     public abstract void TintWhenNotAbleToAct();

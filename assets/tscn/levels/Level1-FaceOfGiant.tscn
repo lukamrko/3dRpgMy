@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ebgs7kcklaft"]
+[gd_scene load_steps=13 format=3 uid="uid://bwrfghxx2pppi"]
 
 [ext_resource type="Script" path="res://src/Level.cs" id="1_06p3s"]
 [ext_resource type="PackedScene" uid="uid://6vlwluhiblu7" path="res://assets/tscn/ui/LevelUI.tscn" id="2_c7v11"]
@@ -9,8 +9,8 @@
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="5_pruti"]
 [ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="6_8t5w6"]
 [ext_resource type="Script" path="res://src/EnemyController.cs" id="7_qk87i"]
-[ext_resource type="Script" path="res://src/EnemyPawn.cs" id="8_dpqx6"]
 [ext_resource type="Script" path="res://src/Spawner.cs" id="9_p8bqg"]
+[ext_resource type="PackedScene" uid="uid://b474b5rkvpy3m" path="res://assets/tscn/EnemyPawn.tscn" id="10_dfltf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5yiin"]
 
@@ -64,31 +64,23 @@ PawnName = "Conan"
 [node name="Enemy" type="Node3D" parent="."]
 script = ExtResource("7_qk87i")
 
-[node name="Pawn4" parent="Enemy" instance=ExtResource("6_8t5w6")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 5.5, 1, -0.5)
-script = ExtResource("8_dpqx6")
+[node name="Pawn" parent="Enemy" instance=ExtResource("10_dfltf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1, -0.5)
 PawnClass = 6
 PawnStrategy = 1
-PawnName = "Joe"
 
-[node name="Pawn5" parent="Enemy" instance=ExtResource("6_8t5w6")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.5, 1, -0.5)
-script = ExtResource("8_dpqx6")
+[node name="Pawn2" parent="Enemy" instance=ExtResource("10_dfltf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 1, -0.5)
 PawnClass = 7
-PawnName = "Joe"
 
-[node name="Pawn6" parent="Enemy" instance=ExtResource("6_8t5w6")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 10.5, 1, -0.5)
-script = ExtResource("8_dpqx6")
+[node name="Pawn3" parent="Enemy" instance=ExtResource("10_dfltf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 1, -0.5)
+PawnClass = 7
+
+[node name="Pawn4" parent="Enemy" instance=ExtResource("10_dfltf")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 1, -0.5)
 PawnClass = 6
 PawnStrategy = 1
-PawnName = "Joe"
-
-[node name="Pawn7" parent="Enemy" instance=ExtResource("6_8t5w6")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 11.5, 1, -0.5)
-script = ExtResource("8_dpqx6")
-PawnClass = 7
-PawnName = "Joe"
 
 [node name="EnemySpawner" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.04029, -1.76458, -2)

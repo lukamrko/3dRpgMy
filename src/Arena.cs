@@ -263,7 +263,6 @@ public partial class Arena : Node3D
         var tiles = new Godot.Collections.Array<Tile>();
         foreach (var tile in targetTileNeighbors)
         {
-            var potentialTile = new Tile();
             var currentTile = tile.Value;
             var tileSide = tile.Key;
             for (int i = 0; i < distance - 1; i++)

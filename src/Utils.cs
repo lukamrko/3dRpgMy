@@ -3,6 +3,7 @@ using System;
 
 public static class Utils
 {
+    #region Paths
     private static string KnightSprite = "res://assets/sprites/characters/chr_pawn_knight.png";
     private static string ArcherSprite = "res://assets/sprites/characters/chr_pawn_archer.png";
     private static string ChemistSprite = "res://assets/sprites/characters/chr_pawn_chemist.png";
@@ -15,10 +16,15 @@ public static class Utils
     // private static string SkeletonMedicSprite = "res://assets/sprites/characters/chr_pawn_skeleton_medic.png";
     private static string TotemSprite = "res://assets/sprites/characters/totem.png";
 
-    private static string SoundGenericAttack = "res://assets/music/atk_archer.wav";
+    private static string SoundArcherAttack = "res://assets/sound/attacks/atk_archer.wav";
+    private static string SoundChemistAttack = "res://assets/sound/attacks/atk_chemist.wav";
+    private static string SoundKnightAttack = "res://assets/sound/attacks/atk_knight.wav";
+    private static string SoundSkeletonAttack = "res://assets/sound/attacks/atk_ske_enemy.wav";
+    private static string SoundSkeletonHeal = "res://assets/sound/attacks/atk_ske_heal.wav";
 
 
     static string TileSrc = "res://src/Tile.cs";
+#endregion
 
     /// <summary>
     /// Given a Spatial Node as parameter (tilesObj), this function will iterate over each
@@ -61,7 +67,7 @@ public static class Utils
             var instanceID = staticBody.GetInstanceId();
 
             staticBody.SetScript(script);
-            Tile staticBodyTile = (Tile)GodotObject.InstanceFromId(instanceID);
+            Tile staticBodyTile = GodotObject.InstanceFromId(instanceID) as Tile;
             staticBodyTile._Ready();
             staticBodyTile.ConfigureTile();
             staticBodyTile.SetProcess(true);
@@ -85,27 +91,23 @@ public static class Utils
         switch (pawnClass)
         {
             case PawnClass.Knight:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundKnightAttack);
             case PawnClass.Archer:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundArcherAttack);
             case PawnClass.Chemist:
-                return GD.Load<AudioStream>(SoundGenericAttack);
-            case PawnClass.Cleric:
-                return GD.Load<AudioStream>(SoundGenericAttack);
-            case PawnClass.Totem:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundChemistAttack);
             case PawnClass.SkeletonWarrior:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundSkeletonAttack);
             case PawnClass.SkeletonArcher:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundSkeletonAttack);
             case PawnClass.SkeletonBomber:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundSkeletonAttack);
             case PawnClass.SkeletonHero:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundSkeletonAttack);
             case PawnClass.SkeletonMedic:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundSkeletonHeal);
             default:
-                return GD.Load<AudioStream>(SoundGenericAttack);
+                return GD.Load<AudioStream>(SoundSkeletonAttack);
         }
     }
 

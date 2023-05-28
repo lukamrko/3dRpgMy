@@ -14,6 +14,7 @@ public partial class PlayerPawn : APawn
 		Character = GetNode<Sprite3D>("Character");
 		AnimationTree = GetNode<AnimationTree>("Character/AnimationTree");
 		CharacterStats = GetNode<Node3D>("CharacterStats");
+		// CharacterStats.Visible=true;
         HealthLabel = GetNode<Label>("CharacterStats/Health/SubViewport/Label");
         NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
 		CurrTile = GetNode<RayCast3D>("Tile");
@@ -61,6 +62,12 @@ public partial class PlayerPawn : APawn
 		StartAnimator();
 		TintWhenNotAbleToAct();
 		HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
+        if (!HealthLabel.Visible || !CharacterStats.Visible)
+        {
+			GD.Print(string.Format("Health visible{0}, Stats visible:{1}", CharacterStats.Visible, HealthLabel.Visible));
+        	CharacterStats.Visible=true;
+            HealthLabel.Visible = true;
+        }
 	}
 
 }

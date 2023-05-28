@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://b026sljdvvl5g"]
 
-[ext_resource type="AudioStream" uid="uid://br2nec00m87jg" path="res://assets/music/bckg_fantasy_theme_1.mp3" id="1_wa7xs"]
+[ext_resource type="AudioStream" uid="uid://br2nec00m87jg" path="res://assets/sound/bckg_fantasy_theme_1.mp3" id="1_tu76m"]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer"]
-stream = ExtResource("1_wa7xs")
+stream = ExtResource("1_tu76m")
 volume_db = -20.599
 autoplay = true
