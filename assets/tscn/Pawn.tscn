@@ -147,9 +147,10 @@ transparent_bg = true
 size = Vector2i(128, 30)
 
 [node name="Label" type="Label" parent="CharacterStats/Health/SubViewport"]
+top_level = true
 custom_minimum_size = Vector2(128, 30)
-offset_right = 53.0
-offset_bottom = 14.0
+offset_right = 128.0
+offset_bottom = 30.0
 text = "100/100"
 
 [node name="Name" type="Sprite3D" parent="CharacterStats"]
@@ -162,9 +163,10 @@ transparent_bg = true
 size = Vector2i(150, 30)
 
 [node name="Label" type="Label" parent="CharacterStats/Name/SubViewport"]
+top_level = true
 custom_minimum_size = Vector2(128, 30)
-offset_right = 53.0
-offset_bottom = 14.0
+offset_right = 128.0
+offset_bottom = 30.0
 text = "Name"
 
 [node name="DeadZoneDetector" type="Area3D" parent="."]

@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bslemieycl6t1" path="res://assets/tscn/ui/PlayerControllerUI.tscn" id="2_sltmk"]
 [ext_resource type="PackedScene" uid="uid://ch6r35xoxyrud" path="res://assets/tscn/ui/EndInfoWindow.tscn" id="3_e36pc"]
 [ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="3_j6swh"]
-[ext_resource type="PackedScene" uid="uid://lcgda0duxvgi" path="res://assets/tscn/maps/01-v2-FaceOfGiant.tscn" id="5_a31gn"]
+[ext_resource type="PackedScene" uid="uid://dbtjyii0gatb2" path="res://assets/tscn/maps/01-v3-FaceOfGiant.tscn" id="4_7d80a"]
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="5_pruti"]
 [ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="6_8t5w6"]
 [ext_resource type="Script" path="res://src/EnemyController.cs" id="7_qk87i"]
@@ -21,12 +21,12 @@ script = ExtResource("1_06p3s")
 
 [node name="PlayerControllerUI" parent="." instance=ExtResource("2_sltmk")]
 
+[node name="Arena" parent="." instance=ExtResource("4_7d80a")]
+
 [node name="EndInfoWindow" parent="." instance=ExtResource("3_e36pc")]
 visible = false
 
 [node name="TacticsCamera" parent="." instance=ExtResource("3_j6swh")]
-
-[node name="Arena" parent="." instance=ExtResource("5_a31gn")]
 
 [node name="Player" type="Node3D" parent="."]
 script = ExtResource("5_pruti")

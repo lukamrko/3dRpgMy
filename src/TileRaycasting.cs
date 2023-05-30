@@ -13,7 +13,7 @@ public partial class TileRaycasting : Node3D
 
     public TileRaycasting()
     {
-        _Ready();
+        // _Ready();
         worldSideToString = new Dictionary<WorldSide, string>
         {
             { WorldSide.North, "N"},

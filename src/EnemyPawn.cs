@@ -17,8 +17,14 @@ public partial class EnemyPawn : APawn
         Character = GetNode<Sprite3D>("Character");
         AnimationTree = GetNode<AnimationTree>("Character/AnimationTree");
         CharacterStats = GetNode<Node3D>("CharacterStats");
-        HealthLabel = GetNode<Label>("CharacterStats/Health/SubViewport/Label");
-        NameLabel = GetNode<Label>("CharacterStats/Name/SubViewport/Label");
+        GD.Print("Character stats label is null? " + (CharacterStats is null).ToString() + " " + this.PawnName);
+        CharacterStats.Show();
+        HealthLabel = CharacterStats.GetNode<Label>("Health/SubViewport/Label");
+        GD.Print("Health label is null? " + (HealthLabel is null).ToString() + " " + this.PawnName);
+        HealthLabel.Show();
+        NameLabel = CharacterStats.GetNode<Label>("Name/SubViewport/Label");
+        GD.Print("Name label is null? " + (NameLabel is null).ToString() + " " + this.PawnName);
+        GD.Print("Name label text:" + NameLabel.Text);
         CurrTile = GetNode<RayCast3D>("Tile");
 
         SoundPawnAttack = GetNode<AudioStreamPlayer>("SoundPawnAttack");
@@ -27,22 +33,14 @@ public partial class EnemyPawn : APawn
 
         SoundPawnAttack = GetNode<AudioStreamPlayer>("SoundPawnAttack");
 
-        deadZoneDetector.AreaEntered+= (deadZone) => AreaDetection(deadZone);
-        // deadZone.AreaEntered += (deadZoneDetector) => AreaDetection(deadZoneDetector);
-        // deadZone.AreaEntered += AreaDetection;
-
-
-        // myDetector.AreaEntered += (x) => AreaDetection(arena);
-        // myDetector.AreaEntered += AreaDetection;
-        // myDetector.AreaExited += AreaDetection;
-        // deadZone.Connect(nameof(deadZone.AreaEntered), callable);
-        // Callable callable = new Callable(this, MethodName.AreaDetection);
-        // deadZone.Connect("area_entered", callable);
-
+        deadZoneDetector.AreaEntered += (deadZone) => AreaDetection(deadZone);
+        this.Visible = true;
         LoadStats();
         LoadAnimatorSprite();
         DisplayPawnStats(true);
         _oldPosition = this.Position;
+        GD.Print("Name label text:" + NameLabel.Text);
+        GD.Print("Health label text:" + HealthLabel.Text);
     }
 
     public void AreaDetection(Area3D area)
@@ -60,6 +58,7 @@ public partial class EnemyPawn : APawn
         return CanAttack && CurrHealth > 0;
     }
 
+    int count = 0;
     public override void _Process(double delta)
     {
         RotatePawnSprite();
@@ -67,11 +66,19 @@ public partial class EnemyPawn : APawn
         StartAnimator();
         TintWhenNotAbleToAct();
         HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
-        if(!HealthLabel.Visible)
+        if (!HealthLabel.Visible)
         {
-            HealthLabel.Visible=true;
+            HealthLabel.Visible = true;
         }
-        // DebugHelper();
+        if (++count % 1000 == 0)
+        {
+            GD.Print("Character stats label is visible? " + (CharacterStats.Visible).ToString() + " " + this.PawnName);
+            GD.Print("Health layer is visible in tree? " + (HealthLabel.IsVisibleInTree().ToString() + " " + this.PawnName));
+            GD.Print("Health label is visible? " + (HealthLabel.Visible).ToString() + " " + this.PawnName);
+            GD.Print("Name label is visible? " + (NameLabel.Visible).ToString() + " " + this.PawnName);
+            GD.Print("Name label text:" + NameLabel.Text);
+            GD.Print("Health label text:" + HealthLabel.Text);
+        }
     }
 
     private void DebugHelper()
