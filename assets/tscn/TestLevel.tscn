@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="5"]
 [ext_resource type="Script" path="res://src/EnemyController.cs" id="6"]
 [ext_resource type="Script" path="res://src/EnemyPawn.cs" id="7"]
-[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn0.tscn" id="8"]
 [ext_resource type="Script" path="res://src/Spawner.cs" id="9_ywnox"]
 
 [sub_resource type="BoxShape3D" id="1"]

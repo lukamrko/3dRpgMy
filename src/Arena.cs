@@ -163,10 +163,10 @@ public partial class Arena : Node3D
     public Tile GetNearestNeighborTileToPawn(int distance, APawn pawn, Godot.Collections.Array<PlayerPawn> pawns, int currentIteration = 1)
     {
         Tile nearestTile = null;
-        if (pawn.PawnStrategy == PawnStrategy.ObjectiveSniper)
-        {
-            pawns = GetOnlyTotems(pawns);
-        }
+        // if (pawn.PawnStrategy == PawnStrategy.ObjectiveSniper)
+        // {
+        //     pawns = GetOnlyTotems(pawns);
+        // }
 
         //Try to get free tiles directly close to the pawn
         foreach (PlayerPawn _pawn in pawns)

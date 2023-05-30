@@ -62,12 +62,6 @@ public partial class PlayerPawn : APawn
 		StartAnimator();
 		TintWhenNotAbleToAct();
 		HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
-        if (!HealthLabel.Visible || !CharacterStats.Visible)
-        {
-			GD.Print(string.Format("Health visible{0}, Stats visible:{1}", CharacterStats.Visible, HealthLabel.Visible));
-        	CharacterStats.Visible=true;
-            HealthLabel.Visible = true;
-        }
 	}
 
 }

@@ -1,3 +1,4 @@
+using System.Threading;
 using Godot;
 using System;
 using System.Linq;
@@ -7,9 +8,9 @@ public partial class Level : Node3D
     private const int minNumberOfTotems = 1;
     int currentRound = 1;
 
-    PlayerController Player;
-    EnemyController Enemy;
-    Spawner Spawner;
+    PlayerController PlayerController;
+    EnemyController EnemyController;
+
     TacticsCamera TacticsCamera;
 
     LevelInfo LevelInfo;
@@ -23,28 +24,41 @@ public partial class Level : Node3D
 
     public override void _Ready()
     {
-        Player = GetNode<PlayerController>("Player");
-        Enemy = GetNode<EnemyController>("Enemy");
+        PlayerController = GetNode<PlayerController>("Player");
+        EnemyController = GetNode<EnemyController>("Enemy");
 
-        Arena arena = GetNode<Arena>("Arena");
+        var arena = GetNode<Arena>("Arena");
         TacticsCamera = GetNode<TacticsCamera>("TacticsCamera");
-        PlayerControllerUI playerControllerUI = GetNode<PlayerControllerUI>("PlayerControllerUI");
+        var playerControllerUI = GetNode<PlayerControllerUI>("PlayerControllerUI");
 
         EndInfoWindow = GetNode<EndInfoWindow>("EndInfoWindow");
         EndInfoWindow.Visible = false;
 
-        Player.Configure(arena, TacticsCamera, playerControllerUI);
-        Enemy.Configure(arena, TacticsCamera);
-
-        Spawner = GetNode<Spawner>("EnemySpawner");
-
         LevelManagerInitialOperations();
+        InitialSpawnPawns();
+
+        PlayerController.Configure(arena, TacticsCamera, playerControllerUI);
+        EnemyController.Configure(arena, TacticsCamera);
 
         var levelUI = GetNode("LevelUI");
         valueVictoryRound = levelUI.GetNode<Label>("ColorRectangle/valueVictoryRound");
         valueCurrentRound = levelUI.GetNode<Label>("ColorRectangle/valueCurrentRound");
         valueVictoryRound.Text = LevelInfo.RoundsToWin.ToString();
         valueCurrentRound.Text = currentRound.ToString();
+
+        Thread.Sleep(500);
+    }
+
+    private void InitialSpawnPawns()
+    {
+        var enemyPawns = EnemyController.SpawnEnemies();
+        PlayerController.NotifyAboutNewEnemies(enemyPawns);
+
+        var playerPawns = PlayerController.InitialSpawn();
+        EnemyController.NotifyAboutSpawnedPlayers(playerPawns);
+
+        PlayerController.Reset();
+        EnemyController.Reset();
     }
 
     private void LevelManagerInitialOperations()
@@ -58,36 +72,28 @@ public partial class Level : Node3D
         }
     }
 
-    private void FirstObserverAttachments()
-    {
-        foreach (APawn pawn in Enemy.AllActiveUnits)
-        {
-            pawn.Attach(Enemy);
-        }
-    }
-
 
     public void TurnHandler(double delta)
     {
-        if (Enemy.ShouldApplyForce())
+        if (EnemyController.ShouldApplyForce())
         {
-            Enemy.DoForcedMovement(delta);
+            EnemyController.DoForcedMovement(delta);
         }
-        else if (Player.ShouldApplyForce())
+        else if (PlayerController.ShouldApplyForce())
         {
-            Player.DoForcedMovement(delta);
+            PlayerController.DoForcedMovement(delta);
         }
-        else if (Enemy.CanFirstAct())
+        else if (EnemyController.CanFirstAct())
         {
-            Enemy.FirstAct(delta);
+            EnemyController.FirstAct(delta);
         }
-        else if (Player.CanAct())
+        else if (PlayerController.CanAct())
         {
-            Player.Act(delta);
+            PlayerController.Act(delta);
         }
-        else if (Enemy.CanSecondAct())
+        else if (EnemyController.CanSecondAct())
         {
-            Enemy.SecondAct(delta);
+            EnemyController.SecondAct(delta);
         }
         else
         {
@@ -108,12 +114,12 @@ public partial class Level : Node3D
         }
         currentRound++;
         valueCurrentRound.Text = currentRound.ToString();
-        var enemies = Enemy.SpawnEnemies();
-        Player.NotifyAboutNewEnemies(enemies);
+        var enemies = EnemyController.SpawnEnemies();
+        PlayerController.NotifyAboutNewEnemies(enemies);
         var print = string.Format("Round {0} finished. New round is: {1}", currentRound - 1, currentRound);
         GD.Print(print);
-        Player.Reset();
-        Enemy.Reset();
+        PlayerController.Reset();
+        EnemyController.Reset();
     }
 
     private void GameLost()
@@ -123,14 +129,14 @@ public partial class Level : Node3D
 
     private bool CheckIfGameIsLost()
     {
-        var numberOfTotems = Player.PlayerPawns
+        var numberOfTotems = PlayerController.PlayerPawns
             .Where(x => x.PawnClass == PawnClass.Totem)
             .Count();
         if (numberOfTotems <= minNumberOfTotems)
         {
             return true;
         }
-        var numberOfPLayers = Player.PlayerPawns
+        var numberOfPLayers = PlayerController.PlayerPawns
             .Where(x => x.PawnClass != PawnClass.Totem)
             .Count();
         if (numberOfPLayers <= 0)

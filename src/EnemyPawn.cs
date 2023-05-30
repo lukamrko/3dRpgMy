@@ -58,7 +58,6 @@ public partial class EnemyPawn : APawn
         return CanAttack && CurrHealth > 0;
     }
 
-    int count = 0;
     public override void _Process(double delta)
     {
         RotatePawnSprite();
@@ -66,19 +65,6 @@ public partial class EnemyPawn : APawn
         StartAnimator();
         TintWhenNotAbleToAct();
         HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
-        if (!HealthLabel.Visible)
-        {
-            HealthLabel.Visible = true;
-        }
-        if (++count % 1000 == 0)
-        {
-            GD.Print("Character stats label is visible? " + (CharacterStats.Visible).ToString() + " " + this.PawnName);
-            GD.Print("Health layer is visible in tree? " + (HealthLabel.IsVisibleInTree().ToString() + " " + this.PawnName));
-            GD.Print("Health label is visible? " + (HealthLabel.Visible).ToString() + " " + this.PawnName);
-            GD.Print("Name label is visible? " + (NameLabel.Visible).ToString() + " " + this.PawnName);
-            GD.Print("Name label text:" + NameLabel.Text);
-            GD.Print("Health label text:" + HealthLabel.Text);
-        }
     }
 
     private void DebugHelper()

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Diagnostics;
 using Godot;
 using System;
@@ -6,6 +7,7 @@ using Godot.Collections;
 public partial class PlayerController : Node3D, IObserver
 {
     private PlayerPawn _currentPawn = null;
+    private PlayerSpawner PlayerSpawner;
 
     PlayerPawn CurrentPawn
     {
@@ -55,15 +57,26 @@ public partial class PlayerController : Node3D, IObserver
         Button CancelButton = UIControl.GetAct("Cancel");
         Button AttackButton = UIControl.GetAct("Attack");
 
-        // MoveButton.Connect("pressed", new Callable(this, "PlayerWantsToMove"));
-        // WaitButton.Connect("pressed", new Callable(this, "PlayerWantsToWait"));
-        // CancelButton.Connect("pressed", new Callable(this, "PlayerWantsToCancel"));
-        // AttackButton.Connect("pressed", new Callable(this, "PlayerWantsToAttack"));
-
         MoveButton.Pressed += PlayerWantsToMove;
         WaitButton.Pressed += PlayerWantsToWait;
         CancelButton.Pressed += PlayerWantsToCancel;
         AttackButton.Pressed += PlayerWantsToAttack;
+    }
+
+    public Godot.Collections.Array<PlayerPawn> InitialSpawn()
+    {
+        var actualPawns = new Godot.Collections.Array<PlayerPawn>();
+        var pawns = PlayerSpawner.InitialPlayerSpawn();
+        foreach (var pawn in pawns)
+        {
+            AddChild(pawn.Key);
+            pawn.Key.GlobalPosition = pawn.Value;
+            pawn.Key.Attach(this);
+            actualPawns.Add(pawn.Key);
+        }
+        PlayerPawns.AddRangeAs(actualPawns);
+        AllActiveUnits.AddRangeAs(actualPawns);
+        return actualPawns;
     }
 
     public object GetMouseOverObject(uint lmask)
@@ -73,26 +86,21 @@ public partial class PlayerController : Node3D, IObserver
             return null;
         }
         Camera3D camera = GetViewport().GetCamera3D();
-        // Vector2 origin = !IsJoyStick
-        //     ? GetViewport().GetMousePosition()
-        //     : GetViewport().Size / 2;
         Vector2 origin = GetViewport().GetMousePosition();
 
         Vector3 from = camera.ProjectRayOrigin(origin);
         Vector3 to = from + camera.ProjectRayNormal(origin) * 1000;
         var intersectingRay = new PhysicsRayQueryParameters3D
         {
-            From=from,
+            From = from,
             To = to,
             Exclude = null,
             CollisionMask = lmask
         };
         Godot.Collections.Dictionary rayIntersections = GetWorld3D().DirectSpaceState.IntersectRay(intersectingRay);
-        // Godot.Collections.Dictionary rayIntersections = GetWorld3D().DirectSpaceState.IntersectRay(from, to, null, lmask);
-        // if (rayIntersections.Contains("collider"))
         if (rayIntersections.ContainsKey("collider"))
         {
-            var result = rayIntersections["collider"].Obj; 
+            var result = rayIntersections["collider"].Obj;
             return result;
         }
         return null;
@@ -102,7 +110,7 @@ public partial class PlayerController : Node3D, IObserver
     {
         foreach (PlayerPawn pawn in PlayerPawns)
         {
-            if (pawn.CanAct() 
+            if (pawn.CanAct()
                 && !pawn.IsTotem)
             {
                 return true;
@@ -116,7 +124,7 @@ public partial class PlayerController : Node3D, IObserver
     {
         foreach (PlayerPawn pawn in PlayerPawns)
         {
-            if(!pawn.IsTotem)
+            if (!pawn.IsTotem)
             {
                 pawn.Reset();
             }
@@ -196,8 +204,8 @@ public partial class PlayerController : Node3D, IObserver
         }
 
         CurrentPawn.DisplayPawnStats(true);
-        if (Input.IsActionJustPressed("ui_accept") 
-            && CurrentPawn.CanAct() 
+        if (Input.IsActionJustPressed("ui_accept")
+            && CurrentPawn.CanAct()
             && PlayerPawns.Contains(CurrentPawn))
         {
             TacticsCamera.Target = CurrentPawn;
@@ -243,8 +251,8 @@ public partial class PlayerController : Node3D, IObserver
     {
         Tile tile = GetMouseOverObject(1) as Tile;
         Arena.MarkHoverTile(tile);
-        if (Input.IsActionJustPressed("ui_accept") 
-            && tile is object 
+        if (Input.IsActionJustPressed("ui_accept")
+            && tile is object
             && tile.Reachable)
         {
             CurrentPawn.PathStack = Arena.GeneratePathStack(tile);
@@ -278,8 +286,8 @@ public partial class PlayerController : Node3D, IObserver
             AttackablePawn.DisplayPawnStats(true);
         }
 
-        if (Input.IsActionJustPressed("ui_accept") 
-            && tile is object 
+        if (Input.IsActionJustPressed("ui_accept")
+            && tile is object
             && tile.Attackable)
         {
             TacticsCamera.Target = _AttackableTile;
@@ -302,7 +310,7 @@ public partial class PlayerController : Node3D, IObserver
                 Stage = PlayerStage.DisplayAvailableActionsForPawn;
             }
         }
-            
+
     }
 
     public void AttackTile(double delta)
@@ -334,7 +342,7 @@ public partial class PlayerController : Node3D, IObserver
     public void Act(double delta)
     {
         ListenShortcuts();
-        if(CurrentPawn is null)
+        if (CurrentPawn is null)
         {
             Stage = PlayerStage.SelectPawn;
         }
@@ -380,7 +388,7 @@ public partial class PlayerController : Node3D, IObserver
     #region Camera
     public void MoveCamera()
     {
-        if(Input.GetActionStrength("camera_left")!=0)
+        if (Input.GetActionStrength("camera_left") != 0)
         {
             GD.Print("AAA");
         }
@@ -437,9 +445,11 @@ public partial class PlayerController : Node3D, IObserver
         EnemyController enemyController = GetParent().GetNode<EnemyController>("Enemy");
         var EnemyPawns = enemyController.GetChildren().As<EnemyPawn>();
         AllActiveUnits = new Godot.Collections.Array<APawn>();
-        AllActiveUnits.AddRangeAs(PlayerPawns);
-        AllActiveUnits.AddRangeAs(EnemyPawns);
-        AttachObserverToPawns(AllActiveUnits);
+        // AllActiveUnits.AddRangeAs(PlayerPawns);
+        // AllActiveUnits.AddRangeAs(EnemyPawns);
+        // AttachObserverToPawns(AllActiveUnits);
+        PlayerSpawner = GetParent().GetNode<PlayerSpawner>("PlayerSpawner");
+        GD.Print("Player spawner empty?");
     }
 
     private void AttachObserverToPawns(Array<APawn> pawns)
@@ -497,7 +507,7 @@ public partial class PlayerController : Node3D, IObserver
 
     internal void NotifyAboutNewEnemies(Array<EnemyPawn> enemies)
     {
-        foreach(var enemyPawn in enemies)
+        foreach (var enemyPawn in enemies)
         {
             enemyPawn.Attach(this);
             AllActiveUnits.Add(enemyPawn);

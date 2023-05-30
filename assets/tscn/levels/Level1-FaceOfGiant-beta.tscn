@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="4_2142l"]
 [ext_resource type="PackedScene" uid="uid://bypn4j7f6ohus" path="res://assets/tscn/maps/01-v1-FaceOfGiant.tscn" id="5_kvey2"]
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="6_0rmen"]
-[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="7_3f4ck"]
+[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn0.tscn" id="7_3f4ck"]
 [ext_resource type="Script" path="res://src/EnemyController.cs" id="8_r4v48"]
 [ext_resource type="Script" path="res://src/EnemyPawn.cs" id="9_atfh3"]
 [ext_resource type="Script" path="res://src/Spawner.cs" id="10_6mfv4"]

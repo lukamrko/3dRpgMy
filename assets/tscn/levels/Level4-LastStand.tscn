@@ -7,12 +7,13 @@
 [ext_resource type="PackedScene" uid="uid://bxltfc1karkp2" path="res://assets/tscn/maps/04-v1-LastStand.tscn" id="3_hoagn"]
 [ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="4_7rrxw"]
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="5_kj054"]
-[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="6_q7l32"]
 [ext_resource type="Script" path="res://src/EnemyController.cs" id="7_y1q83"]
-[ext_resource type="Script" path="res://src/EnemyPawn.cs" id="8_cjrhf"]
 [ext_resource type="Script" path="res://src/Spawner.cs" id="9_whl8m"]
+[ext_resource type="Script" path="res://src/PlayerSpawner.cs" id="11_pibnu"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5yiin"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ge48k"]
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_cntrh")
@@ -32,62 +33,8 @@ visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
 script = ExtResource("5_kj054")
 
-[node name="Pawn" parent="Player" instance=ExtResource("6_q7l32")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 4, -18.5)
-PawnClass = 3
-PawnName = "Heisenberg"
-
-[node name="Pawn2" parent="Player" instance=ExtResource("6_q7l32")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 4, -18.5)
-PawnClass = 1
-PawnName = "Xena"
-
-[node name="Pawn3" parent="Player" instance=ExtResource("6_q7l32")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 4, -19.5)
-PawnClass = 2
-PawnName = "Gvardian"
-
-[node name="Pawn4" parent="Player" instance=ExtResource("6_q7l32")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 4, -19.5)
-PawnClass = 5
-PawnName = "Totem1"
-
-[node name="Pawn5" parent="Player" instance=ExtResource("6_q7l32")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 4, -15.5)
-PawnClass = 5
-PawnName = "Totem2"
-
-[node name="Pawn6" parent="Player" instance=ExtResource("6_q7l32")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 4, -17.5)
-PawnClass = 5
-PawnName = "Totem3"
-
 [node name="Enemy" type="Node3D" parent="."]
 script = ExtResource("7_y1q83")
-
-[node name="Pawn4" parent="Enemy" instance=ExtResource("6_q7l32")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 6.5, 1, -0.5)
-script = ExtResource("8_cjrhf")
-PawnClass = 6
-PawnName = "Joe"
-
-[node name="Pawn5" parent="Enemy" instance=ExtResource("6_q7l32")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 10.5, 1, -0.5)
-script = ExtResource("8_cjrhf")
-PawnClass = 10
-PawnName = "Terry"
-
-[node name="Pawn6" parent="Enemy" instance=ExtResource("6_q7l32")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 7.5, 1, -0.5)
-script = ExtResource("8_cjrhf")
-PawnClass = 7
-PawnName = "Andy"
-
-[node name="Pawn7" parent="Enemy" instance=ExtResource("6_q7l32")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 9.5, 1, -0.5)
-script = ExtResource("8_cjrhf")
-PawnClass = 7
-PawnName = "Rock"
 
 [node name="EnemySpawner" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.04029, -1.76458, -2)
@@ -120,3 +67,49 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 0, 1.37636)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EnemySpawner/Spawn4"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("BoxShape3D_5yiin")
+
+[node name="PlayerSpawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+script = ExtResource("11_pibnu")
+
+[node name="KnightSpawn" type="StaticBody3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, -18.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSpawner/KnightSpawn"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ge48k")
+
+[node name="ArcherSpawn" type="StaticBody3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, -19.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSpawner/ArcherSpawn"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ge48k")
+
+[node name="ChemistSpawn" type="StaticBody3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, -18.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSpawner/ChemistSpawn"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ge48k")
+
+[node name="Totem1Spawn" type="StaticBody3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, -19.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSpawner/Totem1Spawn"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ge48k")
+
+[node name="Totem2Spawn" type="StaticBody3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 0, -15.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSpawner/Totem2Spawn"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ge48k")
+
+[node name="Totem3Spawn" type="StaticBody3D" parent="PlayerSpawner"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0, -17.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerSpawner/Totem3Spawn"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_ge48k")

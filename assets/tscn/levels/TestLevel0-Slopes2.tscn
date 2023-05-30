@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dvdy6hbvyvxm5" path="res://assets/tscn/maps/TestSlope.tscn" id="3_0a8ub"]
 [ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="4_18obo"]
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="5_ohnxf"]
-[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="6_rhpio"]
+[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn0.tscn" id="6_rhpio"]
 [ext_resource type="Script" path="res://src/EnemyController.cs" id="7_n7j7m"]
 [ext_resource type="Script" path="res://src/EnemyPawn.cs" id="8_judi8"]
 

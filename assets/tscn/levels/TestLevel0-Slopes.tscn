@@ -1,13 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://cgql1cr07g3ui"]
+[gd_scene load_steps=10 format=3 uid="uid://cgql1cr07g3ui"]
 
 [ext_resource type="Script" path="res://src/LevelSimplified.cs" id="1_rj2m7"]
 [ext_resource type="PackedScene" uid="uid://bslemieycl6t1" path="res://assets/tscn/ui/PlayerControllerUI.tscn" id="2_yb81b"]
 [ext_resource type="PackedScene" uid="uid://5baxyo1ayphd" path="res://assets/tscn/TacticsCamera.tscn" id="3_3ojt6"]
 [ext_resource type="Script" path="res://src/PlayerController.cs" id="5_58mvy"]
-[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn.tscn" id="6_5arsi"]
+[ext_resource type="PackedScene" uid="uid://bor37mlyf67uy" path="res://assets/tscn/Pawn0.tscn" id="6_5arsi"]
 [ext_resource type="Script" path="res://src/EnemyController.cs" id="7_lm3y6"]
 [ext_resource type="Script" path="res://src/EnemyPawn.cs" id="8_42gom"]
 [ext_resource type="PackedScene" uid="uid://dvdy6hbvyvxm5" path="res://assets/tscn/maps/TestSlope.tscn" id="8_mgk3b"]
+[ext_resource type="PackedScene" uid="uid://b474b5rkvpy3m" path="res://assets/tscn/EnemyPawn.tscn" id="9_754kl"]
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_rj2m7")
@@ -37,3 +38,59 @@ script = ExtResource("8_42gom")
 PawnClass = 5
 PawnStrategy = 1
 PawnName = "Joe"
+
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="Player" type="Node3D" parent="Node3D"]
+script = ExtResource("5_58mvy")
+
+[node name="Pawn" parent="Node3D/Player" instance=ExtResource("6_5arsi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3, -8.5)
+PawnClass = 2
+PawnName = "Red Sonya"
+
+[node name="Pawn4" parent="Node3D/Player" instance=ExtResource("6_5arsi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 3, -13.5)
+PawnClass = 5
+PawnName = "Totem1"
+
+[node name="Pawn5" parent="Node3D/Player" instance=ExtResource("6_5arsi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 3, -13.5)
+PawnClass = 5
+PawnName = "Totem2"
+
+[node name="Pawn6" parent="Node3D/Player" instance=ExtResource("6_5arsi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 3, -13.5)
+PawnClass = 5
+PawnName = "Totem3"
+
+[node name="Pawn2" parent="Node3D/Player" instance=ExtResource("6_5arsi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.5, 3, -13.5)
+PawnClass = 3
+PawnName = "Alhazred"
+
+[node name="Pawn3" parent="Node3D/Player" instance=ExtResource("6_5arsi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3, -13.5)
+PawnClass = 1
+PawnName = "Conan"
+
+[node name="Enemy" type="Node3D" parent="Node3D"]
+script = ExtResource("7_lm3y6")
+
+[node name="Pawn" parent="Node3D/Enemy" instance=ExtResource("9_754kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 1, -0.5)
+PawnClass = 6
+PawnStrategy = 1
+
+[node name="Pawn2" parent="Node3D/Enemy" instance=ExtResource("9_754kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 1, -0.5)
+PawnClass = 7
+
+[node name="Pawn3" parent="Node3D/Enemy" instance=ExtResource("9_754kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 1, -0.5)
+PawnClass = 7
+
+[node name="Pawn4" parent="Node3D/Enemy" instance=ExtResource("9_754kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 1, -0.5)
+PawnClass = 6
+PawnStrategy = 1

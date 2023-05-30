@@ -3,6 +3,7 @@ using System.Linq;
 using Godot;
 using System;
 using System.Threading.Tasks;
+using Godot.Collections;
 
 public partial class EnemyController : Node3D, IObserver
 {
@@ -24,7 +25,7 @@ public partial class EnemyController : Node3D, IObserver
 
     public Godot.Collections.Array<APawn> AllActiveUnits;
 
-    Spawner Spawner;
+    Spawner EnemySpawner;
 
     public bool CanFirstAct()
     {
@@ -61,7 +62,6 @@ public partial class EnemyController : Node3D, IObserver
         }
     }
 
-    private ForcedMovement forcedMovement;
 
     public void Configure(Arena arena, TacticsCamera camera)
     {
@@ -71,8 +71,6 @@ public partial class EnemyController : Node3D, IObserver
         {
             CurrentPawn = EnemyPawns[0];
         }
-
-        forcedMovement = new ForcedMovement(CurrentPawn as APawn, arena, TacticsCamera);
     }
 
     public void ChoosePawn()
@@ -188,7 +186,7 @@ public partial class EnemyController : Node3D, IObserver
         Targets = GetParent().GetNode<PlayerController>("Player");
         PlayerPawns = Targets.GetChildren().As<PlayerPawn>();
         EnemyPawns = GetChildren().As<EnemyPawn>();
-        Spawner = GetParent().GetNode<Spawner>("EnemySpawner");
+        EnemySpawner = GetParent().GetNode<Spawner>("EnemySpawner");
         AllActiveUnits = new Godot.Collections.Array<APawn>();
         AllActiveUnits.AddRangeAs(PlayerPawns);
         AllActiveUnits.AddRangeAs(EnemyPawns);
@@ -247,6 +245,16 @@ public partial class EnemyController : Node3D, IObserver
         Stage = EnemyStage.AttackPawn;
     }
 
+    public void NotifyAboutSpawnedPlayers(Array<PlayerPawn> playerPawns)
+    {
+        foreach (var playerPawn in playerPawns)
+        {
+            playerPawn.Attach(this);
+            AllActiveUnits.Add(playerPawn);
+            PlayerPawns.Add(playerPawn);
+        }
+    }
+
     // Inherited from IObserver
     public void Update(ISubject subject)
     {
@@ -275,15 +283,18 @@ public partial class EnemyController : Node3D, IObserver
 
     public Godot.Collections.Array<EnemyPawn> SpawnEnemies()
     {
-        Godot.Collections.Array<EnemyPawn> pawns = Spawner.SpawnEnemies();
-        foreach (EnemyPawn pawn in pawns)
+        var actualPawns = new Godot.Collections.Array<EnemyPawn>();
+        var pawns = EnemySpawner.SpawnEnemies();
+        foreach (var pawn in pawns)
         {
-            AddChild(pawn);
-            pawn.Attach(this);
+            AddChild(pawn.Key);
+            pawn.Key.GlobalPosition = pawn.Value;
+            pawn.Key.Attach(this);
+            actualPawns.Add(pawn.Key);
         }
-        EnemyPawns.AddRangeAs(pawns);
-        AllActiveUnits.AddRangeAs(pawns);
-        return pawns;
+        EnemyPawns.AddRangeAs(actualPawns);
+        AllActiveUnits.AddRangeAs(actualPawns);
+        return actualPawns;
     }
 
     private EnemyStage oldStage;
@@ -354,6 +365,8 @@ public partial class EnemyController : Node3D, IObserver
             CurrentPawn.shouldBeForciblyMoved = false;
         }
     }
+
+
     #endregion
 
 }

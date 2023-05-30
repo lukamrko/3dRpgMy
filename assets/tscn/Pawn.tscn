@@ -1,9 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://bor37mlyf67uy"]
+[gd_scene load_steps=22 format=3 uid="uid://bp358lekhl5fw"]
 
 [ext_resource type="Script" path="res://src/PlayerPawn.cs" id="1"]
 [ext_resource type="Texture2D" uid="uid://b4e7lxufwdwrk" path="res://assets/sprites/characters/chr_pawn_placeholder.png" id="2"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v328r"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_aoqdo"]
 radius = 0.26352
 height = 1.18923
 
@@ -57,7 +57,7 @@ tracks/0/keys = {
 "values": [Vector3(0, 0.602, 0)]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_3fplq"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qkadh"]
 _data = {
 "DAMAGE": SubResource("17"),
 "IDLE": SubResource("4"),
@@ -101,9 +101,9 @@ viewport_path = NodePath("CharacterStats/Health/SubViewport")
 [sub_resource type="ViewportTexture" id="15"]
 viewport_path = NodePath("CharacterStats/Name/SubViewport")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_h5k0y"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_x7c26"]
 
-[sub_resource type="AudioStream" id="AudioStream_8ss3q"]
+[sub_resource type="AudioStream" id="AudioStream_o3owd"]
 
 [node name="Pawn" type="CharacterBody3D"]
 collision_layer = 2
@@ -112,7 +112,7 @@ script = ExtResource("1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.577979, 0)
-shape = SubResource("CapsuleShape3D_v328r")
+shape = SubResource("CapsuleShape3D_aoqdo")
 
 [node name="Tile" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
@@ -127,7 +127,7 @@ vframes = 2
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Character"]
 reset_on_save = false
 libraries = {
-"": SubResource("AnimationLibrary_3fplq")
+"": SubResource("AnimationLibrary_qkadh")
 }
 
 [node name="AnimationTree" type="AnimationTree" parent="Character"]
@@ -147,10 +147,9 @@ transparent_bg = true
 size = Vector2i(128, 30)
 
 [node name="Label" type="Label" parent="CharacterStats/Health/SubViewport"]
-top_level = true
 custom_minimum_size = Vector2(128, 30)
-offset_right = 128.0
-offset_bottom = 30.0
+offset_right = 53.0
+offset_bottom = 14.0
 text = "100/100"
 
 [node name="Name" type="Sprite3D" parent="CharacterStats"]
@@ -163,10 +162,9 @@ transparent_bg = true
 size = Vector2i(150, 30)
 
 [node name="Label" type="Label" parent="CharacterStats/Name/SubViewport"]
-top_level = true
 custom_minimum_size = Vector2(128, 30)
-offset_right = 128.0
-offset_bottom = 30.0
+offset_right = 53.0
+offset_bottom = 14.0
 text = "Name"
 
 [node name="DeadZoneDetector" type="Area3D" parent="."]
@@ -175,7 +173,7 @@ collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DeadZoneDetector"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
-shape = SubResource("BoxShape3D_h5k0y")
+shape = SubResource("BoxShape3D_x7c26")
 
 [node name="SoundPawnAttack" type="AudioStreamPlayer" parent="."]
-stream = SubResource("AudioStream_8ss3q")
+stream = SubResource("AudioStream_o3owd")
