@@ -8,7 +8,7 @@ public static class Utils
     private static string ArcherSprite = "res://assets/sprites/characters/chr_pawn_archer.png";
     private static string ChemistSprite = "res://assets/sprites/characters/chr_pawn_chemist.png";
     private static string ClericSprite = "res://assets/sprites/characters/chr_pawn_mage.png";
-    private static string SkeletonHeroSprite = "res://assets/sprites/characters/chr_pawn_skeleton_cpt.png";
+    private static string SkeletonHeroSprite = "res://assets/sprites/characters/chr_pawn_skeleton_hero.png";
     private static string SkeletonSprite = "res://assets/sprites/characters/chr_pawn_skeleton.png";
     private static string SkeletonArcherSprite = "res://assets/sprites/characters/chr_pawn_skeleton_archer.png";
     private static string SkeletonMedicSprite = "res://assets/sprites/characters/chr_pawn_skeleton_medic.png";
@@ -174,7 +174,7 @@ public static class Utils
         switch (pawnClass)
         {
             case PawnClass.Knight:
-                return 1f;
+                return 1.5f;
             case PawnClass.Archer:
                 return 3f;
             case PawnClass.Chemist:
@@ -190,9 +190,9 @@ public static class Utils
             case PawnClass.SkeletonBomber:
                 return 10f;
             case PawnClass.SkeletonHero:
-                return 0.5f;
+                return 1.5f;
             case PawnClass.SkeletonMedic:
-                return 1f;
+                return 1.5f;
             default:
                 return 1f;
         }
