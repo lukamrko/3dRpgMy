@@ -2,23 +2,44 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Godot;
+using System.IO;
 
 public static class LevelManager
 {
-    private static string levelConfigPath = "config/defaultLevelConfig.cfg";
-    private static string currentLevelConfigPath = "config/currentLevelConfig.cfg";
+
+    private static string levelConfigPath = GenerateConfigBasedOnOS("defaultLevelConfig.cfg");
+
+    private static string currentLevelConfigPath = GenerateConfigBasedOnOS("currentLevelConfig.cfg");
+
+    private static string GenerateConfigBasedOnOS(string configName)
+    {
+        var os = OS.GetName();
+        var executablePath = OS.GetExecutablePath();
+        var directoryPath = Path.GetDirectoryName(executablePath);
+        switch (os.ToLower())
+        {
+            case "windows":
+                directoryPath += "\\" + configName;
+                break;
+            case "linux":
+                directoryPath += "/" + configName;
+                break;
+        }
+        return directoryPath;
+
+    }
 
     private static Dictionary<int, LevelInfo> levelInformations = new Dictionary<int, LevelInfo>();
     private static int currentLevel = -1;
 
-    public static int CurrentLevel 
-    { 
-        get => currentLevel; 
-        set 
+    public static int CurrentLevel
+    {
+        get => currentLevel;
+        set
         {
             currentLevel = value;
             SetCurrentLevelInConfig(currentLevel);
-        } 
+        }
     }
     public static LevelInfo GetNextLevelInfo()
     {
@@ -96,6 +117,7 @@ public static class LevelManager
         // If the file didn't load, ignore it.
         if (err != Error.Ok)
         {
+            GD.Print("Couldn't load file from content");
             return 1;
         }
 
@@ -131,7 +153,8 @@ public static class LevelManager
         }
         currentLevelConfig.SetValue("currentLevel", "currentLevel", 1);
 
-        currentLevelConfig.Save(currentLevelConfigPath);
+        var saveSuccess = currentLevelConfig.Save(currentLevelConfigPath);
+        GD.Print(saveSuccess);
     }
 
     private static void CreateDefaultLevelConfig()
@@ -147,8 +170,8 @@ public static class LevelManager
 
         var lvl1RoundsToWin = 4;
         var lvl2RoundsToWin = 4;
-        var lvl3RoundsToWin = 6;
-        var lvl4RoundsToWin = 7;
+        var lvl3RoundsToWin = 5;
+        var lvl4RoundsToWin = 6;
 
         var lvl1AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher };
         var lvl2AllowedEnemies = new int[] { (int)PawnClass.SkeletonWarrior, (int)PawnClass.SkeletonArcher, (int)PawnClass.SkeletonBomber };
@@ -176,6 +199,7 @@ public static class LevelManager
         levelConfig.SetValue("level4", "AllowedEnemies", lvl4AllowedEnemies);
         levelConfig.SetValue("level4", "LevelPath", lvl4Path);
 
-        levelConfig.Save(levelConfigPath);
+        var saveSuccess = levelConfig.Save(levelConfigPath);
+        GD.Print(saveSuccess);
     }
 }

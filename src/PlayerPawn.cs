@@ -61,7 +61,6 @@ public partial class PlayerPawn : APawn
 		ApplyMovement(delta);
 		StartAnimator();
 		TintWhenNotAbleToAct();
-		HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
 	}
 
 }

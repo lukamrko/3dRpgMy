@@ -138,7 +138,7 @@ parameters/playback = SubResource("8")
 [node name="CharacterStats" type="Node3D" parent="."]
 
 [node name="Health" type="Sprite3D" parent="CharacterStats"]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 1.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 billboard = 1
 texture = SubResource("14")
 
@@ -151,6 +151,9 @@ custom_minimum_size = Vector2(128, 30)
 offset_right = 53.0
 offset_bottom = 14.0
 text = "100/100"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 4
 
 [node name="Name" type="Sprite3D" parent="CharacterStats"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
@@ -159,13 +162,16 @@ texture = SubResource("15")
 
 [node name="SubViewport" type="SubViewport" parent="CharacterStats/Name"]
 transparent_bg = true
-size = Vector2i(150, 30)
+size = Vector2i(128, 30)
 
 [node name="Label" type="Label" parent="CharacterStats/Name/SubViewport"]
 custom_minimum_size = Vector2(128, 30)
 offset_right = 53.0
 offset_bottom = 14.0
 text = "Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 4
 
 [node name="DeadZoneDetector" type="Area3D" parent="."]
 collision_layer = 0

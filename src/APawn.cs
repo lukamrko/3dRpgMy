@@ -47,6 +47,8 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         set
         {
             currHealth = value;
+            HealthLabel.Text = value.ToString() + "/" + MaxHealth.ToString();
+            HealthLabel._Draw();
             // if (currHealth <= 0)
             // {
             //     GD.Print("I have died, but my time will come!");
@@ -632,6 +634,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         SoundPawnAttack.Stream = audioStream;
         SoundPawnAttack.VolumeDb = -15f;
         CurrHealth = MaxHealth;
+        HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
     }
 
     public void LoadAnimatorSprite()
@@ -644,7 +647,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         {
             Character.Offset = new Vector2(0, 30);
         }
-        NameLabel.Text = PawnName + ", The " + PawnClass.ToString();
+        NameLabel.Text = PawnName;
     }
 
     public void DisplayPawnStats(bool characterStatsVisible)

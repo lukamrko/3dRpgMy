@@ -17,14 +17,8 @@ public partial class EnemyPawn : APawn
         Character = GetNode<Sprite3D>("Character");
         AnimationTree = GetNode<AnimationTree>("Character/AnimationTree");
         CharacterStats = GetNode<Node3D>("CharacterStats");
-        GD.Print("Character stats label is null? " + (CharacterStats is null).ToString() + " " + this.PawnName);
-        CharacterStats.Show();
         HealthLabel = CharacterStats.GetNode<Label>("Health/SubViewport/Label");
-        GD.Print("Health label is null? " + (HealthLabel is null).ToString() + " " + this.PawnName);
-        HealthLabel.Show();
         NameLabel = CharacterStats.GetNode<Label>("Name/SubViewport/Label");
-        GD.Print("Name label is null? " + (NameLabel is null).ToString() + " " + this.PawnName);
-        GD.Print("Name label text:" + NameLabel.Text);
         CurrTile = GetNode<RayCast3D>("Tile");
 
         SoundPawnAttack = GetNode<AudioStreamPlayer>("SoundPawnAttack");
@@ -64,7 +58,6 @@ public partial class EnemyPawn : APawn
         ApplyMovement(delta);
         StartAnimator();
         TintWhenNotAbleToAct();
-        HealthLabel.Text = CurrHealth.ToString() + "/" + MaxHealth.ToString();
     }
 
     private void DebugHelper()
