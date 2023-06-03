@@ -33,6 +33,10 @@ public partial class PlayerPawn : APawn
         deadZone = GetParent().GetParent().GetNode<Area3D>("Arena/DeadZone");
         deadZoneDetector = GetNode<Area3D>("DeadZoneDetector");
         deadZoneDetector.AreaEntered += (deadZone) => AreaDetection(deadZone);
+		if(PawnClass == PawnClass.Totem)
+		{
+			CharacterStats.Translate(Vector3.Up*1);
+		}
 	}
 
     public void AreaDetection(Area3D area)
