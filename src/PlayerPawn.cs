@@ -14,9 +14,14 @@ public partial class PlayerPawn : APawn
 		Character = GetNode<Sprite3D>("Character");
 		AnimationTree = GetNode<AnimationTree>("Character/AnimationTree");
 		CharacterStats = GetNode<Node3D>("CharacterStats");
-		// CharacterStats.Visible=true;
-        HealthLabel = CharacterStats.GetNode<Label>("Health/SubViewport/Label");
-        NameLabel = CharacterStats.GetNode<Label>("Name/SubViewport/Label");
+
+        var healthSubViewPort = CharacterStats.GetNode<SubViewport>("Health/SubViewport");
+        healthSubViewPort.RenderTargetUpdateMode= SubViewport.UpdateMode.WhenParentVisible;
+        HealthLabel = healthSubViewPort.GetNode<Label>("Label");
+
+        var nameSubViewPort = CharacterStats.GetNode<SubViewport>("Name/SubViewport");
+        nameSubViewPort.RenderTargetUpdateMode = SubViewport.UpdateMode.WhenParentVisible;
+        NameLabel = nameSubViewPort.GetNode<Label>("Label");
 		CurrTile = GetNode<RayCast3D>("Tile");
 
         SoundPawnAttack = GetNode<AudioStreamPlayer>("SoundPawnAttack");
