@@ -48,29 +48,29 @@ public static class Utils
     public static void ConvertTilesIntoStaticBodies(Node3D tilesObj)
     {
         var script = ResourceLoader.Load<RefCounted>(TileSrc);
-        var tilesObjects1 = tilesObj.GetChildren();
-
         var tilesObjects = tilesObj.GetChildren().As<MeshInstance3D>();
 
         foreach (MeshInstance3D tileObj in tilesObjects)
         {
             tileObj.CreateTrimeshCollision();
-            StaticBody3D staticBody = tileObj.GetChild(0) as StaticBody3D;
+            var staticBody = tileObj.GetChild(0) as StaticBody3D;
             staticBody.Position = tileObj.Position;
 
             tileObj.Position = Vector3.Zero;
             tileObj.Name = "Tile";
             tileObj.RemoveChild(staticBody);
+
             tilesObj.RemoveChild(tileObj);
 
             staticBody.AddChild(tileObj);
             var instanceID = staticBody.GetInstanceId();
 
             staticBody.SetScript(script);
-            Tile staticBodyTile = GodotObject.InstanceFromId(instanceID) as Tile;
-            staticBodyTile._Ready();
+            var staticBodyTile = GodotObject.InstanceFromId(instanceID) as Tile;
+            // staticBodyTile._Ready();
             staticBodyTile.ConfigureTile();
             staticBodyTile.SetProcess(true);
+            
             tilesObj.AddChild(staticBodyTile);
         }
     }

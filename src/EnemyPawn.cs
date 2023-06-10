@@ -50,11 +50,11 @@ public partial class EnemyPawn : APawn
 
     public bool EnemyCanFirstAct()
     {
-        return CanMove && CurrHealth > 0;
+        return CanMove;
     }
     public bool EnemyCanSecondAct()
     {
-        return CanAttack && CurrHealth > 0;
+        return CanAttack;
     }
 
     public override void _Process(double delta)

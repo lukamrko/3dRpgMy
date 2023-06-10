@@ -1,4 +1,4 @@
-[gd_scene load_steps=715 format=3 uid="uid://dbtjyii0gatb2"]
+[gd_scene load_steps=713 format=3 uid="uid://dbtjyii0gatb2"]
 
 [ext_resource type="Script" path="res://src/Arena.cs" id="1_sw636"]
 [ext_resource type="Material" uid="uid://db6mv8snbw02a" path="res://assets/textures/mapGrass.tres" id="2_fn4yt"]
@@ -14,12 +14,6 @@ sky_material = SubResource("PhysicalSkyMaterial_jxrwe")
 background_mode = 2
 sky = SubResource("Sky_7bfu2")
 tonemap_mode = 2
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_kwoje"]
-size = Vector3(1, 1, 15)
-
-[sub_resource type="BoxShape3D" id="1"]
-size = Vector3(1, 1, 15)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6p5t3"]
 
@@ -7130,28 +7124,6 @@ light_energy = 2.0
 transform = Transform3D(0.484638, 0.0163907, 0.874561, 0.560544, -0.773367, -0.296131, 0.671503, 0.633747, -0.38399, 18.106, 4, -2.15562)
 light_color = Color(0.741176, 0.741176, 0, 1)
 light_energy = 2.0
-
-[node name="ArenaLimits" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
-visible = false
-collision_layer = 8
-collision_mask = 8
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="ArenaLimits"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 0.125)
-shape = SubResource("BoxShape3D_kwoje")
-
-[node name="CollisionShape2" type="CollisionShape3D" parent="ArenaLimits"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 0, 0.125)
-shape = SubResource("1")
-
-[node name="CollisionShape3" type="CollisionShape3D" parent="ArenaLimits"]
-transform = Transform3D(-4.01339e-07, 0, -1, 0, 1, 0, 1, 0, -4.01339e-07, 9, 0, -14)
-shape = SubResource("1")
-
-[node name="CollisionShape4" type="CollisionShape3D" parent="ArenaLimits"]
-transform = Transform3D(-4.01339e-07, 0, -1, 0, 1, 0, 1, 0, -4.01339e-07, 9, 0, 15)
-shape = SubResource("1")
 
 [node name="Tiles" type="Node3D" parent="."]
 visible = false

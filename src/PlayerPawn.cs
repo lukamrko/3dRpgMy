@@ -53,7 +53,6 @@ public partial class PlayerPawn : APawn
 	public bool CanAct()
 	{
 		return (CanMove || CanAttack )
-			&& CurrHealth > 0
             && !IsTotem;
 	}
 
