@@ -75,7 +75,6 @@ public partial class EnemyController : Node3D, IObserver
 
     public void ChoosePawn()
     {
-        Arena.Reset();
         foreach (EnemyPawn pawn in EnemyPawns)
         {
             if (pawn.EnemyCanFirstAct())
@@ -214,9 +213,6 @@ public partial class EnemyController : Node3D, IObserver
             case EnemyStage.MovePawn:
                 MovePawn();
                 break;
-            // case EnemyStage.ChosePawnToAttack:
-            //     ChoosePawnToAttack();
-            //     break;
             default:
                 ChoosePawn();
                 break;
