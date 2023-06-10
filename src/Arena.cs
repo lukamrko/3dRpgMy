@@ -26,7 +26,8 @@ public partial class Arena : Node3D
             var neighbors = currentTile.GetNeighbors(height).Values;
             foreach (Tile neighbor in neighbors)
             {
-                var neighborRootState = neighbor.Root is null && neighbor != root;
+                var neighborRootState = neighbor.Root is null 
+                    && neighbor != root;
                 var pawnsOccupy = neighbor.IsTaken()
                     && allies is object
                     && !allies.Contains(neighbor.GetObjectAbove() as APawn);
@@ -160,15 +161,18 @@ public partial class Arena : Node3D
 
 
     private const int maxIterationOfGetNearestNeighborTileToPawn = 3;
-    public Tile GetNearestNeighborTileToPawn(int distance, APawn pawn, Godot.Collections.Array<PlayerPawn> pawns, int currentIteration = 1)
+    public Tile GetNearestNeighborTileToPawn(
+        int distance, 
+        APawn pawn, 
+        Godot.Collections.Array<PlayerPawn> pawns, 
+        int currentIteration = 1)
     {
         Tile nearestTile = null;
-        // if (pawn.PawnStrategy == PawnStrategy.ObjectiveSniper)
-        // {
-        //     pawns = GetOnlyTotems(pawns);
-        // }
-
-        //Try to get free tiles directly close to the pawn
+        if (pawn.PawnStrategy == PawnStrategy.ObjectiveSniper)
+        {
+            pawns = GetOnlyTotems(pawns);
+        }
+        //Try to get free tiles directly close to the pawn based on distance
         foreach (PlayerPawn _pawn in pawns)
         {
             var currentPawnTile = _pawn.GetTile();
@@ -188,29 +192,11 @@ public partial class Arena : Node3D
             return nearestTile;
         }
 
-
         //If didn't find any tiles try once again but for tiles that are distance+1 tiles away from player
         if (nearestTile is null
             && ++currentIteration <= maxIterationOfGetNearestNeighborTileToPawn)
         {
             return GetNearestNeighborTileToPawn(++distance, pawn, pawns, currentIteration: currentIteration);
-            // foreach (PlayerPawn _pawn in pawns)
-            // {
-            //     var currentPawnTile = _pawn.GetTile();
-            //     var tiles = currentPawnTile.GetNeighbors(pawn.JumpHeight);
-            //     nearestTile = SpecificDistanceAwayTiles(2, nearestTile, tiles, pawn);
-            // }
-
-            // while (nearestTile is object
-            //     && !nearestTile.Reachable)
-            // {
-            //     nearestTile = nearestTile.Root;
-            // }
-
-            // if (nearestTile is object)
-            // {
-            //     return nearestTile;
-            // }
         }
 
         return pawn.GetTile();
@@ -279,7 +265,6 @@ public partial class Arena : Node3D
             }
         }
 
-        // var tiles = targetTileNeighbors.Select(x => x.Value).ToList();
         foreach (Tile newTile in tiles)
         {
             var isNewTileNearestTile = (nearestTile is null || newTile.Distance < nearestTile.Distance)
@@ -311,9 +296,14 @@ public partial class Arena : Node3D
         return weakest;
     }
 
-    public PlayerPawn GetRandomPawnToAttack(Godot.Collections.Array<PlayerPawn> pawns)
+    public PlayerPawn GetRandomPawnToAttack(Godot.Collections.Array<PlayerPawn> pawns, PawnStrategy pawnStrategy)
     {
         Godot.Collections.Array<PlayerPawn> potentiallyAttackablePawns = new Godot.Collections.Array<PlayerPawn>();
+        if (pawnStrategy == PawnStrategy.ObjectiveSniper)
+        {
+            pawns = GetOnlyTotems(pawns);
+        }
+
         foreach (PlayerPawn pawn in pawns)
         {
             var pawnTile = pawn.GetTile();

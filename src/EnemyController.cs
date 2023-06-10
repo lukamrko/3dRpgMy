@@ -80,10 +80,10 @@ public partial class EnemyController : Node3D, IObserver
             if (pawn.EnemyCanFirstAct())
             {
                 CurrentPawn = pawn;
+                Stage = EnemyStage.ChoseNearestEnemy;
+                break;
             }
         }
-
-        Stage = EnemyStage.ChoseNearestEnemy;
     }
 
     public void ChoseEnemy()
@@ -122,7 +122,7 @@ public partial class EnemyController : Node3D, IObserver
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
         // AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
-        AttackablePawn = Arena.GetRandomPawnToAttack(PlayerPawns);
+        AttackablePawn = Arena.GetRandomPawnToAttack(PlayerPawns, CurrentPawn.PawnStrategy);
         CurrentPawn.AttackingTowards = GetDirectionToWhichShouldAttack();
         if (AttackablePawn != null)
         {
