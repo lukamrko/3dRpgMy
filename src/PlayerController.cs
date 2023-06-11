@@ -115,8 +115,8 @@ public partial class PlayerController : Node3D, IObserver
                 return true;
             }
         }
-
-        return (int)Stage > 0;
+        
+        return false;
     }
 
     public void Reset()
@@ -374,7 +374,6 @@ public partial class PlayerController : Node3D, IObserver
                 AttackTile(delta);
                 break;
         }
-
     }
 
     private void ListenShortcuts()
@@ -460,13 +459,13 @@ public partial class PlayerController : Node3D, IObserver
     }
 
     private PlayerStage[] ButtonVisibilityOnStages = new PlayerStage[]
-        {
-            PlayerStage.DisplayAvailableActionsForPawn,
-            PlayerStage.DisplayAvailableMovements,
-            PlayerStage.SelectNewLocation,
-            PlayerStage.DisplayAttackableTargets,
-            PlayerStage.SelectTileToAttack
-        };
+    {
+        PlayerStage.DisplayAvailableActionsForPawn,
+        PlayerStage.DisplayAvailableMovements,
+        PlayerStage.SelectNewLocation,
+        PlayerStage.DisplayAttackableTargets,
+        PlayerStage.SelectTileToAttack
+    };
 
     private bool VisibilityBasedOnStage()
     {
