@@ -61,8 +61,7 @@ public partial class Spawner : Node3D
 		var node = EnemyScene.Instantiate();
 		var enemyPawn = node as EnemyPawn;
 		enemyPawn.PawnClass = allowedEnemies.GetRandom();
-		enemyPawn.PawnStrategy = PawnStrategy.Brute;
-		// enemyPawn.PawnStrategy = possibleStrategies.GetRandom();
+		enemyPawn.PawnStrategy = possibleStrategies.GetRandom();
 		enemyPawn.PawnName = possibleNames.GetRandom();
 		return node;
 	}
