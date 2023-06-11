@@ -42,7 +42,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "C:/ProgramData/chocolatey/lib/godot-mono/tools/Godot_v4.0.2-stable_mono_win64/Godot_v4.0.2-stable_mono_win64.exe",
+            "program": "C:/ProgramData/chocolatey/lib/godot-mono/tools/Godot_v4.0.3-stable_mono_win64/Godot_v4.0.3-stable_mono_win64.exe",
             "console": "internalConsole",
             "stopAtEntry": false,
             "justMyCode": false,
