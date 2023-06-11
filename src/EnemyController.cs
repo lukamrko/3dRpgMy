@@ -128,6 +128,7 @@ public partial class EnemyController : Node3D, IObserver
             TacticsCamera.Target = AttackablePawn;
         }
         Stage = EnemyStage.AttackPawn;
+        Arena.Reset();
     }
 
     private KeyValuePair<int, WorldSide> GetDirectionToWhichShouldAttack()

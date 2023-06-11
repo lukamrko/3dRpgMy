@@ -115,7 +115,7 @@ public partial class PlayerController : Node3D, IObserver
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -190,12 +190,6 @@ public partial class PlayerController : Node3D, IObserver
     #region Stages
     public void SelectPawn()
     {
-        Arena.Reset();
-        if (CurrentPawn is object)
-        {
-            CurrentPawn.DisplayPawnStats(true);
-        }
-
         CurrentPawn = AuxSelectPawn();
         if (CurrentPawn is null)
         {
@@ -214,7 +208,6 @@ public partial class PlayerController : Node3D, IObserver
 
     public void DisplayAvailableActionsForPawn()
     {
-        CurrentPawn.DisplayPawnStats(true);
         Arena.Reset();
         Arena.MarkHoverTile(CurrentPawn.GetTile());
     }
@@ -291,6 +284,7 @@ public partial class PlayerController : Node3D, IObserver
         {
             TacticsCamera.Target = _AttackableTile;
             Stage = PlayerStage.AttackTile;
+            Arena.Reset();
         }
     }
 
@@ -321,8 +315,6 @@ public partial class PlayerController : Node3D, IObserver
         else
         {
             CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, _AttackableTile);
-            // CurrentPawn.DoAttack(AttackablePawn, AllActiveUnits);
-            // AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = CurrentPawn;
         }
 
