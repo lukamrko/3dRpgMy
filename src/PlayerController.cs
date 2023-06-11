@@ -248,12 +248,6 @@ public partial class PlayerController : Node3D, IObserver
 
     public void SelectTileToAttack()
     {
-        CurrentPawn.DisplayPawnStats(true);
-        if (AttackablePawn is object)
-        {
-            AttackablePawn.DisplayPawnStats(true);
-        }
-
         Tile tile = AuxSelectTile();
         if (tile is object)
         {
@@ -264,11 +258,6 @@ public partial class PlayerController : Node3D, IObserver
         {
             AttackablePawn = null;
             _AttackableTile = null;
-        }
-
-        if (AttackablePawn is object)
-        {
-            AttackablePawn.DisplayPawnStats(true);
         }
 
         if (Input.IsActionJustPressed("ui_accept")
