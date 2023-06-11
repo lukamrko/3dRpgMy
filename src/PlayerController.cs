@@ -352,35 +352,8 @@ public partial class PlayerController : Node3D, IObserver
 
     private void ListenShortcuts()
     {
-        // MoveCamera();
-        // CameraRotation();
         PlayerShortcuts();
     }
-
-    #region Camera
-    public void MoveCamera()
-    {
-        if (Input.GetActionStrength("camera_left") != 0)
-        {
-            GD.Print("AAA");
-        }
-        float h = -Input.GetActionStrength("camera_left") + Input.GetActionStrength("camera_right");
-        float v = Input.GetActionStrength("camera_forward") - Input.GetActionStrength("camera_backwards");
-        TacticsCamera.MoveCamera(h, v, IsJoyStick);
-    }
-
-    public void CameraRotation()
-    {
-        if (Input.IsActionJustPressed("camera_rotate_left"))
-        {
-            TacticsCamera.YRot -= 90;
-        }
-        if (Input.IsActionJustPressed("camera_rotate_right"))
-        {
-            TacticsCamera.YRot += 90;
-        }
-    }
-    #endregion 
 
     private void PlayerShortcuts()
     {
