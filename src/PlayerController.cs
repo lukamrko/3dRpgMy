@@ -189,7 +189,6 @@ public partial class PlayerController : Node3D, IObserver
             return;
         }
 
-        CurrentPawn.DisplayPawnStats(true);
         if (Input.IsActionJustPressed("ui_accept")
             && CurrentPawn.CanAct()
             && PlayerPawns.Contains(CurrentPawn))
@@ -202,19 +201,17 @@ public partial class PlayerController : Node3D, IObserver
     public void DisplayAvailableActionsForPawn()
     {
         Arena.Reset();
-        Arena.MarkHoverTile(CurrentPawn.GetTile());
+        var currentPawnTile = CurrentPawn.GetTile(); 
+        Arena.MarkHoverTile(currentPawnTile);
     }
 
     public void DisplayAvailableMovements()
     {
         Arena.Reset();
-        if (CurrentPawn is null)
-        {
-            return;
-        }
         TacticsCamera.Target = CurrentPawn;
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.JumpHeight, PlayerPawns);
-        Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
+        var currentTile = CurrentPawn.GetTile();
+        Arena.LinkTiles(currentTile, CurrentPawn.JumpHeight, PlayerPawns);
+        Arena.MarkReachableTiles(currentTile, CurrentPawn.MoveRadius);
         Stage = PlayerStage.SelectNewLocation;
     }
 
