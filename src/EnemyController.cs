@@ -168,15 +168,14 @@ public partial class EnemyController : Node3D, IObserver
         var distance = CurrentPawn.AttackingTowards.Key;
         var side = CurrentPawn.AttackingTowards.Value;
         var attackingTile = CurrentPawn.GetTile();
-        attackingTile = GetTileOnDistanceAndSide(distance, side, attackingTile);
+        attackingTile = GetTileBasedOnDistanceAndSide(distance, side, attackingTile);
         if (attackingTile is object)
         {
             CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, attackingTile);
         }
-        Stage = EnemyStage.ChoosePawn;
     }
 
-    private Tile GetTileOnDistanceAndSide(int distance, WorldSide worldSide, Tile startingTile)
+    private Tile GetTileBasedOnDistanceAndSide(int distance, WorldSide worldSide, Tile startingTile)
     {
         for (int i = 0; i < distance; i++)
         {
