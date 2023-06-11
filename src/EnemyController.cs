@@ -121,12 +121,10 @@ public partial class EnemyController : Node3D, IObserver
         Godot.Collections.Array<EnemyPawn> emptyArray = null;
         Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
         Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
-        // AttackablePawn = Arena.GetWeakestPawnToAttack(TargetPawns);
         AttackablePawn = Arena.GetRandomPawnToAttack(PlayerPawns, CurrentPawn.PawnStrategy);
         CurrentPawn.AttackingTowards = GetDirectionToWhichShouldAttack();
         if (AttackablePawn != null)
         {
-            AttackablePawn.DisplayPawnStats(true);
             TacticsCamera.Target = AttackablePawn;
         }
         Stage = EnemyStage.AttackPawn;
@@ -160,7 +158,7 @@ public partial class EnemyController : Node3D, IObserver
         return attackingTowards;
     }
 
-    public void Attack(double delta)
+    public void Attack()
     {
         if (CurrentPawn.AttackingTowards.Key == 0)
         {
@@ -170,15 +168,26 @@ public partial class EnemyController : Node3D, IObserver
         var distance = CurrentPawn.AttackingTowards.Key;
         var side = CurrentPawn.AttackingTowards.Value;
         var attackingTile = CurrentPawn.GetTile();
-        for (int i = 0; i < distance; i++)
+        attackingTile = GetTileOnDistanceAndSide(distance, side, attackingTile);
+        if (attackingTile is object)
         {
-            attackingTile = attackingTile.GetNeighborAtWorldSide(side);
+            CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, attackingTile);
         }
-
-        CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, attackingTile);
         Stage = EnemyStage.ChoosePawn;
     }
 
+    private Tile GetTileOnDistanceAndSide(int distance, WorldSide worldSide, Tile startingTile)
+    {
+        for (int i = 0; i < distance; i++)
+        {
+            startingTile = startingTile.GetNeighborAtWorldSide(worldSide);
+            if (startingTile is null)
+            {
+                return null;
+            }
+        }
+        return startingTile;
+    }
 
     public override void _Ready()
     {
@@ -224,7 +233,7 @@ public partial class EnemyController : Node3D, IObserver
         ChoosePawnThenPrepareAttack();
         if (Stage == EnemyStage.AttackPawn)
         {
-            Attack(delta);
+            Attack();
         }
     }
 
