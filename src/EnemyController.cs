@@ -96,7 +96,7 @@ public partial class EnemyController : Node3D, IObserver
             currentPawnTile = CurrentPawn.GetTile();
         }
         Arena.LinkTiles(currentPawnTile, CurrentPawn.JumpHeight, EnemyPawns);
-        Arena.MarkReachableTiles(CurrentPawn.GetTile(), CurrentPawn.MoveRadius);
+        Arena.MarkReachableTiles(currentPawnTile, CurrentPawn.MoveRadius);
         var distance = Math.Clamp(CurrentPawn.AttackRadius - 1, 1, CurrentPawn.AttackRadius);
         Tile to = Arena.GetNearestNeighborTileToPawn(distance, CurrentPawn, PlayerPawns);
         CurrentPawn.PathStack = Arena.GeneratePathStack(to);
@@ -111,6 +111,7 @@ public partial class EnemyController : Node3D, IObserver
         {
             Stage = EnemyStage.ChosePawnToAttack;
             CurrentPawn.CanMove = false;
+            CurrentPawn.AdjustToCenter();
             ChoosePawnToAttack();
         }
     }
@@ -119,8 +120,9 @@ public partial class EnemyController : Node3D, IObserver
     {
         Arena.Reset();
         Godot.Collections.Array<EnemyPawn> emptyArray = null;
-        Arena.LinkTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
-        Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
+        var currentTile = CurrentPawn.GetTile();
+        Arena.LinkTilesForAttack(currentTile, CurrentPawn.AttackRadius, emptyArray);
+        Arena.MarkAttackableTiles(currentTile, CurrentPawn.AttackRadius);
         AttackablePawn = Arena.GetRandomPawnToAttack(PlayerPawns, CurrentPawn.PawnStrategy);
         CurrentPawn.AttackingTowards = GetDirectionToWhichShouldAttack();
         if (AttackablePawn != null)
@@ -153,7 +155,7 @@ public partial class EnemyController : Node3D, IObserver
         var attackableTile = AttackablePawn.GetTile();
         GD.Print(String.Format("I, the great rattle bones skeleton {0} am attacking towards this  position: {1}. Name of nemesis is {2}",
            CurrentPawn.PawnName, attackDirectionRounded, AttackablePawn.PawnName));
-        CurrentPawn.LookAtDirection(attackableTile.GlobalTransform.Origin - CurrentPawn.GlobalTransform.Origin);
+        CurrentPawn.LookAtDirection(attackableTile.GlobalTransform.Origin - CurrentPawn.GetTile().GlobalTransform.Origin);
         var attackingTowards = new KeyValuePair<int, WorldSide>(distance, worldSide);
 
         return attackingTowards;

@@ -28,9 +28,9 @@ public partial class Arena : Node3D
             {
                 var neighborRootState = neighbor.Root is null 
                     && neighbor != root;
-                var pawnsOccupy = neighbor.IsTaken()
-                    && allies is object
-                    && !allies.Contains(neighbor.GetObjectAbove() as APawn);
+                var pawnsOccupy = neighbor.IsTaken();
+                    // && allies is object
+                    // && !allies.Contains(neighbor.GetObjectAbove() as APawn);
                 var shouldLinkTiles = neighborRootState && !pawnsOccupy;
 
                 if (shouldLinkTiles)
@@ -251,7 +251,7 @@ public partial class Arena : Node3D
         {
             var currentTile = tile.Value;
             var tileSide = tile.Key;
-            for (int i = 0; i < distance - 1; i++)
+            for (int i = 0; i < distance; i++)
             {
                 currentTile = currentTile.GetNeighborAtWorldSide(tileSide);
                 if (currentTile is null)
@@ -268,7 +268,7 @@ public partial class Arena : Node3D
         foreach (Tile newTile in tiles)
         {
             var isNewTileNearestTile = (nearestTile is null || newTile.Distance < nearestTile.Distance)
-                && newTile.Distance > 0
+                && newTile.Distance >= 0
                 && !newTile.IsTaken(pawn);
 
             if (isNewTileNearestTile)

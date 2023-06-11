@@ -215,7 +215,7 @@ public static class Utils
             case PawnClass.SkeletonWarrior:
                 return 1;
             case PawnClass.SkeletonArcher:
-                return 4;
+                return 3;
             case PawnClass.SkeletonBomber:
                 return 1;
             case PawnClass.SkeletonHero:

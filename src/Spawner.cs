@@ -6,7 +6,7 @@ using Vector3 = Godot.Vector3;
 public partial class Spawner : Node3D
 {
 
-	Godot.Collections.Array<string> possibleNames = new Godot.Collections.Array<string> { "K'", "Maxima", "Ryo", "Robert", "Heidern", "Clark", "Ralf" };
+	Godot.Collections.Array<string> possibleNames = new Godot.Collections.Array<string> { "K'", "Maxima", "Ryo", "Robert", "Heidern", "Clark", "Ralf", "Geese", "Terry", "Joe", "Andy", "Rugal", "Ash" };
 
     Godot.Collections.Array<PawnStrategy> possibleStrategies = new Godot.Collections.Array<PawnStrategy>
     {
@@ -61,7 +61,8 @@ public partial class Spawner : Node3D
 		var node = EnemyScene.Instantiate();
 		var enemyPawn = node as EnemyPawn;
 		enemyPawn.PawnClass = allowedEnemies.GetRandom();
-		enemyPawn.PawnStrategy = possibleStrategies.GetRandom();
+		enemyPawn.PawnStrategy = PawnStrategy.Brute;
+		// enemyPawn.PawnStrategy = possibleStrategies.GetRandom();
 		enemyPawn.PawnName = possibleNames.GetRandom();
 		return node;
 	}
