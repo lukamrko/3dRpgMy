@@ -166,14 +166,7 @@ public partial class PlayerController : Node3D, IObserver
         }
         else
         {
-            if (tile is object)
-            {
-                return tile.GetObjectAbove() as PlayerPawn;
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 
