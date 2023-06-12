@@ -30,8 +30,6 @@ public partial class PlayerController : Node3D, IObserver
         }
     }
 
-    APawn AttackablePawn = null;
-
     float WaitTime = 0;
 
     bool IsJoyStick = false;
@@ -44,7 +42,7 @@ public partial class PlayerController : Node3D, IObserver
     PlayerControllerUI UIControl;
     public Godot.Collections.Array<PlayerPawn> PlayerPawns;
     Godot.Collections.Array<APawn> AllActiveUnits;
-    private Tile _AttackableTile;
+    private Tile AttackableTile;
 
     public void Configure(Arena myArena, TacticsCamera myCamera, PlayerControllerUI myControl)
     {
@@ -218,14 +216,11 @@ public partial class PlayerController : Node3D, IObserver
     public void DisplayAttackableTargets()
     {
         Arena.Reset();
-        if (CurrentPawn is null)
-        {
-            return;
-        }
         TacticsCamera.Target = CurrentPawn;
         Godot.Collections.Array<PlayerPawn> emptyArray = null;
-        Arena.LinkTilesForAttack(CurrentPawn.GetTile(), CurrentPawn.AttackRadius, emptyArray);
-        Arena.MarkAttackableTiles(CurrentPawn.GetTile(), CurrentPawn.AttackRadius);
+        var currentTile = CurrentPawn.GetTile();
+        Arena.LinkTilesForAttack(currentTile, CurrentPawn.AttackRadius, emptyArray);
+        Arena.MarkAttackableTiles(currentTile, CurrentPawn.AttackRadius);
         Stage = PlayerStage.SelectTileToAttack;
     }
 
@@ -248,20 +243,18 @@ public partial class PlayerController : Node3D, IObserver
         Tile tile = AuxSelectTile();
         if (tile is object)
         {
-            AttackablePawn = tile.GetObjectAbove() as APawn;
-            _AttackableTile = tile;
+            AttackableTile = tile;
         }
         else
         {
-            AttackablePawn = null;
-            _AttackableTile = null;
+            AttackableTile = null;
         }
 
         if (Input.IsActionJustPressed("ui_accept")
             && tile is object
             && tile.Attackable)
         {
-            TacticsCamera.Target = _AttackableTile;
+            TacticsCamera.Target = AttackableTile;
             Stage = PlayerStage.AttackTile;
             Arena.Reset();
         }
@@ -269,7 +262,6 @@ public partial class PlayerController : Node3D, IObserver
 
     public void MovePawn()
     {
-        CurrentPawn.DisplayPawnStats(true);
         if (CurrentPawn.PathStack.Count == 0)
         {
             CurrentPawn.CanMove = false;
@@ -282,22 +274,20 @@ public partial class PlayerController : Node3D, IObserver
                 Stage = PlayerStage.DisplayAvailableActionsForPawn;
             }
         }
-
     }
 
     public void AttackTile(double delta)
     {
-        if (_AttackableTile is null)
+        if (AttackableTile is null)
         {
             CurrentPawn.CanAttack = false;
         }
         else
         {
-            CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, _AttackableTile);
+            CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, AttackableTile);
             TacticsCamera.Target = CurrentPawn;
         }
 
-        AttackablePawn = null;
         if (!CurrentPawn.CanAct())
         {
             Stage = PlayerStage.SelectPawn;
