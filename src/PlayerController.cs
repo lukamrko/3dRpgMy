@@ -199,7 +199,7 @@ public partial class PlayerController : Node3D, IObserver
     public void DisplayAvailableActionsForPawn()
     {
         Arena.Reset();
-        var currentPawnTile = CurrentPawn.GetTile(); 
+        var currentPawnTile = CurrentPawn.GetTile();
         Arena.MarkHoverTile(currentPawnTile);
     }
 
@@ -265,29 +265,20 @@ public partial class PlayerController : Node3D, IObserver
         if (CurrentPawn.PathStack.Count == 0)
         {
             CurrentPawn.CanMove = false;
-            if (!CurrentPawn.CanAct())
-            {
-                Stage = PlayerStage.SelectPawn;
-            }
-            else
-            {
-                Stage = PlayerStage.DisplayAvailableActionsForPawn;
-            }
+            SetCurrentPawnState();
         }
     }
 
-    public void AttackTile(double delta)
+    public void AttackTile()
     {
-        if (AttackableTile is null)
-        {
-            CurrentPawn.CanAttack = false;
-        }
-        else
-        {
-            CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, AttackableTile);
-            TacticsCamera.Target = CurrentPawn;
-        }
+        CurrentPawn.DoCharacterActionOnTile(AllActiveUnits, AttackableTile);
+        TacticsCamera.Target = CurrentPawn;
 
+        SetCurrentPawnState();
+    }
+
+    private void SetCurrentPawnState()
+    {
         if (!CurrentPawn.CanAct())
         {
             Stage = PlayerStage.SelectPawn;
@@ -332,7 +323,7 @@ public partial class PlayerController : Node3D, IObserver
                 SelectTileToAttack();
                 break;
             case PlayerStage.AttackTile:
-                AttackTile(delta);
+                AttackTile();
                 break;
         }
     }
