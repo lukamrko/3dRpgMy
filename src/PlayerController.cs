@@ -158,6 +158,12 @@ public partial class PlayerController : Node3D, IObserver
             ? GetMouseOverObject(1) as Tile
             : pawn.GetTile();
         Arena.MarkHoverTile(tile);
+        
+        if(tile is object &&
+            tile.GetObjectAbove() is PlayerPawn playerPawn)
+        {
+            return playerPawn;
+        }
         if (pawn is object)
         {
             return pawn;
@@ -428,7 +434,7 @@ public partial class PlayerController : Node3D, IObserver
         }
     }
 
-    internal void NotifyAboutNewEnemies(Array<EnemyPawn> enemies)
+    public void NotifyAboutNewEnemies(Array<EnemyPawn> enemies)
     {
         foreach (var enemyPawn in enemies)
         {
@@ -450,7 +456,6 @@ public partial class PlayerController : Node3D, IObserver
         foreach (var pawn in PlayerPawns)
         {
             if (pawn.shouldBeForciblyMoved
-                && _forceCalculation != ForceCalculation.ForceBeingApplied
                 && pawn.PawnClass != PawnClass.Totem)
             {
                 _forceCalculation = ForceCalculation.ForceBeingCalculated;

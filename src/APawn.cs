@@ -179,14 +179,13 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                 currentSpeed = Godot.Mathf.Clamp(Math.Abs(MoveDirection.Y) * 2.3f, 3f, Godot.Mathf.Inf);
                 IsJumping = true;
             }
-
             //fall or move to the edge before failing
             else if (MoveDirection.Y < -MinHeightToJump)
             {
                 Gravity += Vector3.Down * (float)delta * GravityStrength;
                 if (Utils.VectorDistanceWithoutY(PathStack.FirstOrDefault(), GlobalTransform.Origin) <= 0.2)
                 {
-                    velocity = (PathStack.FirstOrDefault() - GlobalTransform.Origin).Normalized() + Gravity;
+                    velocity += Gravity;
                 }
                 else
                 {
@@ -194,8 +193,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                 }
             }
             //TODO this is most probable MoveAndSlide refactor
-            // Vector3 _v = MoveAndSlide(velocity * currentSpeed, Vector3.Up);
-            this.Velocity = velocity * currentSpeed; // * Vector3.Up;
+            this.Velocity = velocity * currentSpeed;
             MoveAndSlide();
 
             if (GlobalTransform.Origin.DistanceTo(PathStack.FirstOrDefault()) >= 0.2)
@@ -231,9 +229,8 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         }
         MoveDirection = tilePoint - GlobalTransform.Origin + Gravity;
 
-        this.Velocity = MoveDirection * Speed * 4; //*Vector3.Up;
+        this.Velocity = MoveDirection * Speed * 4;
         MoveAndSlide();
-        // MoveAndSlide(MoveDirection * Speed * 4, Vector3.Up);
     }
 
     public void ApplyMovement(double delta)
@@ -266,15 +263,6 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             Vector3 velocity = MoveDirection.Normalized();
             float currentSpeed = Speed;
 
-            //apply jump
-            // if (MoveDirection.Y > MinHeightToJump)
-            // {
-            //     currentSpeed = Godot.Mathf.Clamp(Math.Abs(MoveDirection.Y) * 2.3f, 3f, Godot.Mathf.Inf);
-            //     IsJumping = true;
-            // }
-
-            // //fall or move to the edge before failing
-            // else 
             if (MoveDirection.Y < -MinHeightToJump)
             {
                 Gravity += Vector3.Down * (float)delta * GravityStrength;
@@ -287,7 +275,7 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                     velocity = Utils.VectorRemoveY(MoveDirection).Normalized() + Gravity;
                 }
             }
-            this.Velocity = velocity * currentSpeed; //* Vector3.Up;
+            this.Velocity = velocity * currentSpeed;
             MoveAndSlide();
             if (GlobalTransform.Origin.DistanceTo(PathStack.FirstOrDefault()) >= 0.2)
             {

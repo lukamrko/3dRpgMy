@@ -318,8 +318,7 @@ public partial class EnemyController : Node3D, IObserver
         }
         foreach (var pawn in EnemyPawns)
         {
-            if (pawn.shouldBeForciblyMoved
-                && _forceCalculation != ForceCalculation.ForceBeingApplied)
+            if (pawn.shouldBeForciblyMoved)
             {
                 _forceCalculation = ForceCalculation.ForceBeingCalculated;
                 CurrentPawn = pawn;
@@ -327,8 +326,6 @@ public partial class EnemyController : Node3D, IObserver
             }
         }
         return false;
-        // return forcedMovement.ShouldApplyForce(EnemyPawns.AsEnumerable<APawn>());
-
     }
 
     public void DoForcedMovement(double delta)
@@ -342,8 +339,6 @@ public partial class EnemyController : Node3D, IObserver
         {
             ApplyForce();
         }
-
-        // forcedMovement.DoForcedMovement(delta);
     }
 
     private void CalculateForce()

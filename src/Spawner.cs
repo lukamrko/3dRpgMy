@@ -28,9 +28,7 @@ public partial class Spawner : Node3D
 	{
         var enemyPawns = new Dictionary<EnemyPawn, Vector3>();
 		var allowedEnemies = LevelManager.GetCurrentLevelInformation().AllowedEnemies;
-		Points.Shuffle();
-		int numberToSpawn = Points.Count;
-		for (int i = 0; i < numberToSpawn; i++)
+		for (int i = 0; i < Points.Count; i++)
 		{
 			EnemyPawn enemyPawn = GetEnemyNode(allowedEnemies) as EnemyPawn;
         	var pointTranslation = new Godot.Vector3
@@ -39,16 +37,12 @@ public partial class Spawner : Node3D
                Points[i].GlobalPosition.Y,
                Points[i].GlobalPosition.Z
 			);
-			
             var spaceState = GetWorld3D().DirectSpaceState;
             var query = PhysicsRayQueryParameters3D.Create(pointTranslation + Vector3.Up * 100, pointTranslation);
             var result = spaceState.IntersectRay(query);
 			var tilePosY = result["position"].AsVector3().Y;
             pointTranslation.Y = tilePosY;
-            // enemyPawn.GlobalPosition = pointTranslation;
 
-            GD.Print("Enemy name:" + enemyPawn.PawnName);
-            GD.Print("Enemy pos:" + pointTranslation);
             enemyPawn.Visible = true;
 			enemyPawns.Add(enemyPawn, pointTranslation);
 		}
