@@ -318,7 +318,6 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         {
             case PawnClass.Knight:
             case PawnClass.Archer:
-            case PawnClass.Cleric:
                 NormalPlayerUnitAttack(allActiveUnits, attackableTile);
                 break;
             case PawnClass.Chemist:
@@ -334,9 +333,6 @@ public abstract partial class APawn : CharacterBody3D, ISubject
                 break;
             case PawnClass.SkeletonMedic:
                 MedicAction(allActiveUnits);
-                break;
-            default:
-                NormalPlayerUnitAttack(allActiveUnits, attackableTile);
                 break;
         }
         this.SoundPawnAttack.Play();
@@ -367,12 +363,10 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     {
         var additionalDamage = GetSkeletonDmgBuffs();
         var targetPawn = attackableTile.GetObjectAbove() as APawn;
-        if (targetPawn is object && CanAttack)
+        if (targetPawn is object)
         {
-            DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
+            DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower + additionalDamage);
         }
-        CanAttack = false;
-        GD.Print("Pretend I do attack!");
     }
 
     private int GetSkeletonDmgBuffs()
@@ -399,25 +393,20 @@ public abstract partial class APawn : CharacterBody3D, ISubject
     private void NormalPlayerUnitAttack(Array<APawn> allActiveUnits, Tile attackableTile)
     {
         var targetPawn = attackableTile.GetObjectAbove() as APawn;
-        if (targetPawn is object && CanAttack)
+        if (targetPawn is object)
         {
             DoIndirectAttacks(targetPawn, allActiveUnits);
             DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
         }
-        CanAttack = false;
-        GD.Print("Pretend I do attack!");
     }
 
     private void ChemistAttack(Array<APawn> allActiveUnits, Tile attackableTile)
     {
-        if (CanAttack)
-        {
-            DoIndirectCrossAttack(attackableTile);
+        DoIndirectCrossAttack(attackableTile);
 
-            if (attackableTile.GetObjectAbove() is APawn targetPawn)
-            {
-                DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
-            }
+        if (attackableTile.GetObjectAbove() is APawn targetPawn)
+        {
+            DealDirectDamageAndRemoveIfDead(targetPawn, AttackPower);
         }
         GD.Print("I have become death, destroyer of skeletons!");
     }
@@ -467,18 +456,11 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         };
 
         var sideWherePawnIsGettingPushed = GetSideOfWorldBasedOnVector(distanceBetweenBehindAndTowardDirection);
-        var targetPawnTile = targetPawn.GetTile();
-        var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
         DoTheRepeatingCongaLineAttack(targetPawn, sideWherePawnIsGettingPushed);
     }
 
     private void DoTheRepeatingCongaLineAttack(APawn targetPawn, WorldSide sideWherePawnIsGettingPushed)
     {
-        if (targetPawn.PawnClass == PawnClass.Totem)
-        {
-            // DealDirectDamageAndRemoveIfDead(targetPawn, PushDamage);
-            // return;
-        }
         var targetPawnTile = targetPawn.GetTile();
         var tileWherePawnIsGettingPushed = targetPawnTile.GetNeighborAtWorldSide(sideWherePawnIsGettingPushed);
 
@@ -493,8 +475,6 @@ public abstract partial class APawn : CharacterBody3D, ISubject
             return;
         }
 
-        var forcedMovementDirection = (tileWherePawnIsGettingPushed.Position - targetPawnTile.Position).Rounded();
-
         if (Math.Abs(tileWherePawnIsGettingPushed.Position.Y - targetPawnTile.Position.Y) >= WallHeightToGetDamaged)
         {
             DealDirectDamageAndRemoveIfDead(targetPawn, PushDamage);
@@ -503,10 +483,10 @@ public abstract partial class APawn : CharacterBody3D, ISubject
         }
 
         var potentialPawn = tileWherePawnIsGettingPushed.GetObjectAbove() as APawn;
-
         if (potentialPawn is null)
         {
             GD.Print("Nobody behind pawn boss!");
+            var forcedMovementDirection = (tileWherePawnIsGettingPushed.Position - targetPawnTile.Position).Rounded();
             targetPawn.shouldBeForciblyMoved = true;
             targetPawn.directionOfForcedMovement = forcedMovementDirection;
         }
